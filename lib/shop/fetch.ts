@@ -7,7 +7,7 @@ import { marketOf, projectTier, type Tier } from "../budget/costs.ts";
 import { tasteTier, type PriceSignal } from "../budget/tier.ts";
 import { creditOf } from "../design/trail.ts";
 import { BRANDS, makesOf, type BrandEntry } from "../taste/brands.ts";
-import { alternatives, brandFor, closestTo, PIECES, piecesOf, priceEach, TIER_LEVEL, type BrandInfo, type Line } from "./list.ts";
+import { alternatives, brandFor, PIECES, piecesOf, priceEach, type BrandInfo, type Line } from "./list.ts";
 
 // Builds the shopping list from Amorphix's brand catalogue: the brands closest to their taste with what each makes
 // and its price level, each piece's best brand, and a cheaper and a dearer brand from the catalogue that make it too.
@@ -52,14 +52,15 @@ export async function shoppingFor(p: Project, tierOverride?: Tier): Promise<Shop
   // Every catalogue brand can stand in as a cheaper or dearer choice for a piece.
   const catalogue = BRANDS.map((b) => brandInfo(b, p));
 
+  // Each use of a brand lowers its pull a little, so a close second gets some pieces and the list isn't one brand.
+  const used = new Map<string, number>();
   const lines: Line[] = pieces.map((piece) => {
-    const brand = brandFor(piece.piece, brands, tier);
+    const fresh = brands.map((b) => ({ ...b, affinity: b.affinity - 0.5 * (used.get(b.id) ?? 0) }));
+    const brand = brands.find((b) => b.id === brandFor(piece.piece, fresh, tier)?.id) ?? null;
     const pool = brand ? [brand, ...catalogue.filter((b) => b.id !== brand.id && brandFor(piece.piece, [b], tier))] : [];
-    // The pick is whichever is nearest their tier among their own brands, so a budget tier gets a budget brand; a
-    // brand they named, or the first choice, wins a close call.
-    const own = pool.filter((b) => brands.some((x) => x.id === b.id));
-    const pick = brand ? closestTo(own, TIER_LEVEL[tier], brand) : null;
+    const pick = brand;
     const alt = pick ? alternatives(pick, pool) : { cheaper: null, dearer: null };
+    if (pick) used.set(pick.id, (used.get(pick.id) ?? 0) + 1);
     return { ...piece, label: PIECES[piece.piece].label, each: priceEach(piece.piece, tier, market), brand: pick, ...alt };
   });
   return { tier, signals: read.signals, currency: market.currency, lines, stores: [] };

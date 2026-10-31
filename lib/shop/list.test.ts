@@ -36,6 +36,7 @@ test("alternatives are the closest a level down and a level up", () => {
   assert.equal(alt.cheaper!.name, "Bit cheaper");
   assert.equal(alt.dearer!.name, "Dearer");
   assert.deepEqual(alternatives(b("Top", 4, []), [b("Also top", 4, [])]), { cheaper: null, dearer: null });
+  assert.equal(alternatives(b("Ours", 2, []), [b("Next up", 3, []), b("Named", 4, [], true)]).dearer!.name, "Named", "a brand they named, even two levels up");
 });
 
 test("prices follow the tier and the market", () => {
@@ -67,11 +68,9 @@ test("a store only counts if it is the brand's and in their city", async () => {
   assert.deepEqual(cityParts("Pune"), ["Pune"]);
 });
 
-test("the tier picks the brand: a budget tier gets a budget brand, a brand they love wins a close call", async () => {
-  const { closestTo } = await import("./list.ts");
-  const lux = b("Lux", 4, []), mid = b("Mid", 2, []), loved = b("Loved", 3, [], true);
-  assert.equal(closestTo([lux, mid], 1, lux).name, "Mid");
-  assert.equal(closestTo([lux, mid], 4, lux).name, "Lux");
-  assert.equal(closestTo([lux, mid, loved], 3, lux).name, "Loved");
-  assert.equal(closestTo([mid, b("Also mid", 2, [])], 2, mid).name, "Mid", "the first choice wins a tie");
+test("the tier picks the brand: a budget tier gets a budget brand, a brand they love wins a close call", () => {
+  const lux = b("Lux", 4, ["sofa"]), mid = b("Mid", 2, ["sofa"]), loved = b("Loved", 3, ["sofa"], true);
+  assert.equal(brandFor("sofa", [lux, mid], "essential")!.name, "Mid");
+  assert.equal(brandFor("sofa", [lux, mid], "luxury")!.name, "Lux");
+  assert.equal(brandFor("sofa", [lux, mid, loved], "premium")!.name, "Loved");
 });

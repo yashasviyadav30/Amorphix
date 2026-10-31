@@ -1,7 +1,7 @@
 # State
 
 Where Amorphix stands, what is left in the 24 hours, and who does what, so anyone on the team can start exactly
-here. Updated 31 Oct 2026, hackCBS 9.0. Dated detail is in `progress.md` (newest first).
+here. Updated 1 Nov 2026, hackCBS 9.0. Dated detail is in `progress.md` (newest first).
 
 **Team:** Vicky Sharma, Yashasvi Yadav. **Repo:** github.com/yashasviyadav30/Amorphix (public, branch `main`).
 **Live:** amorphix-nine.vercel.app, deployed by Vercel on every push to `main`.
@@ -9,17 +9,17 @@ here. Updated 31 Oct 2026, hackCBS 9.0. Dated detail is in `progress.md` (newest
 
 ---
 
-## Resume here (31 Oct, before the break)
+## Resume here (1 Nov, 1:30 am)
 
-1. **Finish the interview walk-through in the browser** (`npm run dev`, open `/start`): answer to the end, add a
-   name or two and a photo on the taste questions, check the taste card and the style reveal, press "Design my
-   space". Expect the design page to fail in places until V6: the moodboard, budget level, shopping list, greenery,
-   art and neighbourhood still call the old service (list in section 1).
-2. **V6:** move those to the new engine (shopping from the brand vectors, budget level and greenery from the taste
-   words; drop art and the neighbourhood read), remove `app/api/interview/taste`, `app/api/taste` (GET lookup),
-   `app/api/quiz`, `app/api/strip`, the interviewer agent's old taste tools, then delete the old module.
-3. Copy to fix: the interview's quick guide still says "three pictures for your taste".
-4. Then the demo seed, V5 (YugabyteDB), V7 (cost and risk model).
+V6 is done (commit 732cec2): nothing calls the old external taste service; the module, its routes and its cache
+table migration are gone, and `git grep -i` for its name finds nothing.
+
+1. **Walk-through on the live site:** `/start` to the end, a name or two and a photo on the taste questions, then
+   "Design my space": the budget level, shopping list and greenery should all load without errors.
+2. **Demo seed (Y5):** `scripts/seed-demo.ts` now builds its taste with `scripts/taste-node.ts` (Gemini descriptions,
+   CLIP in Node, the taste engine). Safe to run now.
+3. **V5 (YugabyteDB)**, then **V7** (cost and risk model). The YugabyteDB allow list needs 0.0.0.0/0 for Vercel.
+4. Optional, if time: a moodboard from the describe output (text tiles), since photos aren't uploaded.
 
 ## 1. What Amorphix is today (the product map)
 
@@ -37,10 +37,11 @@ here. Updated 31 Oct 2026, hackCBS 9.0. Dated detail is in `progress.md` (newest
 | Demo world | Seeded projects and a 12-stop guided tour, no sign-in | `lib/demo`, `scripts/demo-world.ts`, `scripts/seed-demo.ts`, `app/demo` |
 | **Taste engine (new)** | CLIP vectors for photos and words, matched to 50 style words and 30 brands | `lib/taste` |
 
-**Still on the old external taste service (to replace):** the old taste module under `lib/` (its API client and profile builder) and everything that imports it: the interview
-picks (`app/api/interview/taste`, `agents/interviewer/agent/tools/find_taste.ts`, `add_taste.ts`), `app/api/taste`,
-`app/api/quiz`, `app/api/strip` (landing strip), `lib/art`, `lib/neighbourhood`, `lib/shop/fetch.ts`,
-`lib/green/eco.ts`, `lib/budget/tier.ts`, `lib/plan-import/taste.ts`, and its API key read in the client. When this list is empty, delete that module.
+**What changed in V6:** shopping and the budget's starting tier read the brand catalogue (`lib/taste/brands.ts`
+now has each brand's price level and what it makes); plan import reads taste on the device like the interview;
+the interviewer agent has one `add_taste` tool that saves names with their descriptions. Dropped: the moodboard (it
+needed photos from the old service), the neighbourhood read, art and the playlist, eco brands and nearby nurseries
+and stores.
 
 ---
 
@@ -67,9 +68,9 @@ Each task has an owner so both can work at the same time without touching the sa
 | V1 | ✅ `app/api/taste/describe` + `lib/taste/describe.ts` | Done 31 Oct, checked live |
 | V2 | ✅ Browser CLIP (`lib/taste/clip.ts`) and the photo style quiz at `/quiz` | Done 31 Oct, checked in the browser |
 | V3 | ✅ (first pass) the profile is built in the browser by `components/interview/useTaste.ts` and saved by `/api/interview` | Done 31 Oct; moves to the server with V5 |
-| V4 | ⏳ Interview: typed names and idea chips, photos on the first taste question, live taste card from the device | Code done 31 Oct; **finish the browser walk-through** (it reached question 10) |
+| V4 | ⏳ Interview: typed names and idea chips, photos on the first taste question, live taste card from the device | Code done 31 Oct; walk-through on the live site after V6 |
 | V5 | **YugabyteDB vector store** (after Y2): tables for style words and brands with pgvector, nearest-neighbour queries replace the in-memory match | Profile comes from Yugabyte queries |
-| V6 | Replace the rest of the old taste service (list in section 1): shopping from the brand vectors, budget level from the taste, art and neighbourhood dropped or rebuilt | Old module deleted, type check and tests clean |
+| V6 | ✅ Replace the rest of the old taste service: shopping and budget level from the brand catalogue, plan import on the device, art and neighbourhood dropped | Done 1 Nov, old module deleted, 404 tests and type check clean |
 | V7 | **Cost and risk model:** budget by room and trade and the risk of going over, shown on the budget step | Model trained, tested, on screen |
 
 ### Together

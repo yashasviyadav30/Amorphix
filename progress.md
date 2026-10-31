@@ -4,6 +4,16 @@ Newest first. Each entry is what was done that day, and how it was checked.
 
 ---
 
+## 1 November
+
+- **V6, the whole app on Amorphix's own taste model:** the shopping list picks each piece's brand from the brands
+  closest to the person's taste, nearest their price tier, with a cheaper and a dearer brand from the catalogue; the
+  budget's starting tier is the average price level of their closest brands; plan import reads the three names on
+  the device, as the interview does; the interviewer agent saves names with their design descriptions. The old
+  service's module, routes, cache migration and features that needed its data (moodboard photos, neighbourhood read,
+  art and playlist, eco brands, nearby stores) are gone, and the copy that described them is updated. Type check
+  clean, 404 unit tests pass, no mention of the old service left in the repo.
+
 ## 31 October: set-up at hackCBS 9.0
 
 - **Names become design descriptions (V1):** `lib/taste/describe.ts` and `/api/taste/describe`. Gemini says what kind

@@ -106,17 +106,11 @@ export function brandFor(piece: string, brands: BrandInfo[], tier: Tier): BrandI
   return scored.sort((x, y) => y.score - x.score)[0]?.b ?? null;
 }
 
-/** From a brand's competitors, the closest one a level cheaper and the closest a level dearer. */
+/** From a brand's competitors, the closest one a level cheaper and the closest a level dearer; a brand they named wins. */
 export function alternatives(brand: BrandInfo, rivals: BrandInfo[]): { cheaper: BrandInfo | null; dearer: BrandInfo | null } {
   const lvl = brand.level ?? 2;
   const priced = rivals.filter((r) => r.level && r.id !== brand.id);
-  const cheaper = priced.filter((r) => r.level! < lvl).sort((a, b) => b.level! - a.level!)[0] ?? null;
-  const dearer = priced.filter((r) => r.level! > lvl).sort((a, b) => a.level! - b.level!)[0] ?? null;
+  const cheaper = priced.filter((r) => r.level! < lvl).sort((a, b) => Number(b.loved) - Number(a.loved) || b.level! - a.level!)[0] ?? null;
+  const dearer = priced.filter((r) => r.level! > lvl).sort((a, b) => Number(b.loved) - Number(a.loved) || a.level! - b.level!)[0] ?? null;
   return { cheaper, dearer };
-}
-
-/** From brands that make a piece, the one whose price level is nearest `want`; loved brands and `first` win close calls. */
-export function closestTo(pool: BrandInfo[], want: number, first: BrandInfo): BrandInfo {
-  const cost = (b: BrandInfo) => Math.abs((b.level ?? 2) - want) - (b.loved ? 0.6 : 0) - (b.id === first.id ? 0.4 : 0);
-  return [...pool].sort((a, b) => cost(a) - cost(b))[0];
 }
