@@ -34,5 +34,4 @@ fixtures/qloo/
 .output/
 
 # Local working notes (kept off the public repo)
-state.md
 private/
