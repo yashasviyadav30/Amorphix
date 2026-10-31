@@ -75,7 +75,7 @@ export function TasteBand() {
                 {!still && <motion.span className="absolute top-0 h-px w-6 bg-accent shadow-[0_0_8px_var(--accent)]" initial={{ left: "-30%" }} animate={{ left: "110%" }} transition={{ duration: 1.1, repeat: Infinity, ease: "linear" }} />}
               </div>
 
-              <div className="min-w-0">
+              <div className="min-w-0 flex-1">
                 <p className="font-serif text-2xl leading-none">{r.style}</p>
                 <ul className="mt-2 flex flex-wrap gap-1.5">
                   {r.words.map((w, n) => (
