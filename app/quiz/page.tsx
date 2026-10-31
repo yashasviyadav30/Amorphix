@@ -4,7 +4,7 @@ import { Quiz } from "@/components/quiz/Quiz";
 
 export const metadata: Metadata = {
   title: "What's your space style? · Amorphix",
-  description: "Three taps: a place, a brand and something you love. Qloo reads your space style from them.",
+  description: "Show Amorphix photos of spaces you love; its taste model reads your style on your own device.",
 };
 
 export default function QuizPage() {

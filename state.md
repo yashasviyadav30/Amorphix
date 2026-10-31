@@ -53,7 +53,7 @@ Each task has an owner so both can work at the same time without touching the sa
 | # | Task | Done when |
 |---|---|---|
 | V1 | `app/api/taste/describe`: Gemini turns each loved name into a short design description | Returns descriptions for a list of names |
-| V2 | Browser hook: CLIP (transformers.js, `Xenova/clip-vit-base-patch32`) embeds uploaded photos and descriptions on the device | Vectors for 3 photos in a few seconds |
+| V2 | ✅ Browser CLIP (`lib/taste/clip.ts`) and the photo style quiz at `/quiz` | Done 31 Oct, checked in the browser |
 | V3 | `app/api/taste/profile`: vectors in, `Profile` out (`lib/taste/engine.ts`), stored on the project | The style step shows words with their sources |
 | V4 | Interview: photo upload and "things you love" names replace the old picture picks | A new design from photos works end to end |
 | V5 | **YugabyteDB vector store** (after Y2): tables for style words and brands with pgvector, nearest-neighbour queries replace the in-memory match | Profile comes from Yugabyte queries |
