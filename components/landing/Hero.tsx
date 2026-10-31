@@ -40,16 +40,16 @@ export function LandingHeader() {
   }, []);
   return (
     <header className={`sticky top-0 z-40 transition-colors duration-300 ${scrolled ? "border-b border-line/60 bg-paper/85 backdrop-blur-md" : "border-b border-transparent"}`}>
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-4 sm:px-8 md:grid md:grid-cols-[1fr_auto_1fr]">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-4 sm:px-8 lg:grid lg:grid-cols-[auto_1fr_auto] lg:gap-6">
         <HomeLink className="justify-self-start">
           <Logo size={28} />
         </HomeLink>
         <nav
           onMouseLeave={() => setHover(null)}
-          className={`hidden items-center gap-1 rounded-full border p-1 text-sm backdrop-blur-md transition-all duration-300 md:flex ${scrolled ? "border-line bg-paper-raised/80 shadow-[0_10px_40px_-20px_var(--accent)]" : "border-line/70 bg-paper-raised/50"}`}
+          className={`hidden items-center justify-self-center gap-0.5 rounded-full border p-1 text-sm backdrop-blur-md transition-all duration-300 lg:flex ${scrolled ? "border-line bg-paper-raised/80 shadow-[0_10px_40px_-20px_var(--accent)]" : "border-line/70 bg-paper-raised/50"}`}
         >
           {LINKS.map(([label, href]) => (
-            <a key={href} href={href} onMouseEnter={() => setHover(href)} onClick={() => tick()} className="relative rounded-full px-4 py-1.5 text-ink-soft transition-colors hover:text-ink">
+            <a key={href} href={href} onMouseEnter={() => setHover(href)} onClick={() => tick()} className="relative whitespace-nowrap rounded-full px-3 py-1.5 text-ink-soft transition-colors hover:text-ink xl:px-4">
               {hover === href && <motion.span layoutId="nav-hover" className="absolute inset-0 rounded-full bg-accent/10 ring-1 ring-accent/30" transition={{ type: "spring", stiffness: 400, damping: 32 }} />}
               <span className="relative">{label}</span>
             </a>
