@@ -8,6 +8,7 @@ import { tick } from "@/components/fx/sfx";
 import type { Layout } from "@/lib/layout/schema";
 import { CATEGORY_NAMES, estimate, knownMarket, marketOf, MARKETS, money, TIER_NAMES, TIERS, type Category, type Tier, isNewBuild, projectTier } from "@/lib/budget/costs";
 import type { PriceSignal } from "@/lib/budget/tier";
+import { risk } from "@/lib/budget/risk";
 import type { Brief } from "@/lib/design/brief";
 import type { Profile } from "@/lib/taste/types";
 import { GreenAndTime } from "./GreenAndTime";
@@ -54,6 +55,8 @@ export function BudgetStep({ tier, onTier, id, layout, location, interview, brie
   const active = tier ?? start;
   // The region (London, Mumbai, the US Northeast) counts only when costing the site's own market.
   const e = useMemo(() => estimate(layout, active, market, newBuild, marketId ? null : location), [layout, active, market, newBuild, marketId, location]);
+  const odds = useMemo(() => risk(e, newBuild), [e, newBuild]);
+  const pct = (x: number) => `${Math.round(x * 100)}%`;
   const cats = (Object.entries(e.byCategory) as [Category, number][]).filter(([, v]) => v > 0).sort((a, b) => b[1] - a[1]);
   const top = Math.max(...cats.map(([, v]) => v));
   const fmt = (v: number) => money(v, market);
@@ -141,6 +144,32 @@ export function BudgetStep({ tier, onTier, id, layout, location, interview, brie
         </div>
       </section>
       </HudCard>
+
+      {odds.planned > 0 && (taste !== null || tier !== null) && (
+        <HudCard className="mt-8 p-5" delay={0.04}>
+          <section aria-labelledby="risk">
+            <h2 id="risk" className="font-serif text-2xl">Risk of going over</h2>
+            <p className="mt-2 text-sm">
+              <strong className="text-lg">{pct(odds.over)}</strong> chance the final bill goes over the planned {fmt(odds.planned)}, and{" "}
+              {pct(odds.overRange)} that it goes past the top of the range. Keep <strong>{fmt(odds.contingency)}</strong> more aside (
+              {pct(odds.contingency / odds.planned)}) to be 80% sure.
+            </p>
+            <dl className="mt-4 grid grid-cols-3 gap-3 text-sm">
+              {([["Most likely", odds.p50], ["80% sure under", odds.p80], ["90% sure under", odds.p90]] as const).map(([label, v]) => (
+                <div key={label} className="rounded-xl border border-line p-3">
+                  <dt className="text-ink-soft">{label}</dt>
+                  <dd className="mt-1 font-medium">{fmt(v)}</dd>
+                </div>
+              ))}
+            </dl>
+            <p className="mt-3 text-sm text-ink-soft">
+              Most of the risk is in {odds.drivers.map((d) => CATEGORY_NAMES[d.category].toLowerCase()).join(", ").replace(/, ([^,]*)$/, " and $1")}
+              {newBuild ? "." : ", where opening up an existing space can turn up hidden work."} From 4,000 simulated builds of this design, on planning
+              assumptions, not past quotes.
+            </p>
+          </section>
+        </HudCard>
+      )}
 
       <div className="mt-8 grid gap-6 lg:grid-cols-2">
         <HudCard className="p-5" delay={0.05}>

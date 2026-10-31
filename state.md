@@ -9,13 +9,13 @@ here. Updated 1 Nov 2026, hackCBS 9.0. Dated detail is in `progress.md` (newest 
 
 ---
 
-## Resume here (1 Nov, 3:45 am)
+## Resume here (1 Nov, 1:45 am)
 
 Done and checked on the live site: V6 (no old service left), V5 (`/api/taste/profile` answers with
 `engine: "yugabytedb"`, so Vercel reaches YugabyteDB), brand logos on the shopping list, and a full interview with a
 photo and three names: the reveal, the design, the budget's taste tier and the shopping list all work.
 
-1. **V7:** cost and overrun-risk model on the budget step.
+1. **V7:** done (`lib/budget/risk.ts`, the "Risk of going over" card on the budget step); check it on the live site.
 2. Demo seed (Y5) is safe to run now (`scripts/seed-demo.ts`).
 3. Optional: a moodboard from the describe output (text tiles).
 4. Meko (YugabyteDB's agent memory track): decided to skip.
@@ -70,7 +70,7 @@ Each task has an owner so both can work at the same time without touching the sa
 | V4 | ⏳ Interview: typed names and idea chips, photos on the first taste question, live taste card from the device | Code done 31 Oct; walk-through on the live site after V6 |
 | V5 | ✅ **YugabyteDB vector store:** `taste_words` and `taste_brands` (pgvector, ybhnsw index), loaded by `scripts/yb-taste.ts`; `/api/taste/profile` builds the profile from four vector queries (`lib/taste/yb.ts`), falling back to memory | Done 1 Nov, local check: same profile as memory, ~350 ms warm; Vercel needs the 0.0.0.0/0 allow list |
 | V6 | ✅ Replace the rest of the old taste service: shopping and budget level from the brand catalogue, plan import on the device, art and neighbourhood dropped | Done 1 Nov, old module deleted, 404 tests and type check clean |
-| V7 | **Cost and risk model:** budget by room and trade and the risk of going over, shown on the budget step | Model trained, tested, on screen |
+| V7 | ✅ **Cost and risk model:** a Monte Carlo of 4,000 builds per design (trade spreads, upward skew, one shared price factor, renovation risk); chance of going over, P50/P80/P90 and the contingency for 80% confidence, on the budget step | Done 1 Nov; planning assumptions, not trained on past projects (none to train on) |
 
 ### Together
 

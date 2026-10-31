@@ -6,6 +6,14 @@ Newest first. Each entry is what was done that day, and how it was checked.
 
 ## 1 November
 
+- **V7, the risk of going over:** `lib/budget/risk.ts` simulates 4,000 builds of the chosen design: each trade drawn
+  around its estimate with its own spread and an upward skew, all tied by one shared price factor, with extra
+  hidden-condition risk in a renovation. The budget step shows the chance of going over, the most likely, 80% and 90%
+  figures, what to keep aside to be 80% sure, and the trades that carry most of the risk. Six tests (renovation riskier
+  than new build, luxury riskier than essential, same design same figures). A typical fit-out: 61% chance of going
+  over the planned figure, about 13% to keep aside.
+- **Interview reveal fix:** the style shows, and the design can start, only once every pick has been read.
+
 - **V5, the taste engine on YugabyteDB:** the 50 style words and 30 brands are rows with pgvector columns and an HNSW
   index (`ybhnsw`); the browser sends the CLIP vectors it made and `/api/taste/profile` asks YugabyteDB for every
   similarity in four queries (the brands nearest the whole taste are an `order by <=> limit` query). Brand vectors are
