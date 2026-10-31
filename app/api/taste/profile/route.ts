@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { whoOf } from "@/lib/auth/request";
 import vectors from "@/lib/taste/vectors.json";
+import calibration from "@/lib/taste/calibration.json";
 import { buildProfile, profileFrom } from "@/lib/taste/engine";
 import { simsFromYb, yb } from "@/lib/taste/yb";
 
@@ -29,10 +30,11 @@ export async function POST(request: Request) {
   const sql = yb();
   if (sql)
     try {
-      const { words, sims } = await within(simsFromYb(sql, signals, take), 5000);
-      return Response.json({ profile: profileFrom(signals, words, sims), engine: "yugabytedb" });
+      // every brand comes back as a candidate, so the calibration can rank them; YugabyteDB orders them by distance
+      const { words, sims } = await within(simsFromYb(sql, signals, vectors.brands.length), 5000);
+      return Response.json({ profile: profileFrom(signals, words, sims, calibration, take), engine: "yugabytedb" });
     } catch (e) {
       console.error("taste profile: vector store unavailable, using memory", e instanceof Error ? e.message : e);
     }
-  return Response.json({ profile: buildProfile(signals, vectors.words as never, vectors.brands, take), engine: "memory" });
+  return Response.json({ profile: buildProfile(signals, vectors.words as never, vectors.brands, take, calibration), engine: "memory" });
 }

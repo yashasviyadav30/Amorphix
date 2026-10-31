@@ -1,0 +1,152 @@
+[
+  {
+    "space": "A home",
+    "loves": [
+      "The Grand Budapest Hotel",
+      "Aman Tokyo"
+    ],
+    "style": "Wabi Sabi meets Industrial",
+    "words": [
+      {
+        "word": "monochrome",
+        "from": "Aman Tokyo"
+      },
+      {
+        "word": "terracotta",
+        "from": "Aman Tokyo"
+      },
+      {
+        "word": "concrete",
+        "from": "Aman Tokyo"
+      },
+      {
+        "word": "art deco",
+        "from": "The Grand Budapest Hotel"
+      }
+    ],
+    "brands": [
+      "Muji",
+      "Audo Copenhagen"
+    ]
+  },
+  {
+    "space": "A café",
+    "loves": [
+      "Blue Bottle Coffee",
+      "Norah Jones"
+    ],
+    "style": "Scandinavian",
+    "words": [
+      {
+        "word": "scandinavian",
+        "from": "Blue Bottle Coffee"
+      },
+      {
+        "word": "industrial",
+        "from": "Blue Bottle Coffee"
+      },
+      {
+        "word": "mediterranean",
+        "from": "Blue Bottle Coffee"
+      },
+      {
+        "word": "cozy",
+        "from": "Norah Jones"
+      }
+    ],
+    "brands": [
+      "Article",
+      "IKEA"
+    ]
+  },
+  {
+    "space": "A studio flat",
+    "loves": [
+      "Muji",
+      "Spirited Away"
+    ],
+    "style": "Scandinavian",
+    "words": [
+      {
+        "word": "scandinavian",
+        "from": "Muji"
+      },
+      {
+        "word": "japandi",
+        "from": "Muji"
+      },
+      {
+        "word": "minimalist",
+        "from": "Muji"
+      },
+      {
+        "word": "serene",
+        "from": "Spirited Away"
+      }
+    ],
+    "brands": [
+      "Muji",
+      "The Conran Shop"
+    ]
+  },
+  {
+    "space": "An office",
+    "loves": [
+      "Ace Hotel New York",
+      "Mad Men"
+    ],
+    "style": "Industrial",
+    "words": [
+      {
+        "word": "industrial",
+        "from": "Ace Hotel New York"
+      },
+      {
+        "word": "farmhouse",
+        "from": "Ace Hotel New York"
+      },
+      {
+        "word": "vintage",
+        "from": "Ace Hotel New York"
+      },
+      {
+        "word": "dark wood",
+        "from": "Mad Men"
+      }
+    ],
+    "brands": [
+      "Rejuvenation",
+      "Article"
+    ]
+  },
+  {
+    "space": "A hotel lobby",
+    "loves": [
+      "Chateau Marmont",
+      "Jonathan Adler"
+    ],
+    "style": "Old Hollywood meets Art Deco",
+    "words": [
+      {
+        "word": "old hollywood",
+        "from": "Chateau Marmont"
+      },
+      {
+        "word": "art deco",
+        "from": "Jonathan Adler"
+      },
+      {
+        "word": "moody",
+        "from": "Chateau Marmont"
+      },
+      {
+        "word": "velvet",
+        "from": "Chateau Marmont"
+      }
+    ],
+    "brands": [
+      "Jonathan Adler",
+      "Good Earth"
+    ]
+  }
+]

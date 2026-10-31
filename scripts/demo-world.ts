@@ -11,6 +11,7 @@ import { phaseSplit } from "../lib/project/fees.ts";
 import { ANA, DEMO_EMAIL, DEMO_ROLES, MAYA, PARKS, PEOPLE, SAM, TITLES, type DemoRole } from "../lib/demo/story.ts";
 import type { Answers, TastePick } from "../lib/interview/script.ts";
 import { tasteFor } from "./taste-node.ts";
+import { yb } from "../lib/taste/yb.ts";
 
 const BASE = process.argv[2] ?? "http://localhost:3000";
 const db = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!, { auth: { persistSession: false } });
@@ -213,3 +214,4 @@ for (const [id, from, to] of spans) {
   for (const [i, r] of rows.entries()) await db.from(r.table).update({ created_at: new Date(a + ((b - a) * (i + 1)) / (rows.length + 1)).toISOString() }).eq("id", r.id);
 }
 console.log(JSON.stringify({ maya, parks, ana, sam }));
+await yb()?.end();

@@ -3,6 +3,7 @@
 //   node --env-file=.env.local --env-file=.env scripts/seed-demo.ts
 import { randomUUID } from "node:crypto";
 import { tasteFor } from "./taste-node.ts";
+import { yb } from "../lib/taste/yb.ts";
 import { createProject } from "../lib/project/store.ts";
 import { designProject } from "../lib/design/run.ts";
 import { chatModel } from "../lib/models.ts";
@@ -10,6 +11,7 @@ import { chatModel } from "../lib/models.ts";
 const guestId = randomUUID();
 const loves = ["Ace Hotel New York", "Pottery Barn", "The Grand Budapest Hotel", "Norah Jones"];
 const { signals, taste } = await tasteFor(loves);
+await yb()?.end();
 
 const p = await createProject({
   guest_id: guestId,

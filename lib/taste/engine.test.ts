@@ -63,3 +63,25 @@ test("of two opposite words, only the stronger stays", () => {
   assert.deepEqual(kept, ["minimalist", "industrial"]);
   assert.deepEqual(withoutOpposites([t("bright", 1), t("moody", 4)]).map((x) => x.value), ["moody"]);
 });
+
+test("calibrated, a word every description sits close to loses to the one this name really points at; a photo is read as it is", () => {
+  const v = axis(0, 8, 1); v[1] = 0.9;
+  const calibration = { words: words.map((w) => ({ value: w.value, mu: w.value === "industrial" ? 0.7 : 0.1, sd: 0.1 })), brands: [] };
+  const name = { source: { entityId: "name:a", name: "A", layer: 1 as const }, vector: v };
+  assert.equal(buildProfile([name], words, [], 12, calibration).tags[0].value, "scandinavian");
+  assert.equal(buildProfile([name], words).tags[0].value, "industrial");
+  assert.equal(buildProfile([photo("P", v)], words, [], 12, calibration).tags[0].value, "industrial");
+});
+
+test("calibrated, brands are ranked by how far above their usual level they sit", () => {
+  const brands = [
+    { id: "broad", name: "Broad", aesthetic: [], vector: axis(0) },
+    { id: "niche", name: "Niche", aesthetic: [], vector: axis(1) },
+    { id: "other", name: "Other", aesthetic: [], vector: axis(2) },
+  ];
+  const v = axis(0, 8, 1); v[1] = 0.8;
+  const name = { source: { entityId: "name:a", name: "A", layer: 1 as const }, vector: v };
+  const calibration = { words: [], brands: [{ id: "broad", mu: 0.6, sd: 0.1 }, { id: "niche", mu: -0.2, sd: 0.1 }, { id: "other", mu: 0, sd: 0.1 }] };
+  assert.equal(buildProfile([name], words, brands).brands[0].id, "broad");
+  assert.equal(buildProfile([name], words, brands, 12, calibration).brands[0].id, "niche");
+});

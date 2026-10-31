@@ -2,6 +2,7 @@ import { Hero, LandingHeader } from "@/components/landing/Hero";
 import { Audience, Faq, Features, FinalCall, Footer, HowItWorks, Market, Pricing, TasteFlow } from "@/components/landing/Sections";
 import { PlansDemo } from "@/components/landing/PlansDemo";
 import { ForPros, Trust } from "@/components/landing/ForPros";
+import { TasteBand } from "@/components/landing/TasteBand";
 
 export default function Home() {
   return (
@@ -9,6 +10,7 @@ export default function Home() {
       <LandingHeader />
       <main className="flex-1">
         <Hero />
+        <TasteBand />
         <HowItWorks />
         <PlansDemo />
         <TasteFlow />

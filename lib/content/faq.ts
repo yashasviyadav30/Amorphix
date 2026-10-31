@@ -10,7 +10,7 @@ export const FAQ: { q: string; a: string }[] = [
   },
   {
     q: "How does it know my taste?",
-    a: "You tell Amorphix about the films, music, places and brands you love. Amorphix's taste model finds what those have in common, the decor, the ambience, the price level, and Amorphix designs from that. Every choice in your design shows the taste signal behind it.",
+    a: "You name the places, brands, films and music you love, and can add photos of rooms you like. Each name becomes a short description of the look it evokes, and each description and photo becomes a vector with an image-text model on your device. Amorphix's taste model matches them against 50 style words and 30 home brands with vector search on YugabyteDB, and designs from what stands out. Every choice in your design says which of your loves it came from.",
   },
   {
     q: "What happens to my data?",

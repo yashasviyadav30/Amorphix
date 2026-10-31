@@ -27,7 +27,7 @@ function Heading({ eyebrow, title, sub }: { eyebrow: string; title: ReactNode; s
 
 const STEPS = [
   { n: "01", title: "Tell Amorphix about it", body: "The space, who uses it, how it's used and your budget. Tap, type or just talk." },
-  { n: "02", title: "Find your style", body: "Three quick picks: a place, a brand, a film or music. Amorphix reads your taste and names your style." },
+  { n: "02", title: "Find your style", body: "A place, a brand, a film or music you love, and photos if you like. Amorphix reads your taste and names your style." },
   { n: "03", title: "Choose a plan", body: "Three floor plans for your plot, each clear about what it does best and what it gives up." },
   { n: "04", title: "Walk through it", body: "Step inside in 3D, by day or by night, with the outside designed from your taste too." },
   { n: "05", title: "Build it", body: "Budget, drawings, a shopping list, your team and the building site, all in one place." },
@@ -253,7 +253,7 @@ export function Features() {
         <Feature delay={0.24} title="3D, inside and out" body="Walk room to room by day or night. The roof and walls outside follow your taste; click any piece for its brand.">
           <Cube />
         </Feature>
-        <Feature delay={0} title="A budget in your currency" body="Researched rates for 8 markets, room by room, with a timeline, a green score and a shopping list near you.">
+        <Feature delay={0} title="A budget in your currency" body="Researched rates for 8 markets, room by room, with the risk of going over, a timeline, a green score and a shopping list at your price.">
           <p className="font-serif text-4xl text-ink">
             $<CountUp value={48200} format={(v) => Math.round(v).toLocaleString("en-US")} />
           </p>

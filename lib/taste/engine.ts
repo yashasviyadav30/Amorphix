@@ -71,21 +71,33 @@ export function tasteVector(signals: Signal[]): number[] {
   return taste;
 }
 
+// Each word's and brand's usual similarity to a described love, measured by scripts/calibrate-taste.ts. Japandi or a
+// broad brand sits close to almost any description of a room; a name counts toward one only above its usual level.
+export type Calibration = { words: { value: string; mu: number; sd: number }[]; brands: { id: string; mu: number; sd: number }[] };
+// Photos are image vectors, read on their own scale; the calibration is for names (text).
+const isPhoto = (s: Signal) => s.source.entityId.startsWith("photo-");
+
 // What the profile is built from, wherever the similarities were worked out (in memory, or by the vector database).
 export type Sims = {
   /** For each input, its similarity to every style word, in `words` order. */
   words: number[][];
-  /** The brands nearest the whole taste, best first, with their (centred) affinity. */
+  /** Brands near the whole taste (the candidates, best first), with their (centred) affinity. */
   nearest: { id: string; name: string; aesthetic: string[]; affinity: number }[];
   /** For each input, its (centred) similarity to each brand, by brand id. */
   brands: Map<string, number>[];
 };
 
-/** Pure: the profile from the inputs and their similarities. */
-export function profileFrom(signals: Signal[], words: Pick<WordVector, "family" | "value">[], sims: Sims): Profile {
+/** Pure: the profile from the inputs and their similarities, with the `take` brands that match best. */
+export function profileFrom(signals: Signal[], words: Pick<WordVector, "family" | "value">[], sims: Sims, calibration?: Calibration, take = 12): Profile {
+  const wordCal = new Map(calibration?.words.map((w) => [w.value, w]));
+  const brandCal = new Map(calibration?.brands.map((b) => [b.id, b]));
   const byKey = new Map<string, StyleTag>();
   signals.forEach((s, i) => {
-    for (const { word, z } of standoutsOf(sims.words[i], words)) {
+    const row = calibration && !isPhoto(s) ? sims.words[i].map((x, k) => {
+      const c = wordCal.get(words[k].value);
+      return c ? (x - c.mu) / c.sd : x;
+    }) : sims.words[i];
+    for (const { word, z } of standoutsOf(row, words)) {
       const key = `${word.family}:${word.value}`;
       const tag = byKey.get(key) ?? { family: word.family, value: word.value, weight: 0, sources: [] };
       tag.weight += LAYER_WEIGHT[s.source.layer] * z * (FAMILY_WEIGHT[word.family] ?? 1);
@@ -94,7 +106,12 @@ export function profileFrom(signals: Signal[], words: Pick<WordVector, "family" 
     }
   });
   const r3 = (x: number) => Math.round(x * 1000) / 1000;
-  const brands: Brand[] = sims.nearest.map((b) => ({
+  const above = (b: Sims["nearest"][number]) => {
+    const c = brandCal.get(b.id);
+    return c ? (b.affinity - c.mu) / c.sd : b.affinity;
+  };
+  const ranked = calibration ? [...sims.nearest].sort((x, y) => above(y) - above(x)) : sims.nearest;
+  const brands: Brand[] = ranked.slice(0, take).map((b) => ({
     id: b.id,
     name: b.name,
     affinity: r3(b.affinity),
@@ -105,7 +122,7 @@ export function profileFrom(signals: Signal[], words: Pick<WordVector, "family" 
 }
 
 /** The profile worked out in memory (the browser, scripts, and the fallback when the vector database is away). */
-export function buildProfile(signals: Signal[], words: WordVector[], brands: BrandVector[] = [], takeBrands = 12): Profile {
+export function buildProfile(signals: Signal[], words: WordVector[], brands: BrandVector[] = [], takeBrands = 12, calibration?: Calibration): Profile {
   if (!signals.length) return { tags: [], brands: [] };
   const centre = centreOf(brands.map((b) => b.vector));
   const centred = brands.map((b) => ({ ...b, vector: minus(b.vector, centre) }));
@@ -114,8 +131,7 @@ export function buildProfile(signals: Signal[], words: WordVector[], brands: Bra
     words: signals.map((s) => words.map((w) => cosine(s.vector, w.vector))),
     nearest: centred
       .map((b) => ({ id: b.id, name: b.name, aesthetic: b.aesthetic, affinity: cosine(taste, b.vector) }))
-      .sort((x, y) => y.affinity - x.affinity)
-      .slice(0, takeBrands),
+      .sort((x, y) => y.affinity - x.affinity),
     brands: signals.map((s) => new Map(centred.map((b) => [b.id, cosine(minus(s.vector, centre), b.vector)]))),
-  });
+  }, calibration, takeBrands);
 }

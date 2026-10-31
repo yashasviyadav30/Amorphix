@@ -8,6 +8,6 @@ export async function profileOf(signals: Signal[], take = 12): Promise<Profile> 
     const res = await fetch("/api/taste/profile", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ signals, take }) });
     if (res.ok) return ((await res.json()) as { profile: Profile }).profile;
   } catch {}
-  const [{ buildProfile }, vectors] = await Promise.all([import("./engine.ts"), import("./vectors.json")]);
-  return buildProfile(signals, vectors.default.words as never, vectors.default.brands, take);
+  const [{ buildProfile }, vectors, calibration] = await Promise.all([import("./engine.ts"), import("./vectors.json"), import("./calibration.json")]);
+  return buildProfile(signals, vectors.default.words as never, vectors.default.brands, take, calibration.default);
 }
