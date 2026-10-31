@@ -16,6 +16,21 @@ const FAMILY_WEIGHT: Partial<Record<Family, number>> = { tone: 0.5 };
 // How many words each input may give, per family, and how far above its average a word must stand.
 const PER_FAMILY: Record<Family, number> = { decor: 3, aesthetic: 3, ambience: 3, tone: 1, style: 2 };
 const STANDS_OUT = 1;
+// Words that can't both describe one taste; when both come up, the weaker one goes.
+const OPPOSITES: [string, string][] = [
+  ["minimalist", "maximalist"],
+  ["bright", "moody"],
+  ["light_wood", "dark_wood"],
+  ["monochrome", "colorful"],
+  ["serene", "lively"],
+];
+
+export function withoutOpposites(tags: StyleTag[]): StyleTag[] {
+  const weight = new Map(tags.map((t) => [t.value, t.weight]));
+  const drop = new Set<string>();
+  for (const [a, b] of OPPOSITES) if (weight.has(a) && weight.has(b)) drop.add(weight.get(a)! >= weight.get(b)! ? b : a);
+  return tags.filter((t) => !drop.has(t.value));
+}
 
 export function cosine(a: number[], b: number[]) {
   let dot = 0, na = 0, nb = 0;
@@ -68,5 +83,5 @@ export function buildProfile(signals: Signal[], words: WordVector[], brands: Bra
         }))
     : [];
 
-  return { tags: [...byKey.values()].sort((a, b) => b.weight - a.weight), brands: ranked };
+  return { tags: withoutOpposites([...byKey.values()].sort((a, b) => b.weight - a.weight)), brands: ranked };
 }

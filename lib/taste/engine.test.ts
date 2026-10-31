@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { buildProfile, cosine, standouts, type WordVector } from "./engine.ts";
+import { buildProfile, cosine, standouts, withoutOpposites, type WordVector } from "./engine.ts";
 
 // Synthetic vectors: each style word points along its own axis, so an input close to an axis stands out for that word.
 const axis = (i: number, n = 8, w = 1) => Array.from({ length: n }, (_, k) => (k === i ? w : 0.05));
@@ -55,4 +55,11 @@ test("brands are ranked by how close they sit to the whole taste, with the input
 
 test("no inputs give an empty profile", () => {
   assert.deepEqual(buildProfile([], words, []), { tags: [], brands: [] });
+});
+
+test("of two opposite words, only the stronger stays", () => {
+  const t = (value: string, weight: number) => ({ family: "decor" as const, value, weight, sources: [] });
+  const kept = withoutOpposites([t("minimalist", 9), t("industrial", 5), t("maximalist", 2)]).map((x) => x.value);
+  assert.deepEqual(kept, ["minimalist", "industrial"]);
+  assert.deepEqual(withoutOpposites([t("bright", 1), t("moody", 4)]).map((x) => x.value), ["moody"]);
 });

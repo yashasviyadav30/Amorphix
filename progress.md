@@ -11,7 +11,8 @@ Newest first. Each entry is what was done that day, and how it was checked.
   `/quiz` is now photo-based: add up to 5 photos, the model downloads once with a progress bar, and a style card
   shows the style, the words with the photo each came from, and the closest brands. Checked in the browser with
   three interior photos: Minimalist with Scandinavian and Bright; brands Audo Copenhagen, HAY, Muji, The Conran
-  Shop. To fix next: opposite words from one photo (minimalist and maximalist) should not both show.
+  Shop. Then fixed: when two opposite words come up (minimalist and maximalist, bright and
+  moody, light and dark wood), only the stronger stays (tested).
 
 - **The 24-hour plan, split for two:** `state.md` now maps every part of the product to its folder, lists what is
   left, and gives each task an owner (Yashasvi: Supabase, YugabyteDB, Gemini key, Vercel on his account, demo data,
