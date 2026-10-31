@@ -2,8 +2,8 @@
 // clients (Maya's house being built, the Parks' house waiting for approval, Ana's apartment in its last week), Mike the
 // builder, and Sam's café in Brooklyn. Every step goes through the app's own routes, so what judges see is what a
 // real run makes. Re-running replaces the old demo projects. The design step calls the model (four designs).
-// Run with the app up (npx next build && npx next start -p 3000):
-//   node --env-file=.env.local --env-file=.env scripts/demo-world.ts [base url]
+// Run with a local app that lets the demo accounts write (the live one keeps them view-only):
+//   AMORPHIX_DEMO_SEED=1 npm run dev     then     node --env-file=.env.local scripts/demo-world.ts [base url]
 import { randomBytes } from "node:crypto";
 import { createClient } from "@supabase/supabase-js";
 import { signUser } from "../lib/auth/guest.ts";
@@ -192,6 +192,8 @@ const { id: sam } = await call<{ id: string }>("sam", "POST", "/api/interview", 
 must(await db.from("projects").update({ unlocked_at: new Date().toISOString(), title: TITLES.sam }).eq("id", sam));
 await designed("sam", sam);
 await call("sam", "POST", `/api/projects/${sam}/choose`, { option: 0 });
+// two changes in plain words, so "Make changes" shows its history
+for (const text of ["Make the cafe seating bigger", "Rename the storage room to Bean store"]) await call("sam", "POST", `/api/projects/${sam}/edit`, { text });
 log("The Brooklyn café: designed");
 
 // Spread each project's story over its real months, in the order it happened (the seed ran it in minutes)

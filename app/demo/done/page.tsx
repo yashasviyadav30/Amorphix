@@ -27,7 +27,7 @@ export default function Done() {
         <h1 className="mt-3 font-serif text-4xl leading-tight sm:text-5xl">
           <Decode text="Thank you, judges." speed={30} />
         </h1>
-        <p className="mx-auto mt-4 max-w-xl text-lg text-ink-soft">In {TOUR.length} stops you saw one home go from a conversation to its keys, and a café read against its street.</p>
+        <p className="mx-auto mt-4 max-w-xl text-lg text-ink-soft">In {TOUR.length} stops you saw one home go from a conversation to its keys, and a café changed in plain words.</p>
       </div>
 
       <div className="mt-8 grid w-full max-w-6xl gap-3 sm:grid-cols-2 lg:grid-cols-4">
