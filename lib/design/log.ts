@@ -24,7 +24,7 @@ export function processingLog(p: Source): string[] {
   for (const sig of p.taste_signals.slice(0, 6)) {
     const tags = (p.taste?.tags ?? []).filter((t) => t.sources.some((x) => x.name === sig.name)).slice(0, 3);
     const found = tags.map((t) => `${t.family}: ${words(t.value)}`).join(", ");
-    lines.push(`> taste graph · ${LAYER[sig.layer]} · ${sig.name}${found ? ` → ${found}` : ""}`);
+    lines.push(`> taste model · ${LAYER[sig.layer]} · ${sig.name}${found ? ` → ${found}` : ""}`);
   }
   const top = (p.taste?.tags ?? []).slice(0, 4).map((t) => words(t.value));
   if (top.length) lines.push(`> style vector · ${top.join(" · ")}`);

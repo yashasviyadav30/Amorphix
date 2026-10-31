@@ -32,6 +32,9 @@ const SAY = {
   pictures: { en: "Pick one, or type your own", hi: "एक चुनिए, या अपना लिखिए", hinglish: "Ek chuno, ya apna type karo" },
   yourStyle: { en: "Your space style", hi: "आपकी स्पेस स्टाइल", hinglish: "Aapka space style" },
   styleFrom: { en: "Read by Amorphix's taste model from", hi: "Amorphix ने पढ़ा", hinglish: "Amorphix ne padha" },
+  addPhotos: { en: "Add photos of spaces you love", hi: "अपनी पसंद की जगहों की फ़ोटो जोड़ें", hinglish: "Apni pasand ki jagahon ki photos add karo" },
+  photosOptional: { en: "(optional, up to 5)", hi: "(चाहें तो, 5 तक)", hinglish: "(optional, 5 tak)" },
+  photosStay: { en: "Read by Amorphix's taste model on your device. They never leave it.", hi: "Amorphix का टेस्ट मॉडल इन्हें आपके डिवाइस पर ही पढ़ता है। ये कहीं नहीं जातीं।", hinglish: "Amorphix ka taste model inhe aapke device par hi padhta hai. Ye kahin nahi jaati." },
   designNow: { en: "Now design my space", hi: "अब मेरा स्पेस डिज़ाइन करें", hinglish: "Ab mera space design karo" },
   designing: { en: "Now designing your space", hi: "अब आपका स्पेस डिज़ाइन हो रहा है", hinglish: "Ab aapka space design ho raha hai" },
   done: { en: "Done", hi: "हो गया", hinglish: "Ho gaya" },
@@ -463,7 +466,7 @@ export function Interview() {
                         onPick={(name) => answer(q.id, { slot: q.slot!, id: `name:${name.toLowerCase()}`, name })}
                       />
                     )}
-                    {q.kind === "taste" && q.slot === "place" && !replay && <AddPhotos photos={photos} onChange={setPhotos} />}
+                    {q.kind === "taste" && q.slot === "place" && !replay && <AddPhotos photos={photos} onChange={setPhotos} text={{ add: say("addPhotos"), optional: say("photosOptional"), stay: say("photosStay") }} />}
                     {q.id === "city" && <CityLookup text={draft} onPick={(label) => answer(q.id, label)} />}
                     {q.optional && (
                       <button type="button" onClick={() => answer(q.id, "")} className="mt-4 rounded-full px-4 py-1.5 text-sm text-ink-soft transition hover:text-accent">
@@ -789,14 +792,14 @@ function TasteIdeas({ slot, chosen, onPick }: { slot: string; chosen: string | n
 }
 
 // Photos of spaces they love, read by the taste model on this device; they never leave it.
-function AddPhotos({ photos, onChange }: { photos: File[]; onChange: (f: File[]) => void }) {
+function AddPhotos({ photos, onChange, text }: { photos: File[]; onChange: (f: File[]) => void; text: { add: string; optional: string; stay: string } }) {
   const input = useRef<HTMLInputElement>(null);
   const urls = useMemo(() => photos.map((f) => URL.createObjectURL(f)), [photos]);
   useEffect(() => () => urls.forEach((u) => URL.revokeObjectURL(u)), [urls]);
   return (
     <div className="mx-auto mt-6 max-w-lg rounded-2xl border border-dashed border-line p-4 text-left">
-      <p className="text-sm font-medium">Add photos of spaces you love <span className="font-normal text-ink-soft">(optional, up to 5)</span></p>
-      <p className="mt-1 text-xs text-ink-soft">Read by Amorphix&apos;s taste model on your device. They never leave it.</p>
+      <p className="text-sm font-medium">{text.add} <span className="font-normal text-ink-soft">{text.optional}</span></p>
+      <p className="mt-1 text-xs text-ink-soft">{text.stay}</p>
       <div className="mt-3 flex flex-wrap gap-2">
         {urls.map((u, i) => (
           <button key={u} type="button" onClick={() => onChange(photos.filter((_, k) => k !== i))} aria-label={`Remove photo ${i + 1}`} className="relative h-16 w-16 overflow-hidden rounded-xl border border-line">

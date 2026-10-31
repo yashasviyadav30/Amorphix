@@ -3,7 +3,7 @@
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { tick } from "@/components/fx/sfx";
 
-// The taste graph: what someone loves (left) is read by Amorphix's taste model into taste words (the hub), which become design
+// The taste map: what someone loves (left) is read by Amorphix's taste model into taste words (the hub), which become design
 // choices (right). The love in focus lights its words and the choices they lead to, with pulses running along the
 // links. Drawn in one 1000 × 560 frame: nodes are HTML placed by percentage, the links one SVG over them.
 

@@ -24,8 +24,8 @@ test("the log is built from the project's own data", () => {
   assert.equal(log[0], "> load project · house · Austin, TX");
   assert.equal(log[1], "> site 12.2 × 18.3 m · 2 floors");
   assert.equal(log[2], "> interview parsed · people, needs");
-  assert.ok(log.includes("> taste graph · place · Ace Hotel New York → decor: post industrial, ambience: moodily dark"));
-  assert.ok(log.includes("> taste graph · culture · Norah Jones"));
+  assert.ok(log.includes("> taste model · place · Ace Hotel New York → decor: post industrial, ambience: moodily dark"));
+  assert.ok(log.includes("> taste model · culture · Norah Jones"));
   assert.ok(log.includes("> style vector · post industrial · moodily dark"));
   assert.ok(log.includes("> matched brands · Pottery Barn"));
   assert.match(log.at(-1)!, /3 plans/);
