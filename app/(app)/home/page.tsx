@@ -289,7 +289,7 @@ function Cockpit({ projects, board, pro }: { projects: Card[]; board: Board; pro
             <div className="mt-5 grid grid-cols-2 gap-4">
               {board.focus?.estimate && (
                 <div>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-ink-soft">Estimate, mid-range</p>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-ink-soft">Estimate, {board.focus.tier}</p>
                   <p className="mt-1 font-serif text-2xl">{board.focus.estimate}</p>
                 </div>
               )}

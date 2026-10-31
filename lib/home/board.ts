@@ -5,7 +5,7 @@ import { waitsFor, type Wait, type WaitInput } from "./waiting.ts";
 import { unreadCount } from "../project/thread.ts";
 import { sitesToday } from "../site/store.ts";
 import { money, sideOf } from "../project/fees.ts";
-import { estimate, isNewBuild, marketOf, money as cost, projectTier } from "../budget/costs.ts";
+import { estimate, isNewBuild, marketOf, money as cost, projectTier, TIER_NAMES } from "../budget/costs.ts";
 import { timeline } from "../budget/timeline.ts";
 
 // Everything the home page shows beyond the project list, fetched together: a drawing of each design, unread
@@ -29,7 +29,7 @@ export type Board = {
   waits: Wait[];
   money: { billed: string | null; received: string | null };
   /** for the project in focus: the estimate and when it opens or is finished */
-  focus: { estimate: string | null; opening: string | null; openingSet: boolean; layout: Layout | null } | null;
+  focus: { estimate: string | null; tier: string; opening: string | null; openingSet: boolean; layout: Layout | null } | null;
 };
 
 const db = () => supabaseAdmin();
@@ -128,7 +128,7 @@ export async function boardFor(userId: string, projects: BoardProject[], day?: s
     const est = layout ? estimate(layout, tier, market, isNewBuild(said ?? {}), first.site?.location) : null;
     const weeks = layout ? timeline(layout, tier, isNewBuild(said ?? {})).weeks : null;
     const opening = first.site?.opening ?? (weeks ? new Date(today.getTime() + weeks * 7 * 86_400_000).toISOString().slice(0, 10) : null);
-    focus = { estimate: est ? `${cost(est.total.low, market)}–${cost(est.total.high, market)}` : null, opening, openingSet: !!first.site?.opening, layout };
+    focus = { estimate: est ? `${cost(est.total.low, market)}–${cost(est.total.high, market)}` : null, tier: TIER_NAMES[tier].toLowerCase(), opening, openingSet: !!first.site?.opening, layout };
   }
 
   return {
