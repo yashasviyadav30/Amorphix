@@ -37,6 +37,8 @@ export function ProsDirectory() {
     const r = q.get("role");
     queueMicrotask(() => {
       setProject(q.get("project"));
+      // opened without a project (a bookmark, the search): say where it comes from instead of waiting forever
+      if (!q.get("project")) setError("Find a pro opens from one of your projects: its Team page, or Find a pro on its overview.");
       if (r === "builder") setRole("builder");
     });
   }, []);
