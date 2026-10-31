@@ -40,9 +40,9 @@ Each task has an owner so both can work at the same time without touching the sa
 
 | # | Task | Done when |
 |---|---|---|
-| Y1 | **Supabase:** new project on your account. Put its keys in `.env.local` (see section 4). Run `node scripts/migrate.ts` | All migrations applied, `npm run dev` opens the landing page |
-| Y2 | **YugabyteDB:** free cluster on YugabyteDB Aeon. Enable pgvector (`CREATE EXTENSION vector;`). Put `YUGABYTE_URL` in `.env.local` | `psql "$YUGABYTE_URL" -c "select 1"` works |
-| Y3 | **Gemini key** from a new Google Cloud project on your account: `GOOGLE_GENERATIVE_AI_API_KEY` | `npm run dev`, the interview answers |
+| Y1 | ✅ **Supabase:** new project on your account. Put its keys in `.env.local` (see section 4). Run `node scripts/migrate.ts` | All migrations applied, `npm run dev` opens the landing page |
+| Y2 | ✅ **YugabyteDB:** free cluster on YugabyteDB Aeon. Enable pgvector (`CREATE EXTENSION vector;`). Put `YUGABYTE_URL` in `.env.local` | `psql "$YUGABYTE_URL" -c "select 1"` works |
+| Y3 | ✅ **Gemini key** from a new Google Cloud project on your account: `GOOGLE_GENERATIVE_AI_API_KEY` | `npm run dev`, the interview answers |
 | Y4 | **Vercel:** import the repo on your account, add every key from `.env.local` as environment variables | The deploy URL opens |
 | Y5 | **Demo world:** run the seed scripts against the new database (`scripts/demo-world.ts`, then `scripts/seed-demo.ts`) | `/demo` opens the tour |
 | Y6 | **End-to-end test** on the deploy, as each person (owner, architect, builder, client) and on a phone; write what breaks into section 3 | Every stop of the tour and a fresh design work |
@@ -70,6 +70,14 @@ Each task has an owner so both can work at the same time without touching the sa
 ## 3. Bugs and notes from testing
 
 (Yashasvi adds here while testing: what, where, how to repeat it.)
+
+- 31 Oct: keys in place; Supabase has all 16 migrations (26 tables), YugabyteDB connects with pgvector 0.8.0, Gemini
+  key works. The venue Wi-Fi goes out from two IPs, so the YugabyteDB allow list has the venue range
+  14.139.45.0/24. **Before the Vercel deploy (Y4):** Vercel's IPs change, so the allow list needs 0.0.0.0/0; the
+  password and TLS still protect the database.
+- 31 Oct, fixed: an empty `AMORPHIX_MODEL=` line made the app ask for a model with no name; empty now means the
+  default. `gemini-2.5-flash` is closed to new accounts, so the fallbacks are now gemini-3.5-flash,
+  gemini-3.1-flash-lite, gemini-flash-lite-latest, gemini-flash-latest (checked on the new key).
 
 ---
 

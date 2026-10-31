@@ -43,3 +43,8 @@ test("an agent that calls tools never leads with a lite model", async () => {
   assert.deepEqual(geminiOrder("gemini-3.1-flash-lite", false, ["gemini-3.5-flash"]), ["gemini-3.1-flash-lite", "gemini-3.5-flash"]);
   assert.deepEqual(geminiOrder("gemini-3.5-flash", true, ["gemini-3.5-flash", "gemini-2.5-flash"]), ["gemini-3.5-flash", "gemini-2.5-flash"]);
 });
+
+test("an empty model setting, as in a copied template, means the default", () => {
+  assert.deepEqual(route({ AMORPHIX_MODEL: "", GOOGLE_GENERATIVE_AI_API_KEY: "k" }), { via: "google", model: "gemini-3.5-flash" });
+  assert.deepEqual(route({ AMORPHIX_MODEL: "  ", GOOGLE_GENERATIVE_AI_API_KEY: "k" }), { via: "google", model: "gemini-3.5-flash" });
+});

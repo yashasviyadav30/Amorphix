@@ -10,7 +10,8 @@ import { wrapLanguageModel, type LanguageModel } from "ai";
 export type Route = { via: "google" | "anthropic" | "gateway"; model: string };
 
 export function route(env: Record<string, string | undefined> = process.env): Route {
-  const id = env.AMORPHIX_MODEL ?? "google/gemini-3.5-flash";
+  // An empty value (a copied template) means the default, not a model with no name.
+  const id = env.AMORPHIX_MODEL?.trim() || "google/gemini-3.5-flash";
   const [provider, ...rest] = id.split("/");
   const model = rest.join("/");
   if (provider === "google" && env.GOOGLE_GENERATIVE_AI_API_KEY) return { via: "google", model };
@@ -20,7 +21,7 @@ export function route(env: Record<string, string | undefined> = process.env): Ro
 
 // Gemini models to fall back to, in order, when the chosen one is out of quota. Each free-tier model has its own
 // daily quota, so a busy day on one (evals, a demo) doesn't stop the interview. AMORPHIX_FALLBACK_MODELS overrides.
-const GEMINI_FALLBACKS = ["gemini-3.5-flash", "gemini-3.1-flash-lite", "gemini-2.5-flash"];
+const GEMINI_FALLBACKS = ["gemini-3.5-flash", "gemini-3.1-flash-lite", "gemini-flash-lite-latest", "gemini-flash-latest"];
 
 /**
  * A quota, rate-limit or "too busy right now" error: worth trying another model. Anything else (a bad request, a bad

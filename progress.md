@@ -6,6 +6,10 @@ Newest first. Each entry is what was done that day, and how it was checked.
 
 ## 31 October: set-up at hackCBS 9.0
 
+- **Keys and databases connected:** Supabase with all migrations, YugabyteDB with pgvector, a Gemini key; each one
+  checked with a live call. Two fixes from that: an empty model setting now means the default model, and the Gemini
+  fallbacks skip a model closed to new accounts (tested).
+
 - **Style from photos, on the device (V2):** `lib/taste/clip.ts` runs CLIP in the browser (transformers.js), so photos
   never leave the device; `lib/taste/name.ts` names a style from its strongest looks (tested). The style quiz at
   `/quiz` is now photo-based: add up to 5 photos, the model downloads once with a progress bar, and a style card
