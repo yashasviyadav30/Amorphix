@@ -47,7 +47,7 @@ test("prices follow the tier and the market", () => {
 });
 
 test("a catalogue brand keeps its price level and what it makes; a matched brand says what it matched", () => {
-  const e = { id: "lamp", name: "Lamp Co", level: 3 as const, makes: ["lighting"], aesthetic: [], prompt: "" };
+  const e = { id: "lamp", site: "lampco.com", name: "Lamp Co", level: 3 as const, makes: ["lighting"], aesthetic: [], prompt: "" };
   const p = { taste_signals: [{ entityId: "film", name: "A Film", layer: 3 as const }], taste: { tags: [], brands: [{ id: "lamp", name: "Lamp Co", affinity: 0.8, aesthetic: [], because: [{ entityId: "film", score: 0.4 }] }] } };
   const info = brandInfo(e, p);
   assert.equal(info.level, 3);

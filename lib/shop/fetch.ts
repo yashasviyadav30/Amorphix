@@ -6,7 +6,7 @@ import { choicesOf, type Ticked } from "../green/improve.ts";
 import { marketOf, projectTier, type Tier } from "../budget/costs.ts";
 import { tasteTier, type PriceSignal } from "../budget/tier.ts";
 import { creditOf } from "../design/trail.ts";
-import { BRANDS, makesOf, type BrandEntry } from "../taste/brands.ts";
+import { BRANDS, logoOf, makesOf, type BrandEntry } from "../taste/brands.ts";
 import { alternatives, brandFor, PIECES, piecesOf, priceEach, type BrandInfo, type Line } from "./list.ts";
 
 // Builds the shopping list from Amorphix's brand catalogue: the brands closest to their taste with what each makes
@@ -24,6 +24,8 @@ export function brandInfo(e: BrandEntry, p: Pick<Project, "taste_signals" | "tas
   return {
     id: e.id,
     name: e.name,
+    image: logoOf(e),
+    site: e.site,
     level: e.level,
     products: makesOf(e),
     loved,

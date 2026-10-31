@@ -18,6 +18,8 @@ export type BrandInfo = {
   /** A store of this brand checked to be in their city, and the brand's official Instagram handle. */
   store?: { name: string; address: string } | null;
   instagram?: string;
+  /** The brand's own website, e.g. "ikea.com". */
+  site?: string;
 };
 
 const WORD = (s: string) => s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").split(/[^a-z0-9]+/).filter((w) => w && w !== "the" && w !== "and");

@@ -15,13 +15,15 @@ import { mapsLink } from "./GreenAndTime";
 const dollars = (b: BrandInfo) => (b.level ? "$".repeat(b.level) : "");
 const why = (b: BrandInfo) => (b.loved ? "you love it" : b.via.length ? `matched to ${b.via.slice(0, 2).join(" and ")}` : "matched to your taste");
 
-/** Where a brand's link goes: its store in their city (checked), else its official Instagram, else a web search. */
+/** Where a brand's link goes: its store in their city (checked), else its official Instagram, else its website. */
 const linkOf = (b: BrandInfo) =>
   b.store
     ? { href: mapsLink(b.store.name, b.store.address), says: `Store near you: ${b.store.name.split("|")[0].trim()}` }
     : b.instagram
       ? { href: `https://www.instagram.com/${encodeURIComponent(b.instagram)}/`, says: "Not sold near you · see their work on Instagram" }
-      : { href: `https://www.google.com/search?q=${encodeURIComponent(b.name)}`, says: "Find it online" };
+      : b.site
+        ? { href: `https://www.${b.site}/`, says: `Shop at ${b.site}` }
+        : { href: `https://www.google.com/search?q=${encodeURIComponent(b.name)}`, says: "Find it online" };
 
 function BrandLink({ b, className, children }: { b: BrandInfo; className: string; children: React.ReactNode }) {
   const l = linkOf(b);
