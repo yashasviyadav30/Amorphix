@@ -1,6 +1,6 @@
 # Amorphix
 
-**An AI architect that learns your taste, designs the whole space around you, and stays with the project until you move in.**
+**An AI architect that learns your taste, designs the whole space around you, and stays with the project until you move in.** Powered by Albo AI Research Lab.
 
 Show Amorphix the places and rooms you love and tell it how you live. Its own ML models read the taste behind them, and Amorphix turns it into a style, three floor plans with honest trade-offs, a 3D walkthrough by day and night, a budget in your currency, a shopping list, a drawings pack, and a shared project your architect, client and builder run together: review, change requests, fees, the building site, snags, handover and warranty.
 

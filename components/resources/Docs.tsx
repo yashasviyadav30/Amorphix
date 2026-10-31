@@ -44,7 +44,7 @@ const SECTIONS: Section[] = [
     body: (
       <>
         <p>
-          Amorphix is an AI architect. You talk to it about who you are and what you love; it reads your taste through Amorphix's taste model&apos;s taste graph and designs your space from it: a floor plan, a 3D walkthrough by day and night, a budget in your currency, a shopping list and a timeline. Then it stays with the project through review, approval and building.
+          Amorphix is an AI architect. You talk to it about who you are and what you love; it reads your taste with its own taste model and designs your space from it: a floor plan, a 3D walkthrough by day and night, a budget in your currency, a shopping list and a timeline. Then it stays with the project through review, approval and building.
         </p>
         <Steps
           items={[

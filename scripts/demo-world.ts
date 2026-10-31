@@ -9,7 +9,8 @@ import { createClient } from "@supabase/supabase-js";
 import { signUser } from "../lib/auth/guest.ts";
 import { phaseSplit } from "../lib/project/fees.ts";
 import { ANA, DEMO_EMAIL, DEMO_ROLES, MAYA, PARKS, PEOPLE, SAM, TITLES, type DemoRole } from "../lib/demo/story.ts";
-import type { Answers } from "../lib/interview/script.ts";
+import type { Answers, TastePick } from "../lib/interview/script.ts";
+import { tasteFor } from "./taste-node.ts";
 
 const BASE = process.argv[2] ?? "http://localhost:3000";
 const db = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!, { auth: { persistSession: false } });
@@ -58,6 +59,12 @@ async function designed(as: DemoRole, id: string) {
   }
 }
 const log = (s: string) => console.log(new Date().toISOString().slice(11, 19), s);
+/** The taste from a person's three picks, read the way the interview reads it (descriptions, CLIP, the taste engine). */
+async function tasteOf(a: Answers) {
+  const names = (["place", "brand", "media"] as const).map((k) => (a[k] as TastePick).name);
+  const { signals, taste } = await tasteFor(names);
+  return { signals, profile: taste };
+}
 
 // The old demo world goes first (projects cascade to everything on them; Mike's crew is his own)
 const old = must(await db.from("projects").select("id").in("owner_id", [ids.lena, ids.sam, ids.maya, ids.mike])) as { id: string }[];
@@ -69,7 +76,7 @@ log(`cleared ${old.length} old demo projects`);
 async function lenasClient(name: string, answers: Answers, title: string, client?: DemoRole) {
   const { id, token } = await call<{ id: string; token?: string }>("lena", "POST", "/api/clients", { name, spaceType: answers.type, city: answers.city, link: !!client });
   if (client) await call(client, "POST", `/api/join/${token}`);
-  await call(client ?? "lena", "POST", "/api/interview", { answers, lang: "en", projectId: id });
+  await call(client ?? "lena", "POST", "/api/interview", { answers, lang: "en", projectId: id, taste: await tasteOf(answers) });
   must(await db.from("projects").update({ title }).eq("id", id));
   log(`${title}: designing`);
   await designed("lena", id);
@@ -181,7 +188,7 @@ await call("mike", "POST", `/api/projects/${ana}/movein`, { op: "pack", warranty
 log("Ana's apartment: in its last week");
 
 // 4. Sam's café in Brooklyn: Sam's own project, paid for
-const { id: sam } = await call<{ id: string }>("sam", "POST", "/api/interview", { answers: SAM, lang: "en" });
+const { id: sam } = await call<{ id: string }>("sam", "POST", "/api/interview", { answers: SAM, lang: "en", taste: await tasteOf(SAM) });
 must(await db.from("projects").update({ unlocked_at: new Date().toISOString(), title: TITLES.sam }).eq("id", sam));
 await designed("sam", sam);
 await call("sam", "POST", `/api/projects/${sam}/choose`, { option: 0 });
