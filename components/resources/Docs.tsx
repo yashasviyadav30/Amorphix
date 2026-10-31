@@ -388,7 +388,7 @@ export function Docs() {
       </h1>
       <p className="mt-3 max-w-2xl text-lg text-ink-soft">Guides for each way of using Amorphix, how it turns taste into a design, answers to common questions, and a guide for developers.</p>
 
-      <div className="mt-10 grid gap-10 lg:grid-cols-[14rem_minmax(0,1fr)]">
+      <div className="mt-10 grid grid-cols-[minmax(0,1fr)] gap-10 lg:grid-cols-[14rem_minmax(0,1fr)]">
         <nav aria-label="Contents" className="lg:sticky lg:top-24 lg:self-start">
           {/* on a phone the contents scroll sideways above the text */}
           <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-2 lg:mx-0 lg:block lg:space-y-6 lg:overflow-visible lg:px-0">
