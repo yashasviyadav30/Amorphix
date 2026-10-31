@@ -153,7 +153,7 @@ export function CheckPlan({ id, imported, units, onDone }: Props) {
               <span className="text-ink-soft">{units === "imperial" ? "ft" : "m"}, width across the front by depth</span>
             </div>
             <label className="mt-4 block">
-              <span className="text-sm">Where is it? Costs, stores and the local taste come from here.</span>
+              <span className="text-sm">Where is it? Costs come from here.</span>
               <input value={location} onChange={(e) => setLocation(e.target.value)} placeholder="City, e.g. Austin, TX or Brooklyn, NY" autoComplete="address-level2" className="mt-1 w-full rounded-xl border border-line bg-paper-raised px-3 py-2" />
             </label>
           </section>

@@ -84,7 +84,7 @@ export const lockedSteps = (unlocked: boolean): string[] => (unlocked ? [] : ["b
  */
 export const OPEN_FOR_JUDGING = true;
 
-/** The one-time price to unlock a project: businesses get more (neighbourhood read, more rooms), so pay more. */
+/** The one-time price to unlock a project: businesses get more (how the place runs, more rooms), so pay more. */
 export const unlockPrice = (spaceType: string | null | undefined) => (["cafe", "office", "shop", "hotel"].includes(spaceType ?? "") ? 299 : 149);
 
 /**

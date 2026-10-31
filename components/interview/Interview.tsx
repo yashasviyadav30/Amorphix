@@ -17,6 +17,7 @@ import { MAYA } from "@/lib/demo/story";
 import { tourGo } from "@/components/demo/JudgeBar";
 import { VoiceMode, type VoiceState } from "./VoiceMode";
 import { useTaste } from "./useTaste";
+import { QUIZ_PHOTOS } from "@/lib/quiz/picks";
 
 const LANG_KEY = "amorphix-lang";
 
@@ -75,6 +76,17 @@ export function Interview() {
     return () => clearTimeout(go);
   }, [projectId, router]);
   const [photos, setPhotos] = useState<File[]>([]);
+  // photos brought from the style quiz ("Design your space") start the interview's taste
+  useEffect(() => {
+    try {
+      const saved = JSON.parse(sessionStorage.getItem(QUIZ_PHOTOS) ?? "[]") as string[];
+      sessionStorage.removeItem(QUIZ_PHOTOS);
+      if (!saved.length) return;
+      Promise.all(saved.map(async (url, i) => new File([await (await fetch(url)).blob()], `photo-${i + 1}.jpg`, { type: "image/jpeg" })))
+        .then(setPhotos)
+        .catch(() => {});
+    } catch {}
+  }, []);
   // The judges' replay (/start?demo=1): Maya's answers play themselves, at 2x unless slowed to 1x; nothing is saved.
   const [replay, setReplay] = useState(false);
   const [speed, setSpeed] = useState(2);

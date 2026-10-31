@@ -6,12 +6,13 @@ import { Decode } from "@/components/fx/Decode";
 import { Scanning } from "@/components/fx/Motion";
 import { chime, ok, tick, whoosh } from "@/components/fx/sfx";
 import type { Profile } from "@/lib/taste/types";
+import { QUIZ_PHOTOS } from "@/lib/quiz/picks";
 
 // What's your space style: a few photos of rooms and places you love, read on your own device by Amorphix's taste
 // model (CLIP), then a style card: its name, the words it's made of with the photo each came from, and the brands
 // closest to it. "Design your space" carries the taste into the full interview.
 
-export const TASTE_KEY = "amorphix-photo-taste";
+
 const MAX = 5;
 type Card = { style: string; profile: Profile; photos: string[] };
 
@@ -77,10 +78,16 @@ export function Quiz() {
     setTimeout(() => setCopied(false), 1600);
   };
 
-  const design = () => {
+  const design = async () => {
     tick();
     try {
-      if (card) sessionStorage.setItem(TASTE_KEY, JSON.stringify(card.profile));
+      const read = (f: File) => new Promise<string>((ok, no) => {
+        const r = new FileReader();
+        r.onload = () => ok(String(r.result));
+        r.onerror = no;
+        r.readAsDataURL(f);
+      });
+      sessionStorage.setItem(QUIZ_PHOTOS, JSON.stringify(await Promise.all(files.map(read))));
     } catch {}
     location.assign("/start");
   };
