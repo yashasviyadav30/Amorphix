@@ -55,10 +55,11 @@ export function TasteBand() {
               animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               exit={{ opacity: 0, y: -8, filter: "blur(4px)" }}
               transition={{ duration: 0.35 }}
-              className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-5"
+              className="flex flex-col gap-2.5"
             >
-              <div className="flex shrink-0 flex-wrap items-center gap-2">
-                <span className="mr-1 text-xs text-ink-soft">{r.space}:</span>
+              {/* the loves, the model reading them, the style it names */}
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+                <span className="text-xs text-ink-soft">{r.space}:</span>
                 {r.loves.map((name, n) => (
                   <span key={name} className="flex items-center gap-2">
                     {n > 0 && <span className="text-ink-soft">+</span>}
@@ -68,31 +69,26 @@ export function TasteBand() {
                     </span>
                   </span>
                 ))}
+                <span aria-hidden className="relative hidden h-px w-14 shrink-0 overflow-hidden bg-line sm:block">
+                  {!still && <motion.span className="absolute top-0 h-px w-6 bg-accent shadow-[0_0_8px_var(--accent)]" initial={{ left: "-30%" }} animate={{ left: "110%" }} transition={{ duration: 1.1, repeat: Infinity, ease: "linear" }} />}
+                </span>
+                <span className="font-serif text-2xl leading-none">{r.style}</span>
               </div>
-
-              {/* the model reading them */}
-              <div aria-hidden className="relative hidden h-px w-16 shrink-0 overflow-hidden bg-line sm:block">
-                {!still && <motion.span className="absolute top-0 h-px w-6 bg-accent shadow-[0_0_8px_var(--accent)]" initial={{ left: "-30%" }} animate={{ left: "110%" }} transition={{ duration: 1.1, repeat: Infinity, ease: "linear" }} />}
-              </div>
-
-              <div className="min-w-0 flex-1">
-                <p className="font-serif text-2xl leading-none">{r.style}</p>
-                <ul className="mt-2 flex flex-wrap gap-1.5">
-                  {r.words.map((w, n) => (
-                    <motion.li
-                      key={w.word}
-                      initial={still ? false : { opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: 0.25 + n * 0.08 }}
-                      className="rounded-full border border-accent/30 bg-accent/5 px-2.5 py-0.5 font-mono text-[11px] text-accent"
-                    >
-                      {w.word}
-                      {w.from && <span className="ml-1 text-ink-soft">· {w.from}</span>}
-                    </motion.li>
-                  ))}
-                </ul>
-                {r.brands.length > 0 && <p className="mt-1.5 truncate text-xs text-ink-soft">Nearest brands, by vector search on YugabyteDB: {r.brands.join(" · ")}</p>}
-              </div>
+              <ul className="flex flex-wrap gap-1.5">
+                {r.words.map((w, n) => (
+                  <motion.li
+                    key={w.word}
+                    initial={still ? false : { opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.25 + n * 0.08 }}
+                    className="rounded-full border border-accent/30 bg-accent/5 px-2.5 py-0.5 font-mono text-[11px] text-accent"
+                  >
+                    {w.word}
+                    {w.from && <span className="ml-1 text-ink-soft">· {w.from}</span>}
+                  </motion.li>
+                ))}
+              </ul>
+              {r.brands.length > 0 && <p className="truncate text-xs text-ink-soft">Nearest brands, by vector search on YugabyteDB: {r.brands.join(" · ")}</p>}
             </motion.div>
           </AnimatePresence>
         </div>
