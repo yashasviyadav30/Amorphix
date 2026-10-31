@@ -1,33 +1,21 @@
-import { entitiesById, tagId, type Entity } from "../qloo/api.ts";
-import type { TasteSignal } from "../project/store.ts";
+import { BRANDS } from "../taste/brands.ts";
+import type { Profile } from "../taste/types.ts";
 import { TIERS, type Tier } from "./costs.ts";
 
-// The quality tier a budget starts at, read from the price of what they love: a 4-star hotel, a $$$ brand, a
-// moderately priced café. Only things they named count; a brand Amorphix matched says nothing about their wallet.
+// The quality tier a budget starts at, read from the price of the brands closest to their taste: someone whose taste
+// sits by Restoration Hardware and Good Earth starts higher than someone whose taste sits by IKEA and H&M Home.
 
 export type PriceSignal = { name: string; level: 1 | 2 | 3 | 4; says: string };
-type Props = { price_level?: number; hotel_class?: number };
 
-const WORDS = ["inexpensive", "moderately priced", "pricey", "very expensive"];
 const clamp = (n: number) => Math.min(4, Math.max(1, Math.round(n))) as 1 | 2 | 3 | 4;
+const LEVEL = new Map(BRANDS.map((b) => [b.id, b.level]));
 
-/** What one entity says about price, if anything. */
-export function priceOf(e: Entity): PriceSignal | null {
-  const p = (e.properties ?? {}) as Props;
-  if (typeof p.hotel_class === "number" && p.hotel_class > 0) {
-    return { name: e.name, level: clamp(p.hotel_class - 1), says: `a ${p.hotel_class}-star hotel` };
-  }
-  if (typeof p.price_level === "number" && p.price_level > 0) {
-    const level = clamp(p.price_level);
-    return { name: e.name, level, says: WORDS[level - 1] };
-  }
-  const tag = e.tags?.map((t) => ({ id: tagId(t), name: t.name ?? "" })).find((t) => t.id.startsWith("urn:tag:price_level:"));
-  const dollars = tag ? (tag.name || tag.id.split(":").pop() || "").match(/^\$+$/)?.[0].length : undefined;
-  if (dollars) {
-    const level = clamp(dollars);
-    return { name: e.name, level, says: `a ${"$".repeat(level)} brand` };
-  }
-  return null;
+/** The price signals of their closest brands, best match first. */
+export function priceSignals(taste: Profile | null, n = 3): PriceSignal[] {
+  return (taste?.brands ?? []).flatMap((b) => {
+    const level = LEVEL.get(b.id);
+    return level ? [{ name: b.name, level, says: `a ${"$".repeat(level)} brand` }] : [];
+  }).slice(0, n);
 }
 
 /** Pure: the tier from price signals (their average level), with the signals behind it. */
@@ -37,9 +25,4 @@ export function tierFrom(signals: PriceSignal[]): { tier: Tier; signals: PriceSi
   return { tier: TIERS[clamp(avg) - 1], signals };
 }
 
-/** Looks up what they love in Amorphix (one cached call) and reads the tier from it. */
-export async function tasteTier(loved: TasteSignal[]): Promise<{ tier: Tier; signals: PriceSignal[] }> {
-  const ids = loved.filter((s) => s.layer !== 3).map((s) => s.entityId);
-  const found = await entitiesById(ids);
-  return tierFrom(found.map(priceOf).filter((s): s is PriceSignal => s !== null));
-}
+export const tasteTier = (taste: Profile | null) => tierFrom(priceSignals(taste));

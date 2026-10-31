@@ -1,5 +1,8 @@
 import type { Brand, Evidence, Family, Layer, Profile, StyleTag } from "./types.ts";
 
+// How a description of a look is put to the image-text model: as a picture of a room, which is what photos are.
+export const asPrompt = (description: string) => `a photo of an interior with ${description}`;
+
 // Amorphix's taste engine. Every photo and every name a person loves is a vector in the same space as the style words
 // (CLIP image and text embeddings). For each one, the words that stand out from the rest (by how many standard
 // deviations they sit above that input's average similarity) become style tags, weighted by how strong the signal is

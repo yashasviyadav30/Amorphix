@@ -1,11 +1,10 @@
 {
   "name": "amorphix",
   "version": "0.1.0",
-  "description": "Amorphix: an AI architect with taste. Agents grounded in the Qloo taste graph design a home or business from what its people love, then run the whole project to the keys.",
+  "description": "Amorphix: an AI architect with taste. Its own taste model reads what people love from names and photos, and agents design a home or business from what its people love, then run the whole project to the keys.",
   "keywords": [
-    "qloo",
-    "qloo-api",
-    "taste-graph",
+    "taste-model",
+    "clip",
     "agentic",
     "ai-agent",
     "eve",

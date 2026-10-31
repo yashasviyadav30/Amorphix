@@ -11,7 +11,6 @@ import type { Profile } from "@/lib/taste/types";
 import type { Tier } from "@/lib/budget/costs";
 import { timeline } from "@/lib/budget/timeline";
 import { addAll, choicesOf, fixes, scoreWith, type Ticked } from "@/lib/green/improve";
-import type { EcoBrand, Nursery } from "@/lib/green/eco";
 import { look } from "@/lib/three/materials";
 
 type Props = {
@@ -33,24 +32,12 @@ type Props = {
 export const mapsLink = (name: string, address: string) =>
   `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent([name, address].filter(Boolean).join(", "))}`;
 
-// How long it takes, and how green it is: a phase chart, then the greenery score with one tip per room, the eco
-// brands in their taste and plant nurseries near the site.
+// How long it takes, and how green it is: a phase chart, then the greenery score with one tip per room.
 export function GreenAndTime({ id, layout, brief, taste, lot, tier, newBuild, said, ticked, onTicked, units }: Props) {
   const [saving, setSaving] = useState<"idle" | "saving" | "saved" | "failed">("idle");
   const still = useReducedMotion();
   const [showDone, setShowDone] = useState(false);
   const [showAll, setShowAll] = useState(false);
-  const [eco, setEco] = useState<{ brands: EcoBrand[]; nurseries: Nursery[] } | null>(null);
-  useEffect(() => {
-    let live = true;
-    fetch(`/api/projects/${id}/green`)
-      .then((r) => (r.ok ? r.json() : { brands: [], nurseries: [] }))
-      .then((b) => live && setEco(b))
-      .catch(() => live && setEco({ brands: [], nurseries: [] }));
-    return () => {
-      live = false;
-    };
-  }, [id]);
 
   const t = useMemo(() => timeline(layout, tier, newBuild), [layout, tier, newBuild]);
   // The same furniture the 3D shows (with any plants they added), so the plants counted are the plants you see.
@@ -213,46 +200,6 @@ export function GreenAndTime({ id, layout, brief, taste, lot, tier, newBuild, sa
           </div>
         )}
 
-        {!eco && (
-          <div className="mt-6">
-            <Scanning label="Finding eco brands in your taste and nurseries near you" />
-          </div>
-        )}
-        {eco && (eco.brands.length > 0 || eco.nurseries.length > 0) && (
-          <Reveal className="mt-6 grid gap-6 md:grid-cols-2">
-            {eco.brands.length > 0 && (
-              <div>
-                <h3 className="font-serif text-xl">Brands in your taste that care</h3>
-                <ul className="mt-2 space-y-2 text-sm">
-                  {eco.brands.slice(0, 5).map((b) => (
-                    <li key={b.name}>
-                      <span className="font-medium">{b.name}</span>
-                      <span className="text-ink-soft">{b.loved ? " · you love it" : b.via.length ? ` · matched to ${b.via.slice(0, 2).join(" and ")}` : ""}</span>
-                      <p className="text-ink-soft">{b.does.join(", ")}</p>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            {eco.nurseries.length > 0 && (
-              <div>
-                <h3 className="font-serif text-xl">Plant nurseries near you</h3>
-                <p className="text-xs text-ink-soft">Ranked for your taste.</p>
-                <ul className="mt-2 space-y-2 text-sm">
-                  {eco.nurseries.map((n) => (
-                    <li key={n.name}>
-                      <a href={mapsLink(n.name, n.address)} target="_blank" rel="noopener noreferrer" className="group block rounded-lg p-1 -m-1 hover:bg-paper">
-                        <span className="font-medium group-hover:underline">{n.name}</span>
-                        {n.address && <p className="text-ink-soft">{n.address}</p>}
-                        <span className="text-xs text-leaf">Open in Google Maps ↗</span>
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </Reveal>
-        )}
       </section>
       </HudCard>
     </>

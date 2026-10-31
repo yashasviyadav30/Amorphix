@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import type { Candidate } from "@/lib/interview/logic";
 import { Decode } from "@/components/fx/Decode";
 import { PlanSvg } from "@/components/plan/PlanSvg";
 import { validate } from "@/lib/layout/validate";
 import { applyEdits, plainProblem, rescale, type Imported } from "@/lib/plan-import/edits";
 import { blocking, snapPlan } from "@/lib/plan-import/snap";
 import { SLOTS, type Pick, type SlotId } from "@/lib/plan-import/taste";
+import { useTaste } from "@/components/interview/useTaste";
 
 const KINDS: [string, string][] = [
   ["living", "Living room"], ["kitchen", "Kitchen"], ["dining", "Dining"], ["bedroom", "Bedroom"], ["bath", "Bathroom"],
@@ -45,7 +45,8 @@ export function CheckPlan({ id, imported, units, onDone }: Props) {
   const advice = all.filter((e) => !problems.includes(e));
   const rooms = layout.floors.flatMap((f) => f.spaces.filter((s) => s.zone !== "circulation").map((s) => ({ ...s, level: f.level })));
   const picked = SLOTS.filter((s) => picks[s.id]).length;
-  const ready = problems.length === 0 && picked === SLOTS.length && location.trim().length >= 2;
+  const taste = useTaste(SLOTS.flatMap((s) => picks[s.id] ?? []), []);
+  const ready = problems.length === 0 && picked === SLOTS.length && !!taste.result && !taste.reading && location.trim().length >= 2;
 
   const send = async () => {
     setBusy(true);
@@ -57,7 +58,7 @@ export function CheckPlan({ id, imported, units, onDone }: Props) {
           edits: Object.entries(edits).map(([rid, e]) => ({ id: rid, ...e })),
           answers,
           size: resized ? size : undefined,
-          picks: SLOTS.map((s) => picks[s.id]),
+          taste: { signals: taste.result!.signals, profile: taste.result!.profile },
           location: location.trim(),
         }),
       });
@@ -171,88 +172,52 @@ export function CheckPlan({ id, imported, units, onDone }: Props) {
 
           <section>
             <h2 className="font-serif text-2xl">What do you love?</h2>
-            <p className="mt-1 text-sm text-ink-soft">We style your plan from these, through Amorphix's taste model&apos;s taste data.</p>
+            <p className="mt-1 text-sm text-ink-soft">We style your plan from these. Amorphix&apos;s taste model reads them on your device.</p>
             {SLOTS.map((slot) => (
               <TasteQuestion key={slot.id} slot={slot} onPick={(p) => setPicks((all) => ({ ...all, [slot.id]: p ?? undefined }))} />
             ))}
+            <p aria-live="polite" className="mt-3 text-sm">
+              {taste.failed ? (
+                <span className="text-red-800">Couldn&apos;t read your taste just now. Change an answer to try again.</span>
+              ) : taste.reading ? (
+                <span className="text-ink-soft">Reading your taste…</span>
+              ) : taste.result?.view.family ? (
+                <>
+                  <span className="text-ink-soft">Your style: </span>
+                  <strong>{taste.result.view.family}</strong>
+                  {!!taste.result.view.words?.length && <span className="text-ink-soft"> · {taste.result.view.words.slice(0, 4).map((w) => w.word).join(", ")}</span>}
+                </>
+              ) : null}
+            </p>
           </section>
 
           {error && <p className="rounded-xl border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-900">{error}</p>}
           <button onClick={() => void send()} disabled={!ready || busy} className="w-full rounded-full bg-btn px-8 py-3 text-lg text-btn-ink transition hover:opacity-90 disabled:opacity-40">
             {busy ? "Getting your design ready…" : "Design with my plan"}
           </button>
-          {!ready && !busy && <p className="text-center text-sm text-ink-soft">{problems.length ? "Fix the plan first." : !location.trim() ? "Say where the building is." : `Answer all three, and check each match (${picked} of 3 done).`}</p>}
+          {!ready && !busy && <p className="text-center text-sm text-ink-soft">{problems.length ? "Fix the plan first." : !location.trim() ? "Say where the building is." : `Answer all three (${picked} of 3 done).`}</p>}
         </div>
       </div>
     </main>
   );
 }
 
-type Look = { matches: Candidate[]; hint: string | null } | { error: string };
-
-// One taste question: what the user types is looked up by Amorphix as they pause, and they see what it matched.
-// The closest match of the right kind is used unless they pick another; a vague answer is asked again.
+// One taste question: the name the user types counts once they pause typing.
 function TasteQuestion({ slot, onPick }: { slot: (typeof SLOTS)[number]; onPick: (p: Pick | null) => void }) {
   const [text, setText] = useState("");
-  const [look, setLook] = useState<Look | null>(null);
-  const [chosen, setChosen] = useState<Candidate | null>(null);
-  const q = text.trim();
+  const q = text.replace(/\s+/g, " ").trim();
 
   useEffect(() => {
-    setLook(null);
-    setChosen(null);
-    onPick(null);
-    if (q.length < 2) return;
-    let live = true;
-    const t = setTimeout(async () => {
-      const res = await fetch(`/api/taste?slot=${slot.id}&q=${encodeURIComponent(q)}`).catch(() => null);
-      const body: Look = res ? await res.json().catch(() => ({ error: "Couldn't look that up." })) : { error: "Couldn't look that up. Check your connection." };
-      if (!live) return;
-      setLook(body);
-      if ("matches" in body && body.matches[0]) choose(body.matches[0]);
-    }, 600);
-    return () => {
-      live = false;
-      clearTimeout(t);
-    };
+    if (q.length < 2) return onPick(null);
+    const t = setTimeout(() => onPick({ slot: slot.id, id: `name:${q.toLowerCase()}`, name: q }), 700);
+    return () => clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [q, slot.id]);
 
-  const choose = (c: Candidate) => {
-    setChosen(c);
-    onPick({ slot: slot.id, id: c.entityId, name: c.name });
-  };
-  const describe = (c: Candidate) => [c.kind, c.detail].filter(Boolean).join(" · ");
-
   return (
-    <div className="mt-3">
-      <label className="block">
-        <span className="text-sm">{slot.label}</span>
-        <input value={text} onChange={(e) => setText(e.target.value)} placeholder={`e.g. ${slot.example}`} aria-label={slot.label} className="mt-1 w-full rounded-xl border border-line bg-paper-raised px-3 py-2" />
-      </label>
-      <div aria-live="polite" className="mt-1 text-sm">
-        {q.length >= 2 && !look && <p className="text-ink-soft">Looking it up…</p>}
-        {look && "error" in look && <p className="text-red-800">{look.error}</p>}
-        {look && "matches" in look && !look.matches.length && <p className="text-red-800">{look.hint}</p>}
-        {chosen && (
-          <p>
-            <span className="text-ink-soft">We found: </span>
-            <strong>{chosen.name}</strong> <span className="text-ink-soft">({describe(chosen)})</span>
-          </p>
-        )}
-        {look && "matches" in look && look.matches.length > 1 && (
-          <div className="mt-1 flex flex-wrap items-center gap-2">
-            <span className="text-ink-soft">Not it?</span>
-            {look.matches
-              .filter((m) => m.entityId !== chosen?.entityId)
-              .map((m) => (
-                <button key={m.entityId} type="button" onClick={() => choose(m)} className="rounded-full border border-line px-3 py-1 hover:bg-paper-raised">
-                  {m.name} <span className="text-ink-soft">({describe(m)})</span>
-                </button>
-              ))}
-          </div>
-        )}
-      </div>
-    </div>
+    <label className="mt-3 block">
+      <span className="text-sm">{slot.label}</span>
+      <input value={text} onChange={(e) => setText(e.target.value)} placeholder={`e.g. ${slot.example}`} aria-label={slot.label} className="mt-1 w-full rounded-xl border border-line bg-paper-raised px-3 py-2" />
+    </label>
   );
 }

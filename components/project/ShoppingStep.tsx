@@ -10,18 +10,18 @@ import { CountUp, HudCard, Reveal, Scanning } from "@/components/fx/Motion";
 import { mapsLink } from "./GreenAndTime";
 
 // The shopping list: every piece in the design, a brand in their taste that makes it, a cheaper and a dearer
-// alternative, a rough price at their tier, and furniture stores near the site ranked for their taste.
+// alternative, and a rough price at their tier.
 
 const dollars = (b: BrandInfo) => (b.level ? "$".repeat(b.level) : "");
 const why = (b: BrandInfo) => (b.loved ? "you love it" : b.via.length ? `matched to ${b.via.slice(0, 2).join(" and ")}` : "matched to your taste");
 
-/** Where a brand's link goes: its store in their city (checked), else its official Instagram, else nowhere. */
+/** Where a brand's link goes: its store in their city (checked), else its official Instagram, else a web search. */
 const linkOf = (b: BrandInfo) =>
   b.store
     ? { href: mapsLink(b.store.name, b.store.address), says: `Store near you: ${b.store.name.split("|")[0].trim()}` }
     : b.instagram
       ? { href: `https://www.instagram.com/${encodeURIComponent(b.instagram)}/`, says: "Not sold near you · see their work on Instagram" }
-      : null;
+      : { href: `https://www.google.com/search?q=${encodeURIComponent(b.name)}`, says: "Find it online" };
 
 function BrandLink({ b, className, children }: { b: BrandInfo; className: string; children: React.ReactNode }) {
   const l = linkOf(b);

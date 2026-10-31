@@ -9,7 +9,7 @@ create table if not exists projects (
   status text not null default 'interview' check (status in ('interview', 'designing', 'ready')),
   site jsonb not null default '{}',        -- shell size, floors, location, units
   interview jsonb not null default '{}',   -- what the user told the interviewer, by section
-  taste_signals jsonb not null default '[]', -- Qloo entities the user named: id, name, layer
+  taste_signals jsonb not null default '[]', -- the things the user loves: id, name, layer
   taste jsonb,                             -- the computed style profile
   brief jsonb,
   program jsonb,                           -- rooms the design needs (layout engine input)

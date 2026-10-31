@@ -327,7 +327,7 @@ export const QUESTIONS: Question[] = [
     ],
   },
 
-  // Then the style: three picks from pictures (or typed and matched in Amorphix), after the interview's questions
+  // Then the style: a name for each (typed or tapped) and photos, read on the device, after the interview's questions
   {
     id: "place",
     stage: 3,
@@ -415,7 +415,7 @@ const TYPE_WORD: Record<SpaceType, string> = { house: "house", apartment: "apart
 /**
  * The project the answers describe, in the shape the design step reads: site in metres, and the interview with
  * the same sections and fields the old agent saved (people, needs, living or running, budget). The taste is added
- * by the finish route once Amorphix has confirmed the three picks.
+ * by the finish route from what the device read.
  */
 const US_STATES = "AL AK AZ AR CA CO CT DE DC FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY".split(" ");
 const US_CITIES = /\b(new york|brooklyn|manhattan|queens|los angeles|san francisco|chicago|houston|austin|dallas|seattle|portland|boston|miami|atlanta|denver|phoenix|philadelphia|san diego|nashville|detroit|minneapolis|las vegas|washington|silver lake|echo park|oakland|honolulu)\b/i;

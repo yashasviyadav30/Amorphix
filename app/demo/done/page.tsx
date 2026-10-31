@@ -8,7 +8,7 @@ export const metadata: Metadata = { title: "Thank you · Amorphix" };
 
 // The end of the judges' tour: the story in five lines, then the way to try it on a space of their own.
 const STORY = [
-  ["Taste", "Maya talked about her family and tapped three things she loves. Amorphix turned them into a style: words, materials, brands, art and a playlist, each with its source."],
+  ["Taste", "Maya talked about her family and tapped three things she loves. Amorphix turned them into a style: words, materials and brands, each with its source."],
   ["Design", "Amorphix drew three plans that fit how she lives, then the 3D, a budget in dollars, a shopping list and the drawings for her builder."],
   ["Team", "Lena the architect and Mike the builder worked from the same project: one thread, the quote, the site, every fee and sign-off."],
   ["Keys", "Ana's apartment went from snag list to handover, and Sam's café was read against the people already on its street."],

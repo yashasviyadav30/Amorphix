@@ -237,7 +237,7 @@ export function Features() {
         <Feature delay={0} title="Talk in your language" body="Speak or type in English, हिंदी or Hinglish. Tap answers when you'd rather not type.">
           <Bars />
         </Feature>
-        <Feature delay={0.08} title="Your style, read by Amorphix's taste model" body="Three picks become your style, and every material, colour and piece says which of your loves it came from.">
+        <Feature delay={0.08} title="Your style, read by Amorphix's taste model" body="A few names and photos of what you love become your style, and every material, colour and piece says which of your loves it came from.">
           <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-ink-soft">
             <span className="rounded border border-line px-1.5 py-0.5">film</span>→<span className="rounded border border-accent px-1.5 py-0.5 text-accent">low light</span>→
             <span className="rounded border border-leaf px-1.5 py-0.5 text-leaf">lamps</span>
@@ -322,7 +322,7 @@ function Cube() {
 
 const AUDIENCE = [
   { title: "Homeowners", body: "Planning a new build or a big renovation: see it, change it and price it before anyone builds it, then follow the build." },
-  { title: "Cafés, hotels, shops and offices", body: "Amorphix asks how you run the place, reads your neighbourhood through Amorphix's taste model and plans for the crowd you want." },
+  { title: "Cafés, hotels, shops and offices", body: "Amorphix asks how you run the place and who comes in, and plans for the crowd you want." },
   { title: "Architects and designers", body: "Studio tools: new clients in person or by link, three options on day one, your branding on every drawing, fees by milestone." },
   { title: "Builders", body: "Run the site in Amorphix: phases, crew, materials and photo updates your client can follow, while your costs stay yours." },
 ];

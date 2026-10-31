@@ -1,5 +1,5 @@
 import type { Profile, StyleTag } from "../taste/types.ts";
-import { isComplaint } from "../qloo/words.ts";
+import { isComplaint } from "../taste/words.ts";
 import type { TasteSignal } from "../project/store.ts";
 import type { Layout } from "../layout/schema.ts";
 import type { Brief } from "./brief.ts";

@@ -28,7 +28,7 @@ const GUIDES: Record<string, Tip[]> = {
     { at: 'nav[aria-label="Judges\' tour"]', title: "Back and Next", body: "Beside every page's title, and in the pill at the bottom." },
     { at: "#judge-pill", title: "See it through other eyes", body: "Point at the pill, or tap it, to switch between Maya, Lena the architect, Mike the builder and Sam the café owner." },
   ],
-  start: [{ title: "Tell Amorphix about your space", body: "Type or talk, in any language. About three minutes of questions, then three pictures for your taste, and your design follows." }],
+  start: [{ title: "Tell Amorphix about your space", body: "Type or talk, in any language. About three minutes of questions, then a few things you love, by name or photo, and your design follows." }],
   project: [
     { at: 'nav[aria-label="Progress"]', title: "Your design, step by step", body: "Your style, three plans, the 3D, budget, shopping list and files. Next, top right, moves on; Make changes lets you ask for anything in words." },
   ],

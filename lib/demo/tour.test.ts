@@ -22,11 +22,11 @@ test("switching role keeps the project only when that person is on it", () => {
   assert.equal(switchTo("lena", "/home", ids), "/home");
 });
 
-test("every chapter has stops, in order, and the café's read comes before its 3D", () => {
+test("every chapter has stops, in order, and the café's brief comes before its 3D", () => {
   const starts = chapterStarts();
   assert.deepEqual([...starts].sort((a, b) => a - b), starts);
   assert.ok(starts.every((s) => s > 0));
-  const read = TOUR.findIndex((s) => s.path.includes("#neighbourhood"));
+  const read = TOUR.findIndex((s) => s.as === "sam" && s.path.includes("step=brief"));
   const cafe3d = TOUR.findIndex((s) => s.as === "sam" && s.path.includes("walkthrough"));
   assert.ok(read < cafe3d);
 });

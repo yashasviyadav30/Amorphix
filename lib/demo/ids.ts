@@ -20,7 +20,7 @@ export const VIEW_ONLY = "This is the judges' demo, so it's view only. Sign up f
 
 // What a demo session may still send: the interview's live taste card, and signing out.
 const OPEN = [
-  { method: "POST", path: "/api/interview/taste" },
+  { method: "POST", path: "/api/taste/describe" },
   { method: "DELETE", path: "/api/session" },
 ];
 

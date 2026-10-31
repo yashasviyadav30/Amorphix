@@ -149,11 +149,10 @@ const SECTIONS: Section[] = [
     title: "For business owners",
     body: (
       <>
-        <p>Cafés, offices, shops and hotels get everything a home does, plus two things a business needs.</p>
+        <p>Cafés, offices, shops and hotels get everything a home does, plus what a business needs.</p>
         <Steps
           items={[
             "How you run it: tell Amorphix how the place works (takeaway or table service, the kitchen, how many seats and people) or name a place you love, and the plans are ranked for it.",
-            "The neighbourhood read: the local favourites around your site, the crowd they draw and their decor, so your space fits the street and stands out on it.",
           ]}
         />
       </>
@@ -257,7 +256,7 @@ const SECTIONS: Section[] = [
           {[
             ["The interview", "Amorphix asks about the space and about you, one question at a time, in English, Hindi or Hinglish, typed, tapped or spoken."],
             ["Amorphix's taste model", "The things you name become taste signals. Amorphix returns what they share: decor, ambience, price level, and brands and places that match."],
-            ["The brief", "A style name and its words, a palette, materials and a moodboard, each linked to the taste behind it."],
+            ["The brief", "A style name and its words, a palette and materials, each linked to the taste behind it."],
             ["The plans", "A layout engine fits your rooms to the site three ways and checks each one against building rules."],
             ["3D and moods", "Each room gets a mood and light from the ambience of the places you love, by day and by night."],
             ["Budget and shopping", "Real cost tables for your market, in your currency, and brands at your price level, a tier up and a tier down."],
@@ -293,7 +292,7 @@ const SECTIONS: Section[] = [
     body: (
       <>
         <p>
-          Amorphix is a Next.js app (App Router, React, Tailwind) with three.js for the 3D, Supabase for accounts, data and files, Amorphix&apos;s Insights API for taste, and an AI model for the brief, the room list and changes by chat. The interview is a script that asks one question at a time and never waits on a model; an interviewer agent built with eve (agents/interviewer, with its own tools, instructions and evals) is mounted at /eve/interviewer.
+          Amorphix is a Next.js app (App Router, React, Tailwind) with three.js for the 3D, Supabase for accounts, data and files, its own taste model (CLIP vectors for names and photos, matched to style words and brands) for taste, and an AI model for the brief, the room list and changes by chat. The interview is a script that asks one question at a time and never waits on a model; an interviewer agent built with eve (agents/interviewer, with its own tools, instructions and evals) is mounted at /eve/interviewer.
         </p>
         <Code>{`app/          pages and API routes
 components/   screens; components/fx holds the shared sounds and motion
@@ -313,15 +312,14 @@ npm test                      # unit tests`}</Code>
           <table className="w-full text-left text-sm">
             <tbody className="divide-y divide-line">
               {[
-                ["POST /api/interview", "every answer of the interview: checked, the taste picks confirmed with Amorphix's taste model, the project created"],
+                ["POST /api/interview", "every answer of the interview and the taste read on the device: checked, the project created"],
                 ["POST /api/taste", "names you love → taste signals and taste tags"],
                 ["GET /api/projects/:id", "a project and your role on it"],
                 ["POST /api/projects/:id/design", "brief, three plans and their trade-offs"],
                 ["POST /api/projects/:id/choose", "pick a plan"],
                 ["POST /api/projects/:id/edit", "a change by chat; saves a new version"],
                 ["GET /api/projects/:id/budget", "the budget by room, in local currency"],
-                ["GET /api/projects/:id/shopping", "taste-matched brands and local stores"],
-                ["GET /api/projects/:id/neighbourhood", "the business neighbourhood read"],
+                ["GET /api/projects/:id/shopping", "taste-matched brands at your price level"],
                 ["GET|POST /api/projects/:id/thread", "the project thread"],
                 ["GET|POST /api/projects/:id/site", "phases, crew, materials, updates"],
                 ["GET|POST /api/projects/:id/team", "who is on it, and invite links by role"],
@@ -335,8 +333,7 @@ npm test                      # unit tests`}</Code>
                 ["DELETE /api/projects/:id", "delete a project (owner only)"],
                 ["DELETE /api/account", "delete your account"],
                 ["GET /api/palette", "your projects, for Ctrl+K"],
-                ["GET /api/strip", "the landing page's live Amorphix reads"],
-                ["GET /api/quiz", "the style quiz: three picks → your style"],
+                ["POST /api/taste/describe", "names someone loves → short design descriptions for the taste model"],
                 ["POST /api/email-check", "can this address receive mail?"],
               ].map(([r, d]) => (
                 <tr key={r}>

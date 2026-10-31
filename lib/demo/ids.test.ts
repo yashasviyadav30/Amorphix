@@ -5,7 +5,7 @@ import { DEMO_IDS, refuseDemo } from "./ids.ts";
 test("a demo account can read and see the taste card, but can't change anything", () => {
   const lena = DEMO_IDS.lena;
   assert.equal(refuseDemo(lena, "GET", "/api/projects/x/site"), false);
-  assert.equal(refuseDemo(lena, "POST", "/api/interview/taste"), false);
+  assert.equal(refuseDemo(lena, "POST", "/api/taste/describe"), false);
   assert.equal(refuseDemo(lena, "DELETE", "/api/session"), false);
   for (const [m, p] of [["POST", "/api/projects/x/site"], ["POST", "/api/projects/x/design"], ["DELETE", "/api/account"], ["POST", "/api/projects/x/team"], ["PATCH", "/api/profile"], ["POST", "/api/interview"]])
     assert.equal(refuseDemo(lena, m, p), true, `${m} ${p}`);

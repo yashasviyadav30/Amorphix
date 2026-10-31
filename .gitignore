@@ -28,9 +28,6 @@ npm-debug.log*
 __pycache__/
 .venv/
 
-# Qloo response data must never be in a public repo (hackathon rules)
-.qloo-cache/
-fixtures/qloo/
 .output/
 
 # Local working notes (kept off the public repo)

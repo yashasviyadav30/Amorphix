@@ -1,7 +1,5 @@
-import type { Entity } from "../qloo/api.ts";
-import { layerOf } from "../qloo/taste.ts";
 import type { Profile } from "../taste/types.ts";
-import { isComplaint } from "../qloo/words.ts";
+import { isComplaint } from "../taste/words.ts";
 import type { Project } from "../project/store.ts";
 import { livingMissing, livingOf } from "./living.ts";
 import { runningMissing, runningOf } from "./running.ts";
@@ -22,9 +20,10 @@ const KIND: Record<string, string> = {
   "urn:entity:destination": "destination",
   "urn:entity:brand": "brand",
   "urn:entity:person": "person",
+  culture: "film, show or music",
 };
 
-/** "film", "place", "brand"... for a Amorphix entity type. */
+/** "film", "place", "brand"... for the type a taste signal was saved with. */
 export const kindOf = (type: string | undefined) => KIND[type ?? ""] ?? "other";
 
 // Sides from 6 m (a small studio) to 180 m (a large hotel). Anything else is almost certainly a typo.
@@ -46,16 +45,6 @@ export function sizeFrom(said: string | undefined, width?: number, depth?: numbe
   // The unit the user said wins over the model's guess: "11 by 8 metres" is metres even if the model sent feet.
   const unit = /\b(m|metres?|meters?|mtr)\b/i.test(said ?? "") ? "m" : /\b(ft|feet|foot)\b|'/i.test(said ?? "") ? "ft" : undefined;
   return { width: width ?? (n ? Number(n[1]) : undefined), depth: depth ?? (n ? Number(n[2]) : undefined), ...(unit ? { unit } : {}) };
-}
-
-export type Candidate = { entityId: string; name: string; kind: string; detail: string; layer: 1 | 2 | 3 };
-
-// A short, human description of a Amorphix match, so the user can tell two "Ace Hotel"s apart.
-export function toCandidate(e: Entity): Candidate {
-  const type = e.types?.find((t) => KIND[t]) ?? "";
-  const p = e.properties ?? {};
-  const detail = p.address ?? p.geocode?.city ?? "";
-  return { entityId: e.entity_id, name: e.name, kind: KIND[type] ?? "other", detail, layer: layerOf(e) };
 }
 
 export const MIN_TASTE = 3;

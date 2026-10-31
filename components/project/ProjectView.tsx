@@ -25,10 +25,6 @@ import { CheckPlan } from "@/components/import/CheckPlan";
 import { importedOf } from "@/lib/plan-import/edits";
 import { creditOf, sayCredit, styleWords, tasteTrail } from "@/lib/design/trail";
 import { TasteTrail } from "./TasteTrail";
-import { Moodboard } from "./Moodboard";
-import { Neighbourhood } from "./Neighbourhood";
-import { ArtAndSound } from "./ArtAndSound";
-import { NEAR } from "@/lib/neighbourhood/read";
 import { BudgetStep } from "./BudgetStep";
 import { ShoppingStep } from "./ShoppingStep";
 import type { Tier } from "@/lib/budget/costs";
@@ -267,7 +263,7 @@ export function ProjectView({ id }: { id: string }) {
   // the 3D from outside are free; the rest opens with unlocking).
   const LOCKED: Partial<Record<StepId, string>> = {
     budget: "The budget opens here: what your design costs, room by room, in your currency.",
-    shop: "The shopping list opens here: pieces from brands in your taste, and stores near you.",
+    shop: "The shopping list opens here: pieces from brands in your taste, each at your price level.",
     workspace: "Make changes opens here: change rooms by tapping or typing, and the plan, 3D and budget follow.",
     drawings: "Share and export opens here: the drawings pack (PDF and CAD), sketches and the walkthrough video.",
   };
@@ -562,20 +558,6 @@ function BriefStep({ p, brief: b, whose }: { p: View; brief: Brief; whose: strin
           </motion.li>
         ))}
       </ul>
-
-      <Reveal>
-        <Moodboard id={p.id} />
-      </Reveal>
-
-      {p.space_type && NEAR[p.space_type] && p.site.location && (
-        <Reveal>
-          <Neighbourhood id={p.id} />
-        </Reveal>
-      )}
-
-      <Reveal>
-        <ArtAndSound id={p.id} />
-      </Reveal>
 
       <div className="mt-10 grid gap-6 md:grid-cols-3">
         <HudCard className="p-5">

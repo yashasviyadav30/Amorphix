@@ -1,9 +1,4 @@
-import { defineState } from "eve/context";
-import type { Entity } from "../../../../lib/qloo/api.ts";
 import { bindSession, createProject, projectForSession, type Project } from "../../../../lib/project/store.ts";
-
-// Amorphix entities found during this conversation, by id, so add_taste can use their full tags.
-export const candidates = defineState<Record<string, Entity>>("interviewer.candidates", () => ({}));
 
 type SessionCtx = { session: { id: string; auth: { initiator?: { principalId?: string; authenticator?: string } | null } } };
 

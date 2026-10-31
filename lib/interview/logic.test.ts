@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { cardWords, missingForDesign, profileSummary, siteSizeProblem, toCandidate, toMetres } from "./logic.ts";
+import { cardWords, missingForDesign, profileSummary, siteSizeProblem, toMetres } from "./logic.ts";
 import type { Project } from "../project/store.ts";
 import type { Profile } from "../taste/types.ts";
 
@@ -12,13 +12,6 @@ const project = (over: Partial<Project> = {}): Project => ({
 test("feet convert to metres", () => {
   assert.equal(toMetres(10, "m"), 10);
   assert.ok(Math.abs(toMetres(40, "ft") - 12.192) < 1e-9);
-});
-
-test("candidates describe the match in plain words", () => {
-  const c = toCandidate({ entity_id: "e", name: "A hotel", types: ["urn:entity:place"], properties: { address: "1 Main St, Austin" } });
-  assert.deepEqual(c, { entityId: "e", name: "A hotel", kind: "place", detail: "1 Main St, Austin", layer: 1 });
-  assert.equal(toCandidate({ entity_id: "f", name: "A film", types: ["urn:entity:movie"] }).kind, "film");
-  assert.equal(toCandidate({ entity_id: "x", name: "?", types: [] }).kind, "other");
 });
 
 test("a fresh project is missing everything", () => {

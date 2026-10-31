@@ -1,15 +1,16 @@
 import { z } from "zod";
 import { ownedProject, publicProject } from "@/lib/auth/request";
 import { confirmImport } from "@/lib/plan-import/flow";
+import { TasteBody } from "@/lib/taste/schema";
 
-// Amorphix look-ups for a few loves, then the layout engine for two alternatives.
+// The corrected plan and the taste read on the device, then the layout engine for two alternatives.
 export const maxDuration = 120;
 
 const Body = z.object({
   edits: z.array(z.object({ id: z.string().max(80), name: z.string().max(60).optional(), kind: z.string().max(30).optional() })).max(60),
   answers: z.record(z.string().max(300), z.string().max(300)).optional(),
   size: z.object({ width: z.number().positive().max(2000), depth: z.number().positive().max(2000) }).optional(),
-  picks: z.array(z.object({ slot: z.enum(["place", "brand", "media"]), id: z.string().max(120), name: z.string().min(1).max(200) })).length(3),
+  taste: TasteBody,
   location: z.string().trim().min(2).max(100),
   title: z.string().max(60).optional(),
 });

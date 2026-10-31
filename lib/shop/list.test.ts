@@ -45,20 +45,14 @@ test("prices follow the tier and the market", () => {
   assert.ok(priceEach("sofa", "mid", marketOf("Pune")) / 88 < priceEach("sofa", "mid", us), "cheaper in India in dollars");
 });
 
-test("a brand's tags become its price level and what it makes; a matched brand says what it matched", () => {
-  const e = {
-    entity_id: "lamp",
-    name: "Lamp Co",
-    tags: [
-      { tag_id: "urn:tag:price_level:qloo:_", name: "$$$" },
-      { tag_id: "urn:tag:product_service:qloo:lighting_fixtures", name: "Lighting Fixtures" },
-    ],
-  };
+test("a catalogue brand keeps its price level and what it makes; a matched brand says what it matched", () => {
+  const e = { id: "lamp", name: "Lamp Co", level: 3 as const, makes: ["lighting"], aesthetic: [], prompt: "" };
   const p = { taste_signals: [{ entityId: "film", name: "A Film", layer: 3 as const }], taste: { tags: [], brands: [{ id: "lamp", name: "Lamp Co", affinity: 0.8, aesthetic: [], because: [{ entityId: "film", score: 0.4 }] }] } };
   const info = brandInfo(e, p);
   assert.equal(info.level, 3);
-  assert.deepEqual(info.products, ["lighting_fixtures"]);
+  assert.deepEqual(info.products, ["lighting"]);
   assert.deepEqual([info.loved, info.via, info.affinity], [false, ["A Film"], 0.8]);
+  assert.equal(brandInfo(e, { taste_signals: [{ entityId: "name:lamp co", name: "lamp co", layer: 2 }], taste: null }).loved, true, "named, in any case");
 });
 
 test("a store only counts if it is the brand's and in their city", async () => {

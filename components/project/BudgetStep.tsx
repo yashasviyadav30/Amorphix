@@ -95,11 +95,11 @@ export function BudgetStep({ tier, onTier, id, layout, location, interview, brie
         <h2 id="tier" className="font-serif text-2xl">Quality</h2>
         {taste === null ? (
           <div className="mt-2">
-            <Scanning label="Reading the price of what you love from Amorphix" />
+            <Scanning label="Reading the price of the brands closest to your taste" />
           </div>
         ) : taste.signals.length ? (
           <p className="mt-2 text-sm">
-            Your taste points to <strong>{TIER_NAMES[taste.tier].toLowerCase()}</strong>: you love{" "}
+            Your taste points to <strong>{TIER_NAMES[taste.tier].toLowerCase()}</strong>: it sits closest to{" "}
             {taste.signals.map((s, i) => (
               <span key={s.name}>
                 {i > 0 && (i === taste.signals.length - 1 ? " and " : ", ")}
@@ -109,7 +109,7 @@ export function BudgetStep({ tier, onTier, id, layout, location, interview, brie
             .
           </p>
         ) : (
-          <p className="mt-2 text-sm text-ink-soft">Nothing you love tells us a price level, so we started at mid-range.</p>
+          <p className="mt-2 text-sm text-ink-soft">Your taste doesn't point to a price level yet, so we started at mid-range.</p>
         )}
         {/* the estimate starts at the quality they told us, when they told us one */}
         {said.length > 0 && start !== taste?.tier && (

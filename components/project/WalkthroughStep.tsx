@@ -9,7 +9,6 @@ import { PlanSvg } from "@/components/plan/PlanSvg";
 import { look as lookOf } from "@/lib/three/materials";
 import { exteriorOf, sayExterior } from "@/lib/three/exterior";
 import { moodsFor, type Mood } from "@/lib/three/mood";
-import { useArtAndSound } from "./ArtAndSound";
 import type { Item } from "@/lib/three/furniture";
 import { PIECES } from "@/lib/shop/list";
 import type { Shopping } from "@/lib/shop/fetch";
@@ -90,8 +89,6 @@ export function WalkthroughStep({
   const moods = useMemo(() => moodsFor(layout, taste?.tags), [layout, taste]);
   const here = layout.floors.flatMap((f) => f.spaces).find((s) => s.name === room);
   const mood = here ? moods[here.id] : undefined;
-  // A playlist for the walk, matched to what they love (Q10).
-  const sound = useArtAndSound(projectId);
 
   // Download the walk as a video: the walk starts again from the street and the browser records the 3D canvas
   // until it ends, then saves the file. No server involved.
@@ -195,19 +192,6 @@ export function WalkthroughStep({
             {style.because.length > 0 && <> because you love {style.because.join(", ")}</>}
             {style.matched.length > 0 && <>{style.because.length ? ", and" : ", from"} brands that match your taste like {style.matched.join(" and ")}</>}.
           </p>
-          {!!sound?.music.length && (
-            <p className="text-sm text-ink-soft">
-              ♪ A playlist for this walk:{" "}
-              {sound.music.slice(0, 4).map((m, i) => (
-                <span key={m.name}>
-                  {i > 0 && ", "}
-                  <a href={m.listen} target="_blank" rel="noreferrer" onClick={() => tick()} className="text-accent underline-offset-2 hover:underline">
-                    {m.name}
-                  </a>
-                </span>
-              ))}
-            </p>
-          )}
           {ex.because.length > 0 && (
             <p className="text-sm text-ink-soft">
               Outside: <span className="font-medium text-ink">{sayExterior(ex).toLowerCase()}</span>, from {ex.because.join(", ")}.

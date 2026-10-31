@@ -74,22 +74,3 @@ test("timeline: phases in order, a new build takes far longer, premium pieces ta
   const apt = timeline(plan("apartment"), "mid").weeks;
   assert.ok(apt >= 8 && apt <= 26, `${apt} weeks`);
 });
-
-test("eco brands: only home brands with real initiatives, loved first, matched ones say what they matched", async () => {
-  const { ecoBrands } = await import("./eco.ts");
-  const p = {
-    taste_signals: [{ entityId: "ikea", name: "IKEA", layer: 2 as const }, { entityId: "film", name: "A Film", layer: 3 as const }],
-    taste: { tags: [], brands: [{ id: "lamp", name: "Lamp Co", affinity: 0.9, aesthetic: [], because: [{ entityId: "film", score: 0.4 }] }] },
-  };
-  const brand = (id: string, name: string, eco: string[], type = "retail_brand") => ({
-    entity_id: id,
-    name,
-    types: ["urn:entity:brand"],
-    tags: [{ tag_id: `urn:tag:brand_type:qloo:${type}` }, ...eco.map((n) => ({ tag_id: `urn:tag:sustainability_initiative:qloo:${n}`, name: n }))],
-  });
-  const out = ecoBrands(p, [brand("lamp", "Lamp Co", ["Recycled Materials"]), brand("ikea", "IKEA", ["Circular Economy Design"]), brand("plain", "Plain", []), brand("app", "App", ["Green Hosting"], "service_brand")]);
-  assert.deepEqual(out.map((b) => [b.name, b.loved, b.via, b.does]), [
-    ["IKEA", true, [], ["Circular Economy Design"]],
-    ["Lamp Co", false, ["A Film"], ["Recycled Materials"]],
-  ]);
-});

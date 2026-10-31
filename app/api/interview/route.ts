@@ -6,6 +6,7 @@ import { problems, toProject, type Answers } from "@/lib/interview/script";
 import { nameOf, postEvent } from "@/lib/project/thread";
 import { JUDGE_COOKIE } from "@/lib/demo/ids";
 import { readCookie } from "@/lib/auth/guest";
+import { TasteBody } from "@/lib/taste/schema";
 
 // The scripted interview's last step: the browser sends every answer and the taste its model read on the device
 // (from the names and photos they love), this checks both and creates the project ready to design.
@@ -16,20 +17,7 @@ const Body = z.object({
   lang: z.enum(["en", "hi", "hinglish"]).default("en"),
   // A project a pro created for a client ("New client"): the answers fill it instead of making a new one.
   projectId: z.uuid().optional(),
-  taste: z.object({
-    signals: z.array(z.object({ entityId: z.string().max(120), name: z.string().max(120), layer: z.union([z.literal(1), z.literal(2), z.literal(3)]), type: z.string().max(20).optional() })).min(1).max(12),
-    profile: z.object({
-      tags: z.array(
-        z.object({
-          family: z.enum(["decor", "ambience", "aesthetic", "tone", "style"]),
-          value: z.string().max(60),
-          weight: z.number(),
-          sources: z.array(z.object({ entityId: z.string().max(120), name: z.string().max(120), layer: z.union([z.literal(1), z.literal(2), z.literal(3)]) })).max(12),
-        }),
-      ).max(200),
-      brands: z.array(z.object({ id: z.string().max(80), name: z.string().max(80), affinity: z.number(), aesthetic: z.array(z.string().max(60)).max(10), because: z.array(z.object({ entityId: z.string().max(120), score: z.number() })).max(12) })).max(40),
-    }),
-  }),
+  taste: TasteBody,
 });
 
 export async function POST(request: Request) {

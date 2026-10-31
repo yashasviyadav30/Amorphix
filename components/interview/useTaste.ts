@@ -5,6 +5,7 @@ import type { TasteView } from "@/lib/interview/view";
 import type { TastePick } from "@/lib/interview/script";
 import type { TasteSignal } from "@/lib/project/store";
 import type { Profile } from "@/lib/taste/types";
+import { asPrompt } from "@/lib/taste/engine";
 
 // The live taste for the interview, read on the person's own device: each name they love becomes a short design
 // description (Gemini, on the server), each description and photo becomes a CLIP vector in the browser, and the taste
@@ -15,7 +16,6 @@ export type TasteResult = { view: TasteView; signals: TasteSignal[]; profile: Pr
 type Read = { name: string; layer: 1 | 2 | 3; vector: number[]; type: string };
 
 const KIND_TYPE = { 1: "place", 2: "brand", 3: "culture" } as const;
-export const asPrompt = (description: string) => `a photo of an interior with ${description}`;
 
 export function useTaste(picks: TastePick[], photos: File[]) {
   const [result, setResult] = useState<TasteResult | null>(null);

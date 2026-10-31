@@ -1,12 +1,11 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { estimate, knownMarket, marketOf, money, MARKETS, type Tier, kitchenSize } from "./costs.ts";
-import { priceOf, tierFrom } from "./tier.ts";
+import { priceSignals, tierFrom } from "./tier.ts";
 import { templateFor } from "../design/program.ts";
 import { planOptionsFor } from "../design/options.ts";
 import { buildingShell } from "../layout/footprint.ts";
 import { DEFAULT_SHELLS } from "../layout/templates.ts";
-import type { Entity } from "../qloo/api.ts";
 
 const plan = (t: "house" | "apartment" | "cafe" | "office") => {
   const p = templateFor(t, t === "house" ? 2 : 1);
@@ -63,13 +62,11 @@ test("money reads the way each market writes it", () => {
   assert.match(money(84000, us), /\$84K/);
 });
 
-const ent = (name: string, extra: Partial<Entity> & { properties?: Record<string, unknown> }): Entity => ({ entity_id: name, name, ...extra } as Entity);
-
-test("price signals: hotel stars, a place's price level, a brand's dollar signs", () => {
-  assert.deepEqual(priceOf(ent("Ace", { properties: { hotel_class: 4 } })), { name: "Ace", level: 3, says: "a 4-star hotel" });
-  assert.deepEqual(priceOf(ent("Cafe", { properties: { price_level: 2 } })), { name: "Cafe", level: 2, says: "moderately priced" });
-  assert.deepEqual(priceOf(ent("IKEA", { tags: [{ tag_id: "urn:tag:price_level:qloo:_", name: "$$" }] })), { name: "IKEA", level: 2, says: "a $$ brand" });
-  assert.equal(priceOf(ent("Film", {})), null);
+test("price signals come from their closest brands in the catalogue, best match first", () => {
+  const brand = (id: string, name: string) => ({ id, name, affinity: 0.3, aesthetic: [], because: [] });
+  const taste = { tags: [], brands: [brand("good-earth", "Good Earth"), brand("unknown", "Nobody"), brand("ikea", "IKEA")] };
+  assert.deepEqual(priceSignals(taste), [{ name: "Good Earth", level: 4, says: "a $$$$ brand" }, { name: "IKEA", level: 1, says: "a $ brand" }]);
+  assert.deepEqual(priceSignals(null), []);
 });
 
 test("the tier is the average of what they love, and mid-range when nothing says", () => {
