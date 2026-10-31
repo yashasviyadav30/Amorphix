@@ -107,9 +107,9 @@ export function Hero() {
             initial={still ? false : { opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="font-mono text-[11px] uppercase tracking-[0.2em] text-accent sm:text-xs sm:tracking-[0.3em]"
+            className="font-mono text-[11px] uppercase tracking-[0.2em] text-accent sm:text-xs"
           >
-            AI architect · powered by Albo AI Research Lab
+            AI architect · <span className="whitespace-nowrap">powered by Albo AI Research Lab</span>
           </motion.p>
           <h1 className="mt-6 font-serif text-5xl leading-[1.05] sm:text-6xl lg:text-7xl">
             Spaces designed around
