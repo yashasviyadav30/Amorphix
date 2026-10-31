@@ -171,7 +171,7 @@ export function CheckPlan({ id, imported, units, onDone }: Props) {
 
           <section>
             <h2 className="font-serif text-2xl">What do you love?</h2>
-            <p className="mt-1 text-sm text-ink-soft">We style your plan from these, through Qloo&apos;s taste data.</p>
+            <p className="mt-1 text-sm text-ink-soft">We style your plan from these, through Amorphix's taste model&apos;s taste data.</p>
             {SLOTS.map((slot) => (
               <TasteQuestion key={slot.id} slot={slot} onPick={(p) => setPicks((all) => ({ ...all, [slot.id]: p ?? undefined }))} />
             ))}
@@ -190,7 +190,7 @@ export function CheckPlan({ id, imported, units, onDone }: Props) {
 
 type Look = { matches: Candidate[]; hint: string | null } | { error: string };
 
-// One taste question: what the user types is looked up in Qloo as they pause, and they see what it matched.
+// One taste question: what the user types is looked up by Amorphix as they pause, and they see what it matched.
 // The closest match of the right kind is used unless they pick another; a vague answer is asked again.
 function TasteQuestion({ slot, onPick }: { slot: (typeof SLOTS)[number]; onPick: (p: Pick | null) => void }) {
   const [text, setText] = useState("");

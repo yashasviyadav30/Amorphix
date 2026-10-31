@@ -5,7 +5,7 @@ import { runningOf } from "../interview/running.ts";
 import { areaRank, categoriesFor, CROWDS, isKind, onePerChain, lookOf, NEAR, placeLook, runningHint, type Crowd } from "./read.ts";
 
 // The neighbourhood read, fetched: the site on the map (once per address), the same kind of places around it
-// ranked by Qloo for the owner's taste and crowd, and the city's taste heatmap. Every Qloo call is cached.
+// ranked by Amorphix for the owner's taste and crowd, and the city's taste heatmap. Every Amorphix call is cached.
 
 /** Where an address is, from OpenStreetMap. Only the address is sent; called once per project address. */
 export async function geocode(location: string): Promise<{ lat: number; lon: number } | null> {

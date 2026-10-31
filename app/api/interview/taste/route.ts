@@ -8,7 +8,7 @@ import { cardWords, profileSummary } from "@/lib/interview/logic";
 import { styleOf } from "@/lib/three/materials";
 import { STYLE_NAME } from "@/lib/quiz/picks";
 
-// The live "Your taste so far" card: the picks made so far in the interview, read through Qloo into style words
+// The live "Your taste so far" card: the picks made so far in the interview, read through Amorphix into style words
 // and matching brands. Only for showing; the finish route confirms the picks again before anything is saved.
 const Body = z.object({
   picks: z.array(z.object({ slot: z.enum(["place", "brand", "media"]), id: z.string().min(1), name: z.string().min(1).max(120) })).min(1).max(5),

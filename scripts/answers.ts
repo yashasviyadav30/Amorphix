@@ -1,4 +1,4 @@
-// Prints a full, valid set of "Let's get to know you" answers for a space type, with real Qloo picks, for testing
+// Prints a full, valid set of "Let's get to know you" answers for a space type, with real Amorphix picks, for testing
 // flows that need a finished interview. Run: node --env-file=.env.local --env-file=.env scripts/answers.ts house "Pune, India"
 import { next, type Answers } from "../lib/interview/script.ts";
 import { search } from "../lib/qloo/api.ts";

@@ -34,7 +34,7 @@ test("a garden lover gets the garden-facing plan among the three", () => {
   assert.equal(ids({ interview: { living: { outlook: "garden" } } })[0], "hall-garden");
 });
 
-test("Qloo taste moves the ranking and names the loved places", () => {
+test("Amorphix taste moves the ranking and names the loved places", () => {
   const lively = rank({ taste: taste(tag("lively", 3, "Ace Hotel New York"), tag("social", 1, "Cafe Gratitude")) });
   assert.equal(lively[0].id, "great-room");
   assert.match(lively[0].why.join(" "), /Things you love, like Ace Hotel New York and Cafe Gratitude, lean lively and social/);
@@ -88,7 +88,7 @@ test("odd interview data never breaks the ranking", () => {
     assert.equal(planOptionsFor(house, shell, { interview: interview as never }).length, 3);
 });
 
-test("a brand Qloo matched is never called something the user loves", () => {
+test("a brand Amorphix matched is never called something the user loves", () => {
   const matched = { family: "ambience" as const, value: "lively", weight: 3, sources: [{ entityId: "m", name: "Matched Brand", layer: 3 as const }] };
   const line = rank({ taste: { tags: [matched], brands: [] } }).find((r) => r.id === "great-room")!.why.join(" ");
   assert.match(line, /Brands that match the films and music you love, like Matched Brand/);

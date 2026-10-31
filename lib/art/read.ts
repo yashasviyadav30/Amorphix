@@ -1,12 +1,12 @@
-// Type-only: this file is shared with the browser, so it must not pull in the Qloo client.
+// Type-only: this file is shared with the browser, so it must not pull in the Amorphix client.
 import type { Entity, QlooTag } from "../qloo/api.ts";
 
 // Art and sound for a design (Q10): galleries and museums near the site for the art wall, and artists matched to
-// what the client loves for a playlist. Pure helpers; the Qloo calls are in fetch.ts.
+// what the client loves for a playlist. Pure helpers; the Amorphix calls are in fetch.ts.
 
 const ids = (e: Entity) => (e.tags ?? []).map((t: QlooTag) => t.tag_id ?? t.id ?? "");
 
-/** A real gallery or museum, not a café or bar that hangs pictures (Qloo tags some of those "art gallery"). */
+/** A real gallery or museum, not a café or bar that hangs pictures (Amorphix tags some of those "art gallery"). */
 export function isGallery(e: Entity) {
   const t = ids(e);
   const art = t.some((x) => /:(art_gallery|museum|art_museum|art_center)$/.test(x));

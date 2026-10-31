@@ -1,5 +1,5 @@
 // Uploads the film (and its poster) to the public "media" bucket, where the landing page plays it from.
-// The film shows Qloo images, so it lives in storage, never in the repo.
+// The film shows Amorphix images, so it lives in storage, never in the repo.
 // Run: node --env-file=.env.local --env-file=.env scripts/upload-video.ts <film.mp4> <poster.jpg>
 import { readFileSync } from "node:fs";
 import { createClient } from "@supabase/supabase-js";

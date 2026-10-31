@@ -21,7 +21,7 @@ export const Brief = z.object({
 });
 export type Brief = z.infer<typeof Brief>;
 
-// The names a brief may credit: only things the user actually said they love, or brands Qloo matched to them.
+// The names a brief may credit: only things the user actually said they love, or brands Amorphix matched to them.
 export function allowedSources(p: Project): string[] {
   const names = new Set(p.taste_signals.map((s) => s.name));
   for (const b of p.taste?.brands ?? []) names.add(b.name);

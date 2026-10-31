@@ -24,7 +24,7 @@ const KIND: Record<string, string> = {
   "urn:entity:person": "person",
 };
 
-/** "film", "place", "brand"... for a Qloo entity type. */
+/** "film", "place", "brand"... for a Amorphix entity type. */
 export const kindOf = (type: string | undefined) => KIND[type ?? ""] ?? "other";
 
 // Sides from 6 m (a small studio) to 180 m (a large hotel). Anything else is almost certainly a typo.
@@ -50,7 +50,7 @@ export function sizeFrom(said: string | undefined, width?: number, depth?: numbe
 
 export type Candidate = { entityId: string; name: string; kind: string; detail: string; layer: 1 | 2 | 3 };
 
-// A short, human description of a Qloo match, so the user can tell two "Ace Hotel"s apart.
+// A short, human description of a Amorphix match, so the user can tell two "Ace Hotel"s apart.
 export function toCandidate(e: Entity): Candidate {
   const type = e.types?.find((t) => KIND[t]) ?? "";
   const p = e.properties ?? {};
@@ -78,7 +78,7 @@ export function missingForDesign(p: Project): string[] {
 // The part of a profile the interviewer reflects back to the user.
 export function profileSummary(profile: Profile, words = 8, brands = 5) {
   return {
-    // A word Qloo gives as both decor and ambience ("elegant") shows once.
+    // A word Amorphix gives as both decor and ambience ("elegant") shows once.
     style: profile.tags
       .filter((t, i, all) => all.findIndex((x) => x.value === t.value) === i)
       .slice(0, words)

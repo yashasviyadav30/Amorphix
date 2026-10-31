@@ -10,7 +10,7 @@ import { creditOf } from "../design/trail.ts";
 import { closeness } from "../plan-import/taste.ts";
 import { alternatives, brandFor, cityParts, closestTo, isStoreOf, PIECES, piecesOf, priceEach, TIER_LEVEL, type BrandInfo, type Line } from "./list.ts";
 
-// Builds the shopping list from Qloo: the brands in their taste with what each makes and its price level, each
+// Builds the shopping list from Amorphix: the brands in their taste with what each makes and its price level, each
 // piece's best brand, cheaper and dearer rivals from the brand's own competitor tags, and furniture stores near the
 // site ranked for their taste. Every call is cached, so a second visit is instant.
 
@@ -61,7 +61,7 @@ export async function shoppingFor(p: Project, tierOverride?: Tier): Promise<Shop
   const names = new Map(layout.floors.flatMap((f) => f.spaces.map((s) => [s.id, s.name] as const)));
   const pieces = piecesOf(items, (id) => names.get(id) ?? id);
 
-  // The brands in their taste: the ones they named first, then those Qloo matched.
+  // The brands in their taste: the ones they named first, then those Amorphix matched.
   const ids = [...p.taste_signals.filter((s) => s.layer === 2).map((s) => s.entityId), ...(p.taste?.brands ?? []).slice(0, 12).map((b) => b.id)];
   const found = (await entitiesById(ids)).filter(isHomeBrand);
   const brands = found.map((e) => brandInfo(e, p));

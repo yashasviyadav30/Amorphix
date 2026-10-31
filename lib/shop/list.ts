@@ -93,7 +93,7 @@ export const priceEach = (piece: string, tier: Tier, m: Market) => PIECES[piece]
 
 /**
  * The brand to buy a piece from: one that makes it (its product tags), near their price tier, and preferring
- * brands they named over brands Qloo matched, then the closer match. Null when no brand in their taste makes it.
+ * brands they named over brands Amorphix matched, then the closer match. Null when no brand in their taste makes it.
  */
 export function brandFor(piece: string, brands: BrandInfo[], tier: Tier): BrandInfo | null {
   const makes = PIECES[piece]?.makes;

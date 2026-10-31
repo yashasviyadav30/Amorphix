@@ -27,8 +27,7 @@ here. Updated 31 Oct 2026, hackCBS 9.0. Dated detail is in `progress.md` (newest
 **Still on the old external taste service (to replace):** the old taste module under `lib/` (its API client and profile builder) and everything that imports it: the interview
 picks (`app/api/interview/taste`, `agents/interviewer/agent/tools/find_taste.ts`, `add_taste.ts`), `app/api/taste`,
 `app/api/quiz`, `app/api/strip` (landing strip), `lib/art`, `lib/neighbourhood`, `lib/shop/fetch.ts`,
-`lib/green/eco.ts`, `lib/budget/tier.ts`, `lib/plan-import/taste.ts`, the old probe script in `scripts/`, and its API
-key line in `.env.example`. When this list is empty, delete that module.
+`lib/green/eco.ts`, `lib/budget/tier.ts`, `lib/plan-import/taste.ts`, and its API key read in the client. When this list is empty, delete that module.
 
 ---
 
@@ -43,7 +42,7 @@ Each task has an owner so both can work at the same time without touching the sa
 | Y1 | ✅ **Supabase:** new project on your account. Put its keys in `.env.local` (see section 4). Run `node scripts/migrate.ts` | All migrations applied, `npm run dev` opens the landing page |
 | Y2 | ✅ **YugabyteDB:** free cluster on YugabyteDB Aeon. Enable pgvector (`CREATE EXTENSION vector;`). Put `YUGABYTE_URL` in `.env.local` | `psql "$YUGABYTE_URL" -c "select 1"` works |
 | Y3 | ✅ **Gemini key** from a new Google Cloud project on your account: `GOOGLE_GENERATIVE_AI_API_KEY` | `npm run dev`, the interview answers |
-| Y4 | **Vercel:** import the repo on your account, add every key from `.env.local` as environment variables | The deploy URL opens |
+| Y4 | ✅ **Vercel:** live at amorphix-nine.vercel.app; import the repo on your account, add every key from `.env.local` as environment variables | The deploy URL opens |
 | Y5 | **Demo world:** run the seed scripts against the new database (`scripts/demo-world.ts`, then `scripts/seed-demo.ts`) | `/demo` opens the tour |
 | Y6 | **End-to-end test** on the deploy, as each person (owner, architect, builder, client) and on a phone; write what breaks into section 3 | Every stop of the tour and a fresh design work |
 | Y7 | **Pitch:** slides and a 2-minute demo script | Ready by 10:00 am, 1 Nov |

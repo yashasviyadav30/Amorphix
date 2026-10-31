@@ -2,7 +2,7 @@ import { z } from "zod";
 import { ownedProject, publicProject } from "@/lib/auth/request";
 import { confirmImport } from "@/lib/plan-import/flow";
 
-// Qloo look-ups for a few loves, then the layout engine for two alternatives.
+// Amorphix look-ups for a few loves, then the layout engine for two alternatives.
 export const maxDuration = 120;
 
 const Body = z.object({

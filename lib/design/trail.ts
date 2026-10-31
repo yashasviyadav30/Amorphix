@@ -5,8 +5,8 @@ import type { Layout } from "../layout/schema.ts";
 import type { Brief } from "./brief.ts";
 import { kindOf } from "../interview/logic.ts";
 
-// The taste trail: every design choice next to the Qloo signal behind it. Things the user named are "loved";
-// brands Qloo matched to them are "matched", and always say what they were matched to, so a matched brand is
+// The taste trail: every design choice next to the Amorphix signal behind it. Things the user named are "loved";
+// brands Amorphix matched to them are "matched", and always say what they were matched to, so a matched brand is
 // never passed off as something the user said.
 
 type Taste = { taste_signals: TasteSignal[]; taste: Profile | null };
@@ -16,7 +16,7 @@ export type Credit = { name: string; loved: boolean; via: string[] };
 
 const label = (w: string) => w.replaceAll("_", " ");
 
-/** How to credit a name: loved if they named it, else the loved things Qloo matched it to, strongest first. */
+/** How to credit a name: loved if they named it, else the loved things Amorphix matched it to, strongest first. */
 export function creditOf(p: Taste, name: string): Credit {
   if (p.taste_signals.some((s) => s.name === name)) return { name, loved: true, via: [] };
   const brand = p.taste?.brands.find((b) => b.name === name);

@@ -43,7 +43,7 @@ test("the brief's words choose the wall finish and tile", () => {
   assert.equal(look(null).finish, "paint");
 });
 
-test("Qloo taste tags choose the furniture style and say which loves chose it", () => {
+test("Amorphix taste tags choose the furniture style and say which loves chose it", () => {
   const taste = {
     tags: [
       { value: "mid_century_modern", weight: 3, sources: [{ name: "Hotel A" }] },
@@ -71,7 +71,7 @@ test("the brief's style name leads, so the 3D matches the style page", () => {
   assert.equal(look({ name: "Warm Bohemian", palette }, calm).style, "boho");
 });
 
-test("brands Qloo matched are never credited as things the user loves", () => {
+test("brands Amorphix matched are never credited as things the user loves", () => {
   const taste = {
     tags: [{ value: "industrial", weight: 5, sources: [{ name: "Matched Brand", layer: 3 }, { name: "Named Hotel", layer: 1 }] }],
     brands: [{ name: "Other Match", aesthetic: ["industrial"] }],

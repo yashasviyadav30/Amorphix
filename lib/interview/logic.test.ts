@@ -98,7 +98,7 @@ test("a size as people say it gives width and depth, keeping what the model alre
   assert.deepEqual(sizeFrom("a big plot"), { width: undefined, depth: undefined });
 });
 
-test("the taste card shows each word once, even when Qloo gives it as both decor and ambience", () => {
+test("the taste card shows each word once, even when Amorphix gives it as both decor and ambience", () => {
   const src = [{ entityId: "a", name: "A hotel", layer: 1 as const }];
   const profile = {
     tags: [

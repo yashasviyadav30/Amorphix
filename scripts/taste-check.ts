@@ -1,4 +1,4 @@
-// Live check of the taste engine against Qloo (through the cache). Prints a profile; writes nothing to the repo.
+// Live check of the taste engine against Amorphix (through the cache). Prints a profile; writes nothing to the repo.
 // Run: node --env-file=.env.local --env-file=.env scripts/taste-check.ts "Ace Hotel New York" "West Elm" ...
 import { homeBrands, search } from "../lib/qloo/api.ts";
 import { buildProfile, layerOf } from "../lib/qloo/taste.ts";

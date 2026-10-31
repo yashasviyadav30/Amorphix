@@ -1,5 +1,5 @@
 // End-to-end check of "bring your own plan" in Chrome: upload a plan, check it, name a love, design, and
-// screenshot each screen. Uses the real model (one read, one brief) and Qloo.
+// screenshot each screen. Uses the real model (one read, one brief) and Amorphix.
 // Run: node --env-file=.env.local --env-file=.env scripts/check-import.ts <baseUrl> <plan.png> <outPrefix>
 import puppeteer from "puppeteer-core";
 

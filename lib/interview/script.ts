@@ -327,7 +327,7 @@ export const QUESTIONS: Question[] = [
     ],
   },
 
-  // Then the style: three picks from pictures (or typed and matched in Qloo), after the interview's questions
+  // Then the style: three picks from pictures (or typed and matched in Amorphix), after the interview's questions
   {
     id: "place",
     stage: 3,
@@ -415,7 +415,7 @@ const TYPE_WORD: Record<SpaceType, string> = { house: "house", apartment: "apart
 /**
  * The project the answers describe, in the shape the design step reads: site in metres, and the interview with
  * the same sections and fields the old agent saved (people, needs, living or running, budget). The taste is added
- * by the finish route once Qloo has confirmed the three picks.
+ * by the finish route once Amorphix has confirmed the three picks.
  */
 const US_STATES = "AL AK AZ AR CA CO CT DE DC FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY".split(" ");
 const US_CITIES = /\b(new york|brooklyn|manhattan|queens|los angeles|san francisco|chicago|houston|austin|dallas|seattle|portland|boston|miami|atlanta|denver|phoenix|philadelphia|san diego|nashville|detroit|minneapolis|las vegas|washington|silver lake|echo park|oakland|honolulu)\b/i;
@@ -480,7 +480,7 @@ export function toProject(a: Answers, lang: LangId) {
   return { space_type: spaceType, site, interview, title };
 }
 
-/** The required taste picks (a place, a brand, a film or music), then any extras they gave, for Qloo to confirm. */
+/** The required taste picks (a place, a brand, a film or music), then any extras they gave, for Amorphix to confirm. */
 export const picksOf = (a: Answers): TastePick[] =>
   QUESTIONS.filter((q) => q.kind === "taste")
     .map((q) => a[q.id])

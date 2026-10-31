@@ -12,7 +12,7 @@ import { JUDGE_COOKIE } from "@/lib/demo/ids";
 import { readCookie } from "@/lib/auth/guest";
 
 // The scripted interview's last step: the browser sends every answer, this checks them against the script,
-// confirms the three taste picks with Qloo, and creates the project ready to design. No model runs here.
+// confirms the three taste picks with Amorphix, and creates the project ready to design. No model runs here.
 export const maxDuration = 60;
 
 const Body = z.object({

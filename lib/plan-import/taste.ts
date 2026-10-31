@@ -2,7 +2,7 @@ import type { Entity } from "../qloo/api.ts";
 import { toCandidate, type Candidate } from "../interview/logic.ts";
 
 // The three taste questions on the check screen. Each takes only its own kind of thing, and only a match whose
-// name is what the user typed: "marvels techy science fiction" is a genre, not a film, and Qloo's nearest
+// name is what the user typed: "marvels techy science fiction" is a genre, not a film, and Amorphix's nearest
 // guess for it (a bookstore) must never style someone's home.
 
 export const SLOTS = [
@@ -63,7 +63,7 @@ export function vagueHint(slot: SlotId): string {
 export type Pick = { slot: SlotId; id: string; name: string };
 
 /**
- * One pick as its Qloo entity. The browser only sends an id and a name, so it is looked up again and must still be
+ * One pick as its Amorphix entity. The browser only sends an id and a name, so it is looked up again and must still be
  * the same entity, of the right kind for its question; anything else is refused.
  */
 export async function confirmPick(p: Pick, find: (q: string, take: number, types: string) => Promise<Entity[]>): Promise<Entity> {
@@ -75,7 +75,7 @@ export async function confirmPick(p: Pick, find: (q: string, take: number, types
   return e;
 }
 
-/** The user's three picks as Qloo entities, one for each question, each confirmed with `confirmPick`. */
+/** The user's three picks as Amorphix entities, one for each question, each confirmed with `confirmPick`. */
 export async function resolvePicks(picks: Pick[], find: (q: string, take: number, types: string) => Promise<Entity[]>): Promise<Entity[]> {
   return Promise.all(
     SLOTS.map(async (s) => {

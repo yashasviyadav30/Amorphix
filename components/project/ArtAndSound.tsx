@@ -24,14 +24,14 @@ export function useArtAndSound(id: string | undefined) {
   return data;
 }
 
-// Art for the walls from galleries near the site, and a playlist for the home, both read by Qloo from what they love.
+// Art for the walls from galleries near the site, and a playlist for the home, both read by Amorphix's taste model from what they love.
 export function ArtAndSound({ id }: { id: string }) {
   const data = useArtAndSound(id);
   const still = useReducedMotion();
   if (data === null || (data && !data.art.length && !data.music.length)) return null;
   return (
     <section className="mt-12" aria-labelledby="art-sound" aria-busy={!data}>
-      <p className="font-mono text-xs uppercase tracking-[0.3em] text-accent">Read by Qloo</p>
+      <p className="font-mono text-xs uppercase tracking-[0.3em] text-accent">Read by Amorphix's taste model</p>
       <h2 id="art-sound" className="mt-1 font-serif text-3xl">
         <Decode text="Art and sound" />
       </h2>
@@ -76,7 +76,7 @@ export function ArtAndSound({ id }: { id: string }) {
                       className="flex items-center gap-2 rounded-xl border border-line p-2 text-sm transition hover:border-accent hover:text-accent"
                     >
                       {m.image ? (
-                        // eslint-disable-next-line @next/next/no-img-element -- Qloo's own image host, sized by CSS
+                        // eslint-disable-next-line @next/next/no-img-element -- an image host, sized by CSS
                         <img src={m.image} alt="" className="h-9 w-9 shrink-0 rounded-full object-cover" />
                       ) : (
                         <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-line">♪</span>

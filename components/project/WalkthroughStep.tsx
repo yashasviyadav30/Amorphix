@@ -598,7 +598,7 @@ function MoodPill({ room, mood, className }: { room: string; mood?: Mood; classN
           exit={{ opacity: 0, y: -6 }}
           className={`pointer-events-none absolute z-20 max-w-[min(92%,440px)] rounded-2xl bg-paper/90 px-4 py-2 text-sm backdrop-blur ${className}`}
         >
-          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-accent">Mood, read by Qloo</p>
+          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-accent">Mood, read by Amorphix's taste model</p>
           <p className="mt-0.5">
             <span className="font-medium capitalize">{mood.word}</span>
             <span className="text-ink-soft"> · from {mood.from}</span>

@@ -32,7 +32,7 @@ const SAY = {
   typeOwn: { en: "Something else? Type it", hi: "कुछ और? लिखिए", hinglish: "Kuch aur? Type karo" },
   pictures: { en: "Pick one, or type your own", hi: "एक चुनिए, या अपना लिखिए", hinglish: "Ek chuno, ya apna type karo" },
   yourStyle: { en: "Your space style", hi: "आपकी स्पेस स्टाइल", hinglish: "Aapka space style" },
-  styleFrom: { en: "Read by Qloo from", hi: "Qloo ने पढ़ा", hinglish: "Qloo ne padha" },
+  styleFrom: { en: "Read by Amorphix's taste model from", hi: "Amorphix ने पढ़ा", hinglish: "Amorphix ne padha" },
   designNow: { en: "Now design my space", hi: "अब मेरा स्पेस डिज़ाइन करें", hinglish: "Ab mera space design karo" },
   designing: { en: "Now designing your space", hi: "अब आपका स्पेस डिज़ाइन हो रहा है", hinglish: "Ab aapka space design ho raha hai" },
   done: { en: "Done", hi: "हो गया", hinglish: "Ho gaya" },
@@ -44,7 +44,7 @@ const SAY = {
   notSure: { en: "Not sure, use a typical size", hi: "पता नहीं, आम साइज़ लें", hinglish: "Pata nahi, typical size le lo" },
   width: { en: "Width", hi: "चौड़ाई", hinglish: "Width" },
   depth: { en: "Depth", hi: "गहराई", hinglish: "Depth" },
-  looking: { en: "Looking it up in Qloo…", hi: "Qloo में ढूँढ रहे हैं…", hinglish: "Qloo mein dhoondh rahe hain…" },
+  looking: { en: "Looking it up by Amorphix…", hi: "Amorphix में ढूँढ रहे हैं…", hinglish: "Amorphix dhoondh raha hai…" },
   found: { en: "We found", hi: "हमें मिला", hinglish: "Humein mila" },
   thatsIt: { en: "Yes, that's it", hi: "हाँ, यही", hinglish: "Haan, yehi" },
   notIt: { en: "Not it?", hi: "यह नहीं?", hinglish: "Yeh nahi?" },
@@ -54,7 +54,7 @@ const SAY = {
 
 // "Let's get to know you": the first thing a visitor does. One question at a time sits in the middle of the
 // screen; each answer is a tap, a few typed words or a sentence spoken aloud, and the next question appears at
-// once, since nothing waits on a model. The taste questions are matched in Qloo as they type, and the taste card
+// once, since nothing waits on a model. The taste questions are matched by Amorphix as they type, and the taste card
 // fills in beside them. The design itself runs after, on the project page.
 export function Interview() {
   const still = useReducedMotion();
@@ -93,7 +93,7 @@ export function Interview() {
   const [pictures, setPictures] = useState<Record<string, Picture[]>>({});
   const [own, setOwn] = useState(false);
   useEffect(() => {
-    // "v=2": the list with Qloo ids (a copy cached before they were added has none, and those can't be picked).
+    // "v=2": the list with Amorphix's taste model ids (a copy cached before they were added has none, and those can't be picked).
     fetch("/api/quiz?v=2")
       .then((r) => (r.ok ? r.json() : { rounds: [] }))
       .then((b: { rounds: { slot: string; options: Picture[] }[] }) => setPictures(Object.fromEntries(b.rounds.map((r) => [r.slot, r.options.filter((o) => o.id)]))))
@@ -239,7 +239,7 @@ export function Interview() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [q?.id, lang, held]);
 
-  // The live taste card: each new pick is read through Qloo while the next question is already on screen.
+  // The live taste card: each new pick is read by Amorphix's taste model while the next question is already on screen.
   const picks = picksOf(answers);
   const pickKey = picks.map((p) => p.id).join("|");
   useEffect(() => {
@@ -255,7 +255,7 @@ export function Interview() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pickKey]);
 
-  // All answered: confirm the picks with Qloo and create the project. The design itself runs on the next page.
+  // All answered: confirm the picks with Amorphix's taste model and create the project. The design itself runs on the next page.
   const finish = useCallback(async () => {
     setFinishing("working");
     transition();
@@ -557,7 +557,7 @@ export function Interview() {
                     </>
                   ) : (
                     <div className="mx-auto mt-6 w-fit text-left text-sm">
-                      <TypeLog lines={["Reading your picks with Qloo", "Finding the words your style is made of", "Matching brands to your taste"]} done={false} />
+                      <TypeLog lines={["Reading your picks with Amorphix's taste model", "Finding the words your style is made of", "Matching brands to your taste"]} done={false} />
                     </div>
                   )}
                   {replay ? (
@@ -577,7 +577,7 @@ export function Interview() {
                   </div>
                   <h1 className="mt-6 font-serif text-3xl sm:text-4xl">{projectId ? say("ready") : say("building")}</h1>
                   <div className="mx-auto mt-6 w-fit text-left text-sm">
-                    <TypeLog lines={["Confirming what you love with Qloo", "Reading your taste into style words", "Saving your project", "Handing over to the designer"]} done={!!projectId} />
+                    <TypeLog lines={["Confirming what you love with Amorphix's taste model", "Reading your taste into style words", "Saving your project", "Handing over to the designer"]} done={!!projectId} />
                   </div>
                   {finishing === "failed" && (
                     <div className="mt-6 flex flex-wrap items-center justify-center gap-3 text-sm">
@@ -664,7 +664,7 @@ function Pictures({ options, chosen, hint, typeOwn, onPick, onOwn }: { options: 
                 onClick={() => onPick(o)}
                 className={`group block w-full overflow-hidden rounded-2xl border bg-paper-raised text-left transition hover:-translate-y-0.5 hover:border-accent hover:shadow-[0_18px_44px_-22px_var(--accent)] ${chosen === o.id ? "-translate-y-1 border-accent ring-4 ring-accent/30" : "border-line"}`}
               >
-                {/* eslint-disable-next-line @next/next/no-img-element -- Qloo's own image host, sized by CSS */}
+                {/* eslint-disable-next-line @next/next/no-img-element -- an image host, sized by CSS */}
                 <img src={o.image} alt="" onError={(e) => e.currentTarget.closest("li")?.setAttribute("hidden", "")} className="aspect-square w-full object-cover transition-transform duration-500 group-hover:scale-105" />
                 <span className="block truncate p-2 text-sm font-medium">{o.name}</span>
               </button>
@@ -772,7 +772,7 @@ function SizeInput({ lang, say, shown, onAnswer }: { lang: LangId; say: (k: keyo
   );
 }
 
-// A taste answer: what they type is matched in Qloo as they type, and they confirm the match with a tap.
+// A taste answer: what they type is matched by Amorphix as they type, and they confirm the match with a tap.
 function TasteLookup({ q, text, near, say, onAnswer }: { q: Question; text: string; near?: string; say: (k: keyof typeof SAY) => string; onAnswer: (v: TastePick) => void }) {
   const [look, setLook] = useState<Look | null>(null);
   const [chosen, setChosen] = useState<Candidate | null>(null);

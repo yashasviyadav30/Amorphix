@@ -1,4 +1,4 @@
-// How well a pro fits a client's taste: the client's Qloo style tags against the tags of the projects the pro has
+// How well a pro fits a client's taste: the client's Amorphix style tags against the tags of the projects the pro has
 // designed on Amorphix. Cosine similarity of the weighted tags, shown as a percentage, plus the words they share.
 // Pure, so it can be tested and explained.
 

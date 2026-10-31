@@ -1,6 +1,6 @@
-// The taste quiz: three rounds of pictures, one tap each. Only names live here; Qloo finds each one (and its photo)
-// at runtime through the cached search, so no Qloo data is kept in the repo. A fixed list keeps a public page from
-// spending the Qloo quota on anything typed in, and every result is cached after the first time.
+// The taste quiz: three rounds of pictures, one tap each. Only names live here; Amorphix finds each one (and its photo)
+// at runtime through the cached search, so no Amorphix data is kept in the repo. A fixed list keeps a public page from
+// spending the Amorphix quota on anything typed in, and every result is cached after the first time.
 
 export type Slot = "place" | "brand" | "media";
 
@@ -58,7 +58,7 @@ export const linkOf = (picks: Record<Slot, string>) => ROUNDS.map((r) => keyOf(p
 
 const words = (s: string) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").match(/[a-z0-9]+/g) ?? [];
 
-/** Whether Qloo found the right thing: the first word of the name matches ("Hoxton Hotel" finding "HOTEL HOXTON PRIDE" doesn't). */
+/** Whether Amorphix found the right thing: the first word of the name matches ("Hoxton Hotel" finding "HOTEL HOXTON PRIDE" doesn't). */
 export function sameName(asked: string, found: string) {
   const a = words(asked).filter((w) => w !== "the");
   const f = words(found).filter((w) => w !== "the");

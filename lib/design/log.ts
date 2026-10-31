@@ -1,5 +1,5 @@
 // The processing screen's terminal log, written from the project's real data: what the user said,
-// what Qloo matched, what Amorphix is about to build. Nothing here is decoration text.
+// what Amorphix matched, what Amorphix is about to build. Nothing here is decoration text.
 
 type Source = {
   space_type: string | null;

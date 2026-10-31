@@ -2,7 +2,7 @@
 // as a person would use them (a visible cursor that moves, clicks and types), one clip per beat, at 1920x1080.
 // The tour's pill and quick guide are hidden; everything else is the real app.
 //   FFMPEG_PATH=<ffmpeg.exe> node --env-file=.env.local --env-file=.env scripts/record-submission.ts <out dir> [beat ...]
-// The clips show Qloo images, so they stay out of the repo.
+// The clips show Amorphix images, so they stay out of the repo.
 import { mkdirSync } from "node:fs";
 import { join } from "node:path";
 import { createClient } from "@supabase/supabase-js";
@@ -131,7 +131,7 @@ await beat("hero", async () => {
   await wait(14);
 });
 
-// 3. Maya's interview: her answers and her three picks, read by Qloo, then the reveal
+// 3. Maya's interview: her answers and her three picks, read by Amorphix, then the reveal
 await beat("interview", async () => {
   await page.goto(BASE + "/demo?step=1", { waitUntil: "domcontentloaded" });
   await until("what are we designing", 60);
@@ -215,7 +215,7 @@ await beat("team", async () => {
   await wait(1.5);
 });
 
-// 10. the café: Qloo reads its street, then by night
+// 10. the café: Amorphix reads its street, then by night
 await beat("cafe", async () => {
   await go("/demo?step=11", "your neighbourhood", 2.5);
   await clickOn("button", "Under 25", 900);

@@ -5,7 +5,7 @@ import type { Profile } from "../taste/types.ts";
 import type { Brief } from "./brief.ts";
 import type { Layout } from "../layout/schema.ts";
 
-// Synthetic taste: a hotel and a film they love, and one brand Qloo matched to them.
+// Synthetic taste: a hotel and a film they love, and one brand Amorphix matched to them.
 const p = {
   taste_signals: [
     { entityId: "hotel", name: "A Hotel", layer: 1 as const },

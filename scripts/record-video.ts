@@ -4,7 +4,7 @@
 // Run with the app on localhost:3000 (npx next build && npx next start -p 3000):
 //   FFMPEG_PATH=<ffmpeg.exe> node --env-file=.env.local --env-file=.env scripts/record-video.ts <designId> <builtId> <clientId> <out.mp4>
 // designId: the test owner's house, unlocked, still in design. builtId: the test owner's house, built and moved in.
-// clientId: a project the test client is on, with an approved design. The film shows Qloo images, so it never goes in
+// clientId: a project the test client is on, with an approved design. The film shows Amorphix images, so it never goes in
 // the repo: it's uploaded to storage (scripts/upload-video.ts).
 import { execFileSync } from "node:child_process";
 import { mkdirSync, rmSync, writeFileSync } from "node:fs";
@@ -100,7 +100,7 @@ await wait(0.8);
 await beat("opening", async () => {
   await page.mouse.click(640, 360);
   await wait(2.4);
-  await caption("", "Your AI architect, powered by Qloo's taste AI");
+  await caption("", "Your AI architect, powered by Amorphix's taste AI");
   await wait(1);
 });
 
@@ -125,7 +125,7 @@ await clickText("Find my style");
 await page.waitForSelector("main li button img", { timeout: 60_000 });
 await wait(1.2);
 await beat("taste", async () => {
-  await caption("Homeowner", "Three things you love. Qloo reads your style.");
+  await caption("Homeowner", "Three things you love. Amorphix reads your style.");
   for (let round = 0; round < 3; round++) {
     await wait(0.55);
     const tiles = await page.$$("main li button");

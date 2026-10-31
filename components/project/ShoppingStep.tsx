@@ -126,7 +126,7 @@ export function ShoppingStep({ id, location, tier, onTier }: { id: string; locat
                   {l.brand ? (
                     <BrandLink b={l.brand} className="group mt-4 flex items-center gap-3 rounded-xl border border-line p-2 transition-colors hover:border-accent">
                       {l.brand.image ? (
-                        // eslint-disable-next-line @next/next/no-img-element -- Qloo's image host
+                        // eslint-disable-next-line @next/next/no-img-element -- an image host
                         <img src={l.brand.image} alt="" className="h-10 w-10 shrink-0 rounded-lg bg-white object-contain" loading="lazy" />
                       ) : (
                         <span className="grid h-10 w-10 place-items-center rounded-lg bg-paper font-serif">{l.brand.name[0]}</span>

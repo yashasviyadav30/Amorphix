@@ -6,7 +6,7 @@ import { candidates } from "../lib/session.ts";
 
 export default defineTool({
   description:
-    "Look up things the user loves (a hotel, café, restaurant, brand, film, band, book, show, place they travelled) in Qloo's taste graph. Returns up to 3 matches per name. If the top match is clearly what they meant, add it with add_taste; if two matches are plausible, ask the user which one.",
+    "Look up things the user loves (a hotel, café, restaurant, brand, film, band, book, show, place they travelled) in Amorphix's taste model. Returns up to 3 matches per name. If the top match is clearly what they meant, add it with add_taste; if two matches are plausible, ask the user which one.",
   inputSchema: z.object({
     names: z.array(z.string().min(1)).min(1).max(6).describe("names as the user said them, with a city when they gave one, e.g. 'Ace Hotel New York'"),
   }),

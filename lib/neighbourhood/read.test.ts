@@ -4,7 +4,7 @@ import { areaRank, categoriesFor, hintLine, isKind, lookOf, onePerChain, rankLin
 import type { Entity } from "../qloo/api.ts";
 import type { StyleTag } from "../taste/types.ts";
 
-// Synthetic places only: Qloo data never goes in the repo.
+// Synthetic places only: Amorphix data never goes in the repo.
 const place = (name: string, tags: string[]): Entity => ({ entity_id: name, name, tags: tags.map((t) => ({ tag_id: t })) });
 const cat = (t: string) => `urn:tag:category:place:${t}`;
 const decor = (t: string) => `urn:tag:decor:qloo:${t}`;

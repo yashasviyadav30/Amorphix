@@ -39,7 +39,7 @@ export function Moodboard({ id }: { id: string }) {
             viewport={{ once: true, margin: "-40px" }}
             transition={{ duration: 0.55, delay: (i % 4) * 0.08, ease: [0.22, 1, 0.36, 1] }}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element -- Qloo's own image host, sized by CSS */}
+            {/* eslint-disable-next-line @next/next/no-img-element -- an image host, sized by CSS */}
             <img
               src={t.image}
               alt={t.name}

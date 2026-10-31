@@ -51,13 +51,13 @@ export type Look = {
   finish: Finish; feature: string; tile: string; tileKind: "plain" | "zellige" | "marble" | "terracotta"; curtain: string; frame: string; art: string[];
   /** Furniture style, and whether the space leans green (more plants) or cozy (throws and cushions). */
   style: Style; lush: boolean; cozy: boolean;
-  /** Things the user named (places, brands) whose Qloo tags chose the style, strongest first. */
+  /** Things the user named (places, brands) whose Amorphix tags chose the style, strongest first. */
   because: string[];
-  /** Brands Qloo matched to the films and music they love, which also pointed to this style. */
+  /** Brands Amorphix matched to the films and music they love, which also pointed to this style. */
   matched: string[];
 };
 type BriefWords = { name?: string; summary?: string; palette?: Swatch[]; materials?: { name: string; where: string }[] };
-// Layer 3 sources are brands Qloo matched to the user's culture picks, not things they named themselves.
+// Layer 3 sources are brands Amorphix matched to the user's culture picks, not things they named themselves.
 type Taste = { tags: { value: string; weight: number; sources: { name: string; layer?: number }[] }[]; brands: { name: string; aesthetic: string[] }[] };
 
 const STYLES: [Style, RegExp][] = [
@@ -72,7 +72,7 @@ const LUSH = /green|botanical|garden|lush|natural|plant|tropical|outdoor/;
 const COZY = /cozy|cosy|warm|intimate|homey|comfort|snug|moody/;
 
 /**
- * Scores each furniture style from the Qloo taste tags (by weight), brand aesthetics and the brief's words.
+ * Scores each furniture style from the Amorphix taste tags (by weight), brand aesthetics and the brief's words.
  * The brief's style name (itself written from those tags and the interview) counts most, so the 3D model
  * always matches the style the client was shown.
  */

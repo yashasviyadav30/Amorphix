@@ -1,6 +1,6 @@
 import type { ToolStub } from "eve/evals";
 
-// Synthetic tool results: evals never write to the real database or spend Qloo quota.
+// Synthetic tool results: evals never write to the real database or spend Amorphix quota.
 export const quietTools: ToolStub[] = [
   { id: "set-project", tool: "set_project", outcome: { response: { saved: true } } },
   { id: "save-answers", tool: "save_answers", outcome: { response: { saved: ["noted"] } } },

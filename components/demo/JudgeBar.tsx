@@ -263,7 +263,7 @@ export function JudgeBar() {
           >
             <div className="flex max-w-xl flex-col items-center text-center">
               <AnimatedMark size={56} />
-              <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.3em] text-accent">Amorphix · Taste intelligence by Qloo</p>
+              <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.3em] text-accent">Amorphix · Taste intelligence by Amorphix</p>
               <motion.div initial={still ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.4 }} className="mt-8">
                 <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-ink-soft">{veil.chapter}</p>
                 <p className="mt-2 font-serif text-3xl leading-tight sm:text-4xl">{veil.title}</p>

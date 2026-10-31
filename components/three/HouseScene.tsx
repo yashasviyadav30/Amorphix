@@ -32,7 +32,7 @@ type Props = {
   /** Look-around only: lift the roof off, and show floors up to this level ("all" keeps every floor). */
   cutaway?: boolean;
   upTo?: number | "all";
-  /** The design brief and Qloo taste profile: colours, wall finish and furniture style come from these. */
+  /** The design brief and taste profile: colours, wall finish and furniture style come from these. */
   brief?: Parameters<typeof lookOf>[0];
   taste?: Parameters<typeof lookOf>[1];
   mode: Mode;

@@ -3,7 +3,7 @@
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { tick } from "@/components/fx/sfx";
 
-// The taste graph: what someone loves (left) is read by Qloo into taste words (the hub), which become design
+// The taste graph: what someone loves (left) is read by Amorphix's taste model into taste words (the hub), which become design
 // choices (right). The love in focus lights its words and the choices they lead to, with pulses running along the
 // links. Drawn in one 1000 × 560 frame: nodes are HTML placed by percentage, the links one SVG over them.
 
@@ -86,7 +86,7 @@ export function TasteGraph({ loves, tags, makes, links, on, onPick }: { loves: L
         {!still && <span aria-hidden className="absolute h-28 w-28 animate-ping rounded-full border border-accent/30" style={{ animationDuration: "2.6s" }} />}
         <div className="relative grid h-24 w-24 place-items-center rounded-full border border-accent/50 bg-paper text-center shadow-[0_0_60px_-10px_var(--accent)]">
           <span className="font-mono text-[9px] uppercase leading-tight tracking-[0.2em] text-accent">
-            Qloo
+            Amorphix
             <br />
             taste AI
           </span>

@@ -5,8 +5,8 @@ import { cardWords } from "@/lib/interview/logic";
 import { styleOf } from "@/lib/three/materials";
 import { sameName, STYLE_NAME } from "@/lib/quiz/picks";
 
-// The landing page's live strip: three pairs of loves, each read by Qloo right now into a style, its words (each
-// with the love it came from) and the brands it points to. Qloo's answers are cached server side, never in the repo.
+// The landing page's live strip: three pairs of loves, each read by Amorphix right now into a style, its words (each
+// with the love it came from) and the brands it points to. Amorphix's answers are cached server side, never in the repo.
 
 const EXAMPLES: { space: string; loves: [string, string][] }[] = [
   { space: "A home", loves: [["The Grand Budapest Hotel", "urn:entity:movie"], ["Aman Tokyo", "urn:entity:place"]] },
@@ -38,7 +38,7 @@ async function read(ex: (typeof EXAMPLES)[number]) {
 
 export async function GET() {
   const reads = (await Promise.all(EXAMPLES.map((ex) => read(ex).catch(() => null)))).filter(Boolean);
-  // the page falls back to a written example when Qloo can't answer
+  // the page falls back to a written example when Amorphix can't answer
   if (!reads.length) return Response.json({ reads: [] }, { status: 502 });
   return Response.json({ reads }, { headers: { "Cache-Control": "public, s-maxage=86400, stale-while-revalidate=604800" } });
 }

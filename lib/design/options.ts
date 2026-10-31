@@ -5,7 +5,7 @@ import { runningOf } from "../interview/running.ts";
 import type { Profile } from "../taste/types.ts";
 
 // The three plans a client sees: the layout concepts that fit how they live, best first, each with the reasons
-// in their own words (from the interview) or their loves (from Qloo). Nothing in a reason is invented: a line
+// in their own words (from the interview) or their loves (from Amorphix). Nothing in a reason is invented: a line
 // appears only when an answer or a taste signal backs it.
 
 export type Who = { interview?: Record<string, unknown> | null; taste?: Profile | null; space_type?: string | null };
@@ -28,8 +28,8 @@ const QUIET = /quiet|serene|calm|peaceful|intimate|relax|tranquil|secluded|roman
 const OUTDOOR = /garden|outdoor|patio|terrace|green|nature|courtyard|rooftop|botanical/;
 
 /**
- * How strongly the Qloo taste leans one way, and who it comes from: things the user named (layers 1 and 2),
- * or, failing that, brands Qloo matched to the films and music they love (layer 3). The two are worded
+ * How strongly the Amorphix taste leans one way, and who it comes from: things the user named (layers 1 and 2),
+ * or, failing that, brands Amorphix matched to the films and music they love (layer 3). The two are worded
  * differently so a matched brand is never passed off as something the user said they love.
  */
 function lean(taste: Profile | null | undefined, re: RegExp) {

@@ -3,7 +3,7 @@ import type { TasteSignal } from "../project/store.ts";
 import { TIERS, type Tier } from "./costs.ts";
 
 // The quality tier a budget starts at, read from the price of what they love: a 4-star hotel, a $$$ brand, a
-// moderately priced café. Only things they named count; a brand Qloo matched says nothing about their wallet.
+// moderately priced café. Only things they named count; a brand Amorphix matched says nothing about their wallet.
 
 export type PriceSignal = { name: string; level: 1 | 2 | 3 | 4; says: string };
 type Props = { price_level?: number; hotel_class?: number };
@@ -37,7 +37,7 @@ export function tierFrom(signals: PriceSignal[]): { tier: Tier; signals: PriceSi
   return { tier: TIERS[clamp(avg) - 1], signals };
 }
 
-/** Looks up what they love in Qloo (one cached call) and reads the tier from it. */
+/** Looks up what they love in Amorphix (one cached call) and reads the tier from it. */
 export async function tasteTier(loved: TasteSignal[]): Promise<{ tier: Tier; signals: PriceSignal[] }> {
   const ids = loved.filter((s) => s.layer !== 3).map((s) => s.entityId);
   const found = await entitiesById(ids);

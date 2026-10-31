@@ -2,7 +2,7 @@ import { ownedProject } from "@/lib/auth/request";
 import { shoppingFor } from "@/lib/shop/fetch";
 import { TIERS, type Tier } from "@/lib/budget/costs";
 
-// The shopping list: Qloo brand look-ups and rivals on a first visit (about 15 s cold), cached after that.
+// The shopping list: Amorphix brand look-ups and rivals on a first visit (about 15 s cold), cached after that.
 export const maxDuration = 60;
 
 export async function GET(request: Request, ctx: RouteContext<"/api/projects/[id]/shopping">) {

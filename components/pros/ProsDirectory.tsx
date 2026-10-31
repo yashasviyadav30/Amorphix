@@ -25,7 +25,7 @@ type Pro = {
 const initials = (n: string) => n.split(/\s+/).slice(0, 2).map((w) => w[0]?.toUpperCase()).join("");
 
 // "Suggest someone": architects or builders on Amorphix, ranked by how well their past work fits this client's
-// Qloo taste, with the style words they share. Asking one sends them a request; they see the design read only.
+// taste, with the style words they share. Asking one sends them a request; they see the design read only.
 export function ProsDirectory() {
   const [project, setProject] = useState<string | null>(null);
   const [role, setRole] = useState<"architect" | "builder">("architect");
@@ -60,7 +60,7 @@ export function ProsDirectory() {
         <Decode text={role === "architect" ? "Architects who fit your taste" : "Builders who fit your taste"} />
       </h1>
       <p className="mt-2 max-w-2xl text-ink-soft">
-        Ranked by how close their past work on Amorphix is to your Qloo taste{data?.city ? `, with pros near ${data.city.split(",")[0]} a little higher` : ""}. Ask one and they see your design before saying yes.
+        Ranked by how close their past work on Amorphix is to your taste{data?.city ? `, with pros near ${data.city.split(",")[0]} a little higher` : ""}. Ask one and they see your design before saying yes.
       </p>
       <div role="tablist" aria-label="Kind of pro" className="mt-6 inline-flex gap-1 rounded-full border border-line p-1 text-sm">
         {(["architect", "builder"] as const).map((r) => (

@@ -5,7 +5,7 @@ import { useRef, useState } from "react";
 import { Reveal } from "@/components/fx/Motion";
 import { tick } from "@/components/fx/sfx";
 
-// The film: a real run of the app from every side, played from storage (it shows Qloo images, so it isn't in the
+// The film: a real run of the app from every side, played from storage (it shows Amorphix images, so it isn't in the
 // repo). Muted and looping once it's in view, with a button to turn the sound on. If the film isn't there, the
 // section steps aside.
 const BASE = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/media`;

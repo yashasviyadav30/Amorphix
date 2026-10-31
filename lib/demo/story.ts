@@ -2,7 +2,7 @@ import type { Answers, TastePick } from "../interview/script.ts";
 
 // The judges' demo: one Los Angeles studio and the people around it, and the interview answers that made each
 // project. scripts/demo-world.ts builds the world from these through the real app; the interview replays Maya's.
-// Synthetic people only. The taste picks are the quiz's own pictures (their Qloo ids are public entity ids).
+// Synthetic people only. The taste picks are the quiz's own pictures (their Amorphix ids are public entity ids).
 
 export const DEMO_EMAIL = (role: DemoRole) => `amorphix.demo.${role}@example.com`;
 export const DEMO_ROLES = ["maya", "lena", "mike", "sam"] as const;

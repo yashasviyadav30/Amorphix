@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import type { Entity } from "../qloo/api.ts";
 import { closeness, matchesFor, resolvePicks, vagueHint } from "./taste.ts";
 
-// Synthetic look-ups shaped like Qloo's search results.
+// Synthetic look-ups shaped like Amorphix's search results.
 const e = (name: string, type: string, extra: Partial<Entity> = {}): Entity => ({ entity_id: name.toLowerCase().replace(/\W+/g, "-"), name, types: [`urn:entity:${type}`], ...extra });
 
 test("a genre is not a film: a vague answer finds nothing", () => {

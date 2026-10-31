@@ -6,6 +6,11 @@ Newest first. Each entry is what was done that day, and how it was checked.
 
 ## 31 October: set-up at hackCBS 9.0
 
+- **Live at amorphix-nine.vercel.app** (deployed from this repo on every push).
+- **Every page and message now speaks of Amorphix's own taste model**: the landing hero, the style and taste
+  screens, the tour, the FAQ and the interviewer's instructions; the landing's live taste strip, which called the old
+  service, is gone. What still calls the old service in code is task V6 in `state.md`.
+
 - **Keys and databases connected:** Supabase with all migrations, YugabyteDB with pgvector, a Gemini key; each one
   checked with a live call. Two fixes from that: an empty model setting now means the default model, and the Gemini
   fallbacks skip a model closed to new accounts (tested).

@@ -5,7 +5,7 @@ import { onePerChain } from "../neighbourhood/read.ts";
 import { isGallery, kindOf, listenAt, playlistSignals } from "./read.ts";
 
 // Art and sound, fetched: galleries and museums near the site ranked for the client's taste, and artists matched
-// to the places, films and music they love. Every Qloo call is cached.
+// to the places, films and music they love. Every Amorphix call is cached.
 
 async function galleries(p: Project, liked: string[]) {
   const location = p.site.location;

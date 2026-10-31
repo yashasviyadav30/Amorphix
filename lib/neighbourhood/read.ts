@@ -1,12 +1,12 @@
-// Type-only: this file runs in the browser too, so it must not pull in the Qloo client.
+// Type-only: this file runs in the browser too, so it must not pull in the Amorphix client.
 import type { Entity, QlooTag } from "../qloo/api.ts";
 import type { StyleTag } from "../taste/types.ts";
 
-// The neighbourhood read for a business: the places of the same kind near the site, ranked by Qloo for the
+// The neighbourhood read for a business: the places of the same kind near the site, ranked by Amorphix for the
 // owner's taste (and the crowd they want), what those favourites look like, how strongly the area matches the
-// owner's taste, and how the café they love runs. Pure: the Qloo and map calls are in fetch.ts.
+// owner's taste, and how the café they love runs. Pure: the Amorphix and map calls are in fetch.ts.
 
-/** Who the business is for. With a taste signal, Qloo re-ranks the same places for the crowd. */
+/** Who the business is for. With a taste signal, Amorphix re-ranks the same places for the crowd. */
 export type Crowd = "all" | "young" | "mid" | "older";
 export const CROWDS: Record<Crowd, { label: string; age?: string }> = {
   all: { label: "Everyone" },
@@ -29,7 +29,7 @@ export const NEAR: Record<string, { tags: string[]; what: string }> = {
 const tagId = (t: QlooTag) => t.tag_id ?? t.id ?? "";
 const idsOf = (e: Entity) => (e.tags ?? []).map(tagId);
 
-// Qloo tags many places "cafe" because they have one inside (a cinema, an observation deck, a bar). A place counts
+// Amorphix tags many places "cafe" because they have one inside (a cinema, an observation deck, a bar). A place counts
 // as a café only if it is one: a coffee-type category or "café" in its name, and nothing that makes it something else.
 const CAFE_LIKE = /:(coffee_shop|coffee_store|coffee_roastery|espresso_bar|tea_house|bakery|pastry_shop|cake_shop)$/;
 const CAFE_NAME = /caf[eé]|coffee|kaffee|chai/i;

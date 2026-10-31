@@ -1,6 +1,6 @@
 import type { Layout } from "../layout/schema.ts";
 
-// Each room's mood and light, from the ambience of the places the client loves (Qloo's ambience tags): a bedroom
+// Each room's mood and light, from the ambience of the places the client loves (Amorphix's ambience tags): a bedroom
 // takes the calmest word they have, a kitchen the brightest, a living room the liveliest or warmest. The light
 // follows the mood: warm and low for a cosy room, bright and even for a clean one. Pure; the walkthrough shows it
 // and the 3D tints each room's light with it.

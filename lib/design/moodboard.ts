@@ -4,7 +4,7 @@ import type { TasteSignal } from "../project/store.ts";
 import { kindOf } from "../interview/logic.ts";
 import { creditOf } from "./trail.ts";
 
-// The moodboard: real photos from Qloo of what the user loves, the home brands matched to them, and places
+// The moodboard: real photos from Amorphix of what the user loves, the home brands matched to them, and places
 // elsewhere that share their look. Every photo says why it's there; nothing goes up without a reason.
 
 export type Tile = { id: string; name: string; image: string; kind: "loved" | "matched" | "kindred"; caption: string };
@@ -59,7 +59,7 @@ export function tiles(p: Taste, found: Entity[], kindred: Entity[], max = 12, br
   return out.slice(0, max);
 }
 
-/** Looks the photos up in Qloo (two calls, both cached) and builds the tiles. */
+/** Looks the photos up in Amorphix (two calls, both cached) and builds the tiles. */
 export async function moodboard(p: Taste): Promise<Tile[]> {
   const loved = p.taste_signals.map((s) => s.entityId);
   const brands = (p.taste?.brands ?? []).slice(0, 8).map((b) => b.id);

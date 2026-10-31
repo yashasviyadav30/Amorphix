@@ -3,7 +3,7 @@ import type { Profile } from "../taste/types.ts";
 import type { TasteSignal } from "../project/store.ts";
 import { creditOf } from "../design/trail.ts";
 
-// The green side of their taste, from Qloo: what the brands they love (or were matched to) do for the planet, and
+// The green side of their taste, from Amorphix: what the brands they love (or were matched to) do for the planet, and
 // plant nurseries near the site ranked for their taste.
 
 export type EcoBrand = { name: string; loved: boolean; via: string[]; does: string[] };
@@ -25,7 +25,7 @@ export function ecoBrands(p: Taste, found: Entity[]): EcoBrand[] {
   return out.sort((a, b) => Number(b.loved) - Number(a.loved));
 }
 
-/** Looks the brands and nearby nurseries up in Qloo (cached). */
+/** Looks the brands and nearby nurseries up in Amorphix (cached). */
 export async function ecoFor(p: Taste & { site: { location?: string | null } }): Promise<{ brands: EcoBrand[]; nurseries: Nursery[] }> {
   const loved = p.taste_signals.map((s) => s.entityId);
   const ids = [...p.taste_signals.filter((s) => s.layer === 2).map((s) => s.entityId), ...(p.taste?.brands ?? []).slice(0, 10).map((b) => b.id)];
