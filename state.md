@@ -9,17 +9,16 @@ here. Updated 1 Nov 2026, hackCBS 9.0. Dated detail is in `progress.md` (newest 
 
 ---
 
-## Resume here (1 Nov, 1:30 am)
+## Resume here (1 Nov, 3:45 am)
 
-V6 is done (commit 732cec2): nothing calls the old external taste service; the module, its routes and its cache
-table migration are gone, and `git grep -i` for its name finds nothing.
+Done and checked on the live site: V6 (no old service left), V5 (`/api/taste/profile` answers with
+`engine: "yugabytedb"`, so Vercel reaches YugabyteDB), brand logos on the shopping list, and a full interview with a
+photo and three names: the reveal, the design, the budget's taste tier and the shopping list all work.
 
-1. **Walk-through on the live site:** `/start` to the end, a name or two and a photo on the taste questions, then
-   "Design my space": the budget level, shopping list and greenery should all load without errors.
-2. **Demo seed (Y5):** `scripts/seed-demo.ts` now builds its taste with `scripts/taste-node.ts` (Gemini descriptions,
-   CLIP in Node, the taste engine). Safe to run now.
-3. **V5 (YugabyteDB)**, then **V7** (cost and risk model). The YugabyteDB allow list needs 0.0.0.0/0 for Vercel.
-4. Optional, if time: a moodboard from the describe output (text tiles), since photos aren't uploaded.
+1. **V7:** cost and overrun-risk model on the budget step.
+2. Demo seed (Y5) is safe to run now (`scripts/seed-demo.ts`).
+3. Optional: a moodboard from the describe output (text tiles).
+4. Meko (YugabyteDB's agent memory track): decided to skip.
 
 ## 1. What Amorphix is today (the product map)
 
