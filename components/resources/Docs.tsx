@@ -49,7 +49,7 @@ const SECTIONS: Section[] = [
         <Steps
           items={[
             "Tell Amorphix about the space: what it is, where, how big, who uses it, your budget.",
-            "Find your style: pick a few places, brands, films or music you love. Amorphix reads what they have in common.",
+            "Find your style: name a few places, brands, films or music you love, and add photos if you like. Amorphix reads what they have in common.",
             "Choose one of three plans, each with what it does best and what it gives up, or upload your own.",
             "Walk through it in 3D, change anything by chat, and see the budget follow.",
             "Share it with your architect, client or builder, approve it, follow the build and move in.",
@@ -249,17 +249,17 @@ const SECTIONS: Section[] = [
     body: (
       <>
         <p>
-          Every design decision in Amorphix can be traced back to something you said you love. The strip under the top of the{" "}
-          <Link href="/?site" className="text-accent hover:underline">home page</Link> shows it live: two loves, and what Amorphix reads from them right now.
+          Every design decision in Amorphix can be traced back to something you said you love. The band under the top of the{" "}
+          <Link href="/?site" className="text-accent hover:underline">home page</Link> shows real reads: two loves, and what the taste model reads from them.
         </p>
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
           {[
             ["The interview", "Amorphix asks about the space and about you, one question at a time, in English, Hindi or Hinglish, typed, tapped or spoken."],
-            ["Amorphix's taste model", "The things you name become taste signals. Amorphix returns what they share: decor, ambience, price level, and brands and places that match."],
+            ["Amorphix's taste model", "Each name becomes a short description of the look it evokes, and each description and photo a vector, made on your device. Vector search on YugabyteDB finds the style words each one stands out for and the home brands nearest the whole taste; their prices set where the budget starts."],
             ["The brief", "A style name and its words, a palette and materials, each linked to the taste behind it."],
             ["The plans", "A layout engine fits your rooms to the site three ways and checks each one against building rules."],
             ["3D and moods", "Each room gets a mood and light from the ambience of the places you love, by day and by night."],
-            ["Budget and shopping", "Real cost tables for your market, in your currency, and brands at your price level, a tier up and a tier down."],
+            ["Budget and shopping", "Real cost tables for your market, in your currency, the risk of going over from thousands of simulated builds, and brands at your price level, a tier up and a tier down."],
           ].map(([t, d]) => (
             <div key={t} className="rounded-2xl border border-line bg-paper p-4">
               <p className="font-medium">{t}</p>
@@ -292,7 +292,7 @@ const SECTIONS: Section[] = [
     body: (
       <>
         <p>
-          Amorphix is a Next.js app (App Router, React, Tailwind) with three.js for the 3D, Supabase for accounts, data and files, its own taste model (CLIP vectors for names and photos, matched to style words and brands) for taste, and an AI model for the brief, the room list and changes by chat. The interview is a script that asks one question at a time and never waits on a model; an interviewer agent built with eve (agents/interviewer, with its own tools, instructions and evals) is mounted at /eve/interviewer.
+          Amorphix is a Next.js app (App Router, React, Tailwind) with three.js for the 3D, Supabase for accounts, data and files, YugabyteDB with pgvector for the taste vectors, its own taste model (CLIP vectors for names and photos, matched to style words and brands) for taste, and an AI model for the brief, the room list and changes by chat. The interview is a script that asks one question at a time and never waits on a model; an interviewer agent built with eve (agents/interviewer, with its own tools, instructions and evals) is mounted at /eve/interviewer.
         </p>
         <Code>{`app/          pages and API routes
 components/   screens; components/fx holds the shared sounds and motion
@@ -304,6 +304,7 @@ scripts/      tools for checking against the real services`}</Code>
         <Code>{`npm install
 cp .env.example .env.local   # Supabase, Amorphix and model keys
 npm run migrate               # creates the tables
+node --env-file=.env.local scripts/yb-taste.ts   # loads the taste vectors into YugabyteDB
 npm run dev                   # http://localhost:3000
 npm test                      # unit tests`}</Code>
         <p className="mt-6 font-medium">The API</p>
@@ -313,7 +314,7 @@ npm test                      # unit tests`}</Code>
             <tbody className="divide-y divide-line">
               {[
                 ["POST /api/interview", "every answer of the interview and the taste read on the device: checked, the project created"],
-                ["POST /api/taste", "names you love → taste signals and taste tags"],
+                ["POST /api/taste/profile", "the vectors read on the device → the taste profile, by vector search on YugabyteDB"],
                 ["GET /api/projects/:id", "a project and your role on it"],
                 ["POST /api/projects/:id/design", "brief, three plans and their trade-offs"],
                 ["POST /api/projects/:id/choose", "pick a plan"],
@@ -353,7 +354,7 @@ npm test                      # unit tests`}</Code>
     title: "Data and privacy",
     body: (
       <p>
-        What Amorphix stores, why, and how to delete it is in the <Link href="/privacy" className="text-accent hover:underline">privacy page</Link>. Taste data from Amorphix is used to design your project and cached only to keep it fast.
+        What Amorphix stores, why, and how to delete it is in the <Link href="/privacy" className="text-accent hover:underline">privacy page</Link>. Your taste profile is kept with your project to design it. Photos you add are read on your device; only their vectors are sent.
       </p>
     ),
   },
