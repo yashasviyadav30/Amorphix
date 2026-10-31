@@ -69,7 +69,7 @@ Each task has an owner so both can work at the same time without touching the sa
 | V2 | ✅ Browser CLIP (`lib/taste/clip.ts`) and the photo style quiz at `/quiz` | Done 31 Oct, checked in the browser |
 | V3 | ✅ (first pass) the profile is built in the browser by `components/interview/useTaste.ts` and saved by `/api/interview` | Done 31 Oct; moves to the server with V5 |
 | V4 | ⏳ Interview: typed names and idea chips, photos on the first taste question, live taste card from the device | Code done 31 Oct; walk-through on the live site after V6 |
-| V5 | **YugabyteDB vector store** (after Y2): tables for style words and brands with pgvector, nearest-neighbour queries replace the in-memory match | Profile comes from Yugabyte queries |
+| V5 | ✅ **YugabyteDB vector store:** `taste_words` and `taste_brands` (pgvector, ybhnsw index), loaded by `scripts/yb-taste.ts`; `/api/taste/profile` builds the profile from four vector queries (`lib/taste/yb.ts`), falling back to memory | Done 1 Nov, local check: same profile as memory, ~350 ms warm; Vercel needs the 0.0.0.0/0 allow list |
 | V6 | ✅ Replace the rest of the old taste service: shopping and budget level from the brand catalogue, plan import on the device, art and neighbourhood dropped | Done 1 Nov, old module deleted, 404 tests and type check clean |
 | V7 | **Cost and risk model:** budget by room and trade and the risk of going over, shown on the budget step | Model trained, tested, on screen |
 

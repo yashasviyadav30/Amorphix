@@ -6,6 +6,14 @@ Newest first. Each entry is what was done that day, and how it was checked.
 
 ## 1 November
 
+- **V5, the taste engine on YugabyteDB:** the 50 style words and 30 brands are rows with pgvector columns and an HNSW
+  index (`ybhnsw`); the browser sends the CLIP vectors it made and `/api/taste/profile` asks YugabyteDB for every
+  similarity in four queries (the brands nearest the whole taste are an `order by <=> limit` query). Brand vectors are
+  measured from the catalogue's average, so affinities spread from about -0.15 to 0.2 instead of all sitting near
+  0.88. Checked: the profile from YugabyteDB matches the in-memory engine (differences under 0.00002), about 350 ms
+  warm; if the database can't be reached the same engine runs in memory.
+- **Shopping list logos:** each catalogue brand has its website, which gives its logo and its shop link.
+
 - **V6, the whole app on Amorphix's own taste model:** the shopping list picks each piece's brand from the brands
   closest to the person's taste, nearest their price tier, with a cheaper and a dearer brand from the catalogue; the
   budget's starting tier is the average price level of their closest brands; plan import reads the three names on

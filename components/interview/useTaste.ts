@@ -31,12 +31,11 @@ export function useTaste(picks: TastePick[], photos: File[]) {
     setReading(true);
     setFailed(false);
     (async () => {
-      const [{ embedImages, embedTexts }, { buildProfile }, { styleName }, { cardWords, profileSummary }, vectors] = await Promise.all([
+      const [{ embedImages, embedTexts }, { profileOf }, { styleName }, { cardWords, profileSummary }] = await Promise.all([
         import("@/lib/taste/clip"),
-        import("@/lib/taste/engine"),
+        import("@/lib/taste/profile-client"),
         import("@/lib/taste/name"),
         import("@/lib/interview/logic"),
-        import("@/lib/taste/vectors.json"),
       ]);
       // names not read yet: describe them, then embed the descriptions
       const fresh = picks.map((p) => p.name).filter((n) => !names.current.has(n));
@@ -57,12 +56,7 @@ export function useTaste(picks: TastePick[], photos: File[]) {
           return r ? [{ ...r, entityId: `name:${p.name.toLowerCase()}` }] : [];
         }),
       ];
-      const profile = buildProfile(
-        reads.map((r) => ({ source: { entityId: r.entityId, name: r.name, layer: r.layer }, vector: r.vector })),
-        vectors.default.words as never,
-        vectors.default.brands,
-        12,
-      );
+      const profile = await profileOf(reads.map((r) => ({ source: { entityId: r.entityId, name: r.name, layer: r.layer }, vector: r.vector })));
       if (!live) return;
       setResult({
         profile,

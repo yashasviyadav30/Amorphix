@@ -45,9 +45,14 @@ export function cosine(a: number[], b: number[]) {
   return na && nb ? dot / Math.sqrt(na * nb) : 0;
 }
 
-// The words one input stands out for, with how far above its average each sits.
-export function standouts(vector: number[], words: WordVector[]) {
-  const sims = words.map((w) => cosine(vector, w.vector));
+// CLIP text vectors all lean one way, so raw similarities to brands bunch up (0.83 to 0.93 for every taste). Measured
+// from the catalogue's average instead, they spread out (about -0.15 to 0.2) and an affinity means something.
+export const centreOf = (vectors: number[][]) =>
+  vectors.length ? vectors[0].map((_, i) => vectors.reduce((s, v) => s + v[i], 0) / vectors.length) : [];
+export const minus = (v: number[], centre: number[]) => (centre.length ? v.map((x, i) => x - centre[i]) : v);
+
+// The words one input stands out for, given its similarity to every word, with how far above its average each sits.
+export function standoutsOf(sims: number[], words: Pick<WordVector, "family" | "value">[]) {
   const mean = sims.reduce((s, x) => s + x, 0) / sims.length;
   const sd = Math.sqrt(sims.reduce((s, x) => s + (x - mean) ** 2, 0) / sims.length) || 1;
   const scored = words.map((w, i) => ({ word: w, z: (sims[i] - mean) / sd })).filter((x) => x.z >= STANDS_OUT);
@@ -57,34 +62,60 @@ export function standouts(vector: number[], words: WordVector[]) {
   return out;
 }
 
-export function buildProfile(signals: Signal[], words: WordVector[], brands: BrandVector[] = [], takeBrands = 12): Profile {
+export const standouts = (vector: number[], words: WordVector[]) => standoutsOf(words.map((w) => cosine(vector, w.vector)), words);
+
+/** The taste as one vector: each input weighted by where it came from. */
+export function tasteVector(signals: Signal[]): number[] {
+  const taste = new Array(signals[0]?.vector.length ?? 0).fill(0);
+  for (const s of signals) s.vector.forEach((x, i) => (taste[i] += x * LAYER_WEIGHT[s.source.layer]));
+  return taste;
+}
+
+// What the profile is built from, wherever the similarities were worked out (in memory, or by the vector database).
+export type Sims = {
+  /** For each input, its similarity to every style word, in `words` order. */
+  words: number[][];
+  /** The brands nearest the whole taste, best first, with their (centred) affinity. */
+  nearest: { id: string; name: string; aesthetic: string[]; affinity: number }[];
+  /** For each input, its (centred) similarity to each brand, by brand id. */
+  brands: Map<string, number>[];
+};
+
+/** Pure: the profile from the inputs and their similarities. */
+export function profileFrom(signals: Signal[], words: Pick<WordVector, "family" | "value">[], sims: Sims): Profile {
   const byKey = new Map<string, StyleTag>();
-  for (const s of signals)
-    for (const { word, z } of standouts(s.vector, words)) {
+  signals.forEach((s, i) => {
+    for (const { word, z } of standoutsOf(sims.words[i], words)) {
       const key = `${word.family}:${word.value}`;
       const tag = byKey.get(key) ?? { family: word.family, value: word.value, weight: 0, sources: [] };
       tag.weight += LAYER_WEIGHT[s.source.layer] * z * (FAMILY_WEIGHT[word.family] ?? 1);
       if (!tag.sources.some((e) => e.entityId === s.source.entityId)) tag.sources.push(s.source);
       byKey.set(key, tag);
     }
+  });
+  const r3 = (x: number) => Math.round(x * 1000) / 1000;
+  const brands: Brand[] = sims.nearest.map((b) => ({
+    id: b.id,
+    name: b.name,
+    affinity: r3(b.affinity),
+    aesthetic: b.aesthetic,
+    because: signals.map((s, i) => ({ entityId: s.source.entityId, score: r3(sims.brands[i].get(b.id) ?? 0) })).sort((x, y) => y.score - x.score).slice(0, 2),
+  }));
+  return { tags: withoutOpposites([...byKey.values()].sort((a, b) => b.weight - a.weight)), brands };
+}
 
-  // The taste as one vector, each input weighted by where it came from; brands are ranked by how close they sit to it.
-  const dims = signals[0]?.vector.length ?? 0;
-  const taste = new Array(dims).fill(0);
-  for (const s of signals) s.vector.forEach((x, i) => (taste[i] += x * LAYER_WEIGHT[s.source.layer]));
-  const ranked: Brand[] = dims
-    ? brands
-        .map((b) => ({ b, affinity: cosine(taste, b.vector) }))
-        .sort((x, y) => y.affinity - x.affinity)
-        .slice(0, takeBrands)
-        .map(({ b, affinity }) => ({
-          id: b.id,
-          name: b.name,
-          affinity: Math.round(affinity * 1000) / 1000,
-          aesthetic: b.aesthetic,
-          because: signals.map((s) => ({ entityId: s.source.entityId, score: Math.round(cosine(s.vector, b.vector) * 1000) / 1000 })).sort((x, y) => y.score - x.score).slice(0, 2),
-        }))
-    : [];
-
-  return { tags: withoutOpposites([...byKey.values()].sort((a, b) => b.weight - a.weight)), brands: ranked };
+/** The profile worked out in memory (the browser, scripts, and the fallback when the vector database is away). */
+export function buildProfile(signals: Signal[], words: WordVector[], brands: BrandVector[] = [], takeBrands = 12): Profile {
+  if (!signals.length) return { tags: [], brands: [] };
+  const centre = centreOf(brands.map((b) => b.vector));
+  const centred = brands.map((b) => ({ ...b, vector: minus(b.vector, centre) }));
+  const taste = minus(tasteVector(signals), centre);
+  return profileFrom(signals, words, {
+    words: signals.map((s) => words.map((w) => cosine(s.vector, w.vector))),
+    nearest: centred
+      .map((b) => ({ id: b.id, name: b.name, aesthetic: b.aesthetic, affinity: cosine(taste, b.vector) }))
+      .sort((x, y) => y.affinity - x.affinity)
+      .slice(0, takeBrands),
+    brands: signals.map((s) => new Map(centred.map((b) => [b.id, cosine(minus(s.vector, centre), b.vector)]))),
+  });
 }

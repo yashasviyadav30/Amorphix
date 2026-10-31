@@ -50,15 +50,14 @@ export function Quiz() {
     setError(null);
     setLoaded(0);
     try {
-      const [{ embedImages }, { buildProfile }, { styleName }, vectors] = await Promise.all([
+      const [{ embedImages }, { profileOf }, { styleName }] = await Promise.all([
         import("@/lib/taste/clip"),
-        import("@/lib/taste/engine"),
+        import("@/lib/taste/profile-client"),
         import("@/lib/taste/name"),
-        import("@/lib/taste/vectors.json"),
       ]);
       const vecs = await embedImages(files, setLoaded);
       const signals = vecs.map((vector, i) => ({ source: { entityId: `photo-${i + 1}`, name: `Photo ${i + 1}`, layer: 1 as const }, vector }));
-      const profile = buildProfile(signals, vectors.default.words as never, vectors.default.brands, 6);
+      const profile = await profileOf(signals, 6);
       setCard({ style: styleName(profile), profile, photos: urls });
       setStep("card");
       chime();
