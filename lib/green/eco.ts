@@ -1,5 +1,5 @@
 import { entitiesById, isHomeBrand, localStores, tagId, type Entity } from "../qloo/api.ts";
-import type { Profile } from "../qloo/taste.ts";
+import type { Profile } from "../taste/types.ts";
 import type { TasteSignal } from "../project/store.ts";
 import { creditOf } from "../design/trail.ts";
 

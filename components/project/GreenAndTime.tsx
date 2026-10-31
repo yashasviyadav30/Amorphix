@@ -7,7 +7,7 @@ import { HudCard, Reveal, Ring, Scanning } from "@/components/fx/Motion";
 import { ok, tick } from "@/components/fx/sfx";
 import type { Layout, Shell } from "@/lib/layout/schema";
 import type { Brief } from "@/lib/design/brief";
-import type { Profile } from "@/lib/qloo/taste";
+import type { Profile } from "@/lib/taste/types";
 import type { Tier } from "@/lib/budget/costs";
 import { timeline } from "@/lib/budget/timeline";
 import { addAll, choicesOf, fixes, scoreWith, type Ticked } from "@/lib/green/improve";

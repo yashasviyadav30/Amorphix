@@ -1,6 +1,6 @@
 // Type-only: this file runs in the browser too, so it must not pull in the Qloo client.
 import type { Entity, QlooTag } from "../qloo/api.ts";
-import type { StyleTag } from "../qloo/taste.ts";
+import type { StyleTag } from "../taste/types.ts";
 
 // The neighbourhood read for a business: the places of the same kind near the site, ranked by Qloo for the
 // owner's taste (and the crowd they want), what those favourites look like, how strongly the area matches the

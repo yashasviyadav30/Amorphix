@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { cardWords, missingForDesign, profileSummary, siteSizeProblem, toCandidate, toMetres } from "./logic.ts";
 import type { Project } from "../project/store.ts";
-import type { Profile } from "../qloo/taste.ts";
+import type { Profile } from "../taste/types.ts";
 
 const project = (over: Partial<Project> = {}): Project => ({
   id: "p", owner_id: null, guest_id: null, mode: "owner", space_type: null, title: null, status: "interview",

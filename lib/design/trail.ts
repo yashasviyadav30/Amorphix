@@ -1,4 +1,4 @@
-import type { Profile, StyleTag } from "../qloo/taste.ts";
+import type { Profile, StyleTag } from "../taste/types.ts";
 import { isComplaint } from "../qloo/words.ts";
 import type { TasteSignal } from "../project/store.ts";
 import type { Layout } from "../layout/schema.ts";

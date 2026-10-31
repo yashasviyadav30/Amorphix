@@ -1,6 +1,6 @@
 import { supabaseAdmin } from "../supabase/admin.ts";
 import type { Layout, Program, SpaceType } from "../layout/schema.ts";
-import type { Profile } from "../qloo/taste.ts";
+import type { Profile } from "../taste/types.ts";
 
 export type Site = {
   width?: number;

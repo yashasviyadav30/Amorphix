@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { creditOf, nameWords, sayCredit, styleWords, tasteTrail } from "./trail.ts";
-import type { Profile } from "../qloo/taste.ts";
+import type { Profile } from "../taste/types.ts";
 import type { Brief } from "./brief.ts";
 import type { Layout } from "../layout/schema.ts";
 

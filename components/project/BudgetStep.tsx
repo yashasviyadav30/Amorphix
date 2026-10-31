@@ -9,7 +9,7 @@ import type { Layout } from "@/lib/layout/schema";
 import { CATEGORY_NAMES, estimate, knownMarket, marketOf, MARKETS, money, TIER_NAMES, TIERS, type Category, type Tier, isNewBuild, projectTier } from "@/lib/budget/costs";
 import type { PriceSignal } from "@/lib/budget/tier";
 import type { Brief } from "@/lib/design/brief";
-import type { Profile } from "@/lib/qloo/taste";
+import type { Profile } from "@/lib/taste/types";
 import { GreenAndTime } from "./GreenAndTime";
 import type { Ticked } from "@/lib/green/improve";
 

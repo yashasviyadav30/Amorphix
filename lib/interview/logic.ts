@@ -1,5 +1,6 @@
 import type { Entity } from "../qloo/api.ts";
-import { layerOf, type Profile } from "../qloo/taste.ts";
+import { layerOf } from "../qloo/taste.ts";
+import type { Profile } from "../taste/types.ts";
 import { isComplaint } from "../qloo/words.ts";
 import type { Project } from "../project/store.ts";
 import { livingMissing, livingOf } from "./living.ts";

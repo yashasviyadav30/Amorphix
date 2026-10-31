@@ -2,7 +2,7 @@ import { CONCEPT_IDS, placeConcept, type ConceptId, type Tweaks } from "../layou
 import type { Layout, Program, Shell } from "../layout/schema.ts";
 import { HOME_TYPES, livingOf, type Living } from "../interview/living.ts";
 import { runningOf } from "../interview/running.ts";
-import type { Profile } from "../qloo/taste.ts";
+import type { Profile } from "../taste/types.ts";
 
 // The three plans a client sees: the layout concepts that fit how they live, best first, each with the reasons
 // in their own words (from the interview) or their loves (from Qloo). Nothing in a reason is invented: a line

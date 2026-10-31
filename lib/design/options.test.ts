@@ -6,7 +6,7 @@ import { DEFAULT_SHELLS, TEMPLATES } from "../layout/templates.ts";
 import { isOpen } from "../layout/walls.ts";
 import { validate } from "../layout/validate.ts";
 import { voiceProblems } from "../voice.ts";
-import type { Profile } from "../qloo/taste.ts";
+import type { Profile } from "../taste/types.ts";
 
 const house = TEMPLATES.house;
 // Roomy enough that all four layout concepts fit, so the ranking alone decides which three show.

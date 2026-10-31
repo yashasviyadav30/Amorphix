@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { decorTags, tiles } from "./moodboard.ts";
 import type { Entity } from "../qloo/api.ts";
-import type { Profile } from "../qloo/taste.ts";
+import type { Profile } from "../taste/types.ts";
 
 // Synthetic: a hotel and a film they love, two matched brands (one an app), and places elsewhere.
 const img = (id: string) => ({ image: { url: `https://img.test/${id}.jpg` } });

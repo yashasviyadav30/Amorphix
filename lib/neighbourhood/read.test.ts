@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { areaRank, categoriesFor, hintLine, isKind, lookOf, onePerChain, rankLine, runningHint, saidLine } from "./read.ts";
 import type { Entity } from "../qloo/api.ts";
-import type { StyleTag } from "../qloo/taste.ts";
+import type { StyleTag } from "../taste/types.ts";
 
 // Synthetic places only: Qloo data never goes in the repo.
 const place = (name: string, tags: string[]): Entity => ({ entity_id: name, name, tags: tags.map((t) => ({ tag_id: t })) });
