@@ -16,7 +16,8 @@ Done and checked on the live site: V6 (no old service left), V5 (`/api/taste/pro
 photo and three names: the reveal, the design, the budget's taste tier and the shopping list all work.
 
 1. **V7:** done (`lib/budget/risk.ts`, the "Risk of going over" card on the budget step); check it on the live site.
-2. Demo seed (Y5) is safe to run now (`scripts/seed-demo.ts`).
+2. ✅ Judges' demo re-seeded on the new build (`scripts/demo-world.ts` against `npm run dev`, about 7 minutes); the
+   demo account ids in `lib/demo/ids.ts` now match this database; all 12 tour stops checked on the live site.
 3. Optional: a moodboard from the describe output (text tiles).
 4. Meko (YugabyteDB's agent memory track): decided to skip.
 
@@ -56,7 +57,7 @@ Each task has an owner so both can work at the same time without touching the sa
 | Y2 | ✅ **YugabyteDB:** free cluster on YugabyteDB Aeon. Enable pgvector (`CREATE EXTENSION vector;`). Put `YUGABYTE_URL` in `.env.local` | `psql "$YUGABYTE_URL" -c "select 1"` works |
 | Y3 | ✅ **Gemini key** from a new Google Cloud project on your account: `GOOGLE_GENERATIVE_AI_API_KEY` | `npm run dev`, the interview answers |
 | Y4 | ✅ **Vercel:** live at amorphix-nine.vercel.app; import the repo on your account, add every key from `.env.local` as environment variables | The deploy URL opens |
-| Y5 | **Demo world:** run the seed scripts against the new database (`scripts/demo-world.ts`, then `scripts/seed-demo.ts`) | `/demo` opens the tour |
+| Y5 | ✅ **Demo world:** run the seed scripts against the new database (`scripts/demo-world.ts`, then `scripts/seed-demo.ts`) | `/demo` opens the tour |
 | Y6 | **End-to-end test** on the deploy, as each person (owner, architect, builder, client) and on a phone; write what breaks into section 3 | Every stop of the tour and a fresh design work |
 | Y7 | **Pitch:** slides and a 2-minute demo script | Ready by 10:00 am, 1 Nov |
 

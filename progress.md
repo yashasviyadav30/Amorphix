@@ -6,6 +6,12 @@ Newest first. Each entry is what was done that day, and how it was checked.
 
 ## 1 November
 
+- **The judges' demo on the new build:** the demo people pick by name and their taste is read by the taste model
+  (`scripts/taste-node.ts`); the seed built Maya's house (on site), the Parks' house (in review), Ana's apartment (last
+  week) and Sam's café through the app's own routes. The tour's demo account ids were from another database, so the
+  tour found no projects; they now match. All 12 stops checked on the live site.
+- **"AI architect · powered by Albo AI Research Lab"** on the landing, intro, tour, footer, exports and README.
+
 - **V7, the risk of going over:** `lib/budget/risk.ts` simulates 4,000 builds of the chosen design: each trade drawn
   around its estimate with its own spread and an upward skew, all tied by one shared price factor, with extra
   hidden-condition risk in a renovation. The budget step shows the chance of going over, the most likely, 80% and 90%
