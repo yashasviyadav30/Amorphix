@@ -3,7 +3,8 @@
 Where Amorphix stands, what is left in the 24 hours, and who does what, so anyone on the team can start exactly
 here. Updated 31 Oct 2026, hackCBS 9.0. Dated detail is in `progress.md` (newest first).
 
-**Team:** Vicky Sharma, Yashasvi Yadav. **Repo:** github.com/yashasviyadav30/Amorphix (branch `main`).
+**Team:** Vicky Sharma, Yashasvi Yadav. **Repo:** github.com/yashasviyadav30/Amorphix (public, branch `main`).
+**Live:** amorphix-nine.vercel.app, deployed by Vercel on every push to `main`.
 **Deadline:** end of the hackCBS sprint, 1 Nov 2026, 12:00 pm. **Sponsor database:** YugabyteDB.
 
 ---
