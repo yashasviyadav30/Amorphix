@@ -6,6 +6,10 @@ Newest first. Each entry is what was done that day, and how it was checked.
 
 ## 31 October: set-up at hackCBS 9.0
 
+- **The 24-hour plan, split for two:** `state.md` now maps every part of the product to its folder, lists what is
+  left, and gives each task an owner (Yashasvi: Supabase, YugabyteDB, Gemini key, Vercel on his account, demo data,
+  end-to-end testing, pitch; Vicky: the ML core), with a set-up guide for anyone joining.
+
 - **CLIP vectors for the taste engine:** a catalog of 30 home brands, and `scripts/embed-taste.ts`, which embeds the
   50 style words and the brands with CLIP's text encoder (transformers.js) into `lib/taste/vectors.json`.
 - **What we learned testing it on real phrases:** a bare name ("Muji") matched against style prompts gives generic
