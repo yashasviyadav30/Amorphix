@@ -38,6 +38,8 @@ type Props = {
   mode: Mode;
   /** Bump to frame the whole building again after flying into a room. */
   fitKey?: number;
+  /** Look-around with the inside showing: fly in to frame these rooms together (bump `key` to fly again). */
+  focus?: { ids: string[]; key: number };
   /** Explore mode: the floor you're on, a point to jump to, and where you are now. */
   level?: number;
   go?: { x: number; z: number; key: number };
@@ -984,11 +986,19 @@ function Recenter({ layout, fitKey }: { layout: Layout; fitKey?: number }) {
 
 // One overlay for every room's label, each placed every frame where its room's centre lands on screen. (A drei <Html>
 // per label made a React root per room, and tearing them all down while leaving the 3D warned in development.)
-function RoomLabels({ layout, level }: { layout: Layout; level: number }) {
+function RoomLabels({ layout, level, focus }: { layout: Layout; level: number; focus?: { ids: string[]; key: number } }) {
   const api = useBounds();
   const { camera, size } = useThree();
   const floor = layout.floors.find((f) => f.level === level);
   const y = level * STOREY;
+  useEffect(() => {
+    const rooms = floor?.spaces.filter((s) => focus?.ids.includes(s.id)) ?? [];
+    if (!rooms.length) return;
+    const box = new Box3();
+    for (const s of rooms) box.union(new Box3(new Vector3(s.rect.x, y, s.rect.y), new Vector3(s.rect.x + s.rect.w, y + WALL_H, s.rect.y + s.rect.h)));
+    api.refresh(box).fit();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [focus?.key]);
   const spaces = useMemo(() => floor?.spaces.filter((s) => s.zone !== "circulation" || s.kind === "stairs") ?? [], [floor]);
   const tags = useRef<(HTMLButtonElement | null)[]>([]);
   const at = useMemo(() => new Vector3(), []);
@@ -1125,7 +1135,7 @@ export default function HouseScene(props: Props) {
             <Overview layout={props.layout} autoRotate={props.autoRotate} wheelZoom={props.wheelZoom} />
             {building}
             <Recenter layout={props.layout} fitKey={props.fitKey} />
-            {props.cutaway && <RoomLabels layout={props.layout} level={props.upTo === "all" || props.upTo === undefined ? top : props.upTo} />}
+            {props.cutaway && <RoomLabels layout={props.layout} level={props.upTo === "all" || props.upTo === undefined ? top : props.upTo} focus={props.focus} />}
           </FitBounds>
         ) : showcase ? (
           <>

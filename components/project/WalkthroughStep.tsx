@@ -21,6 +21,8 @@ import { stamp } from "@/components/fx/watermark";
 type SceneProps = ComponentProps<typeof import("@/components/three/HouseScene").default>;
 
 const WHOLE: Record<string, string> = { house: "house", apartment: "apartment", studio: "studio", cafe: "café", office: "office", shop: "shop", hotel: "floor" };
+// Rooms guests don't see; the reveal flies past them to where the lighting is.
+const BACK_OF_HOUSE = new Set(["kitchen", "storage", "bath", "corridor", "stairs", "laundry", "closet", "pantry", "void"]);
 
 const STYLE_NAME = { midcentury: "Mid-century", industrial: "Industrial", scandi: "Scandinavian", boho: "Boho", classic: "Classic", modern: "Modern" } as const;
 
@@ -72,6 +74,7 @@ export function WalkthroughStep({
   const [restart, setRestart] = useState(0);
   // Look around opens on the whole house with its roof on; "Show inside" then cuts it open at the ground floor.
   const [cutaway, setCutaway] = useState(false);
+  const [focus, setFocus] = useState<{ ids: string[]; key: number } | undefined>(undefined);
   const [upTo, setUpTo] = useState<number | "all">("all");
   const [finished, setFinished] = useState(false);
   const [guide, setGuide] = useState(false);
@@ -166,9 +169,14 @@ export function WalkthroughStep({
     if (h !== "#walk" && h !== "#look" && h !== "#inside" && h !== "#reveal") return;
     const t = setTimeout(() => box.current?.scrollIntoView({ behavior: "smooth", block: "center" }), 900);
     const open = h === "#reveal" ? setTimeout(() => (setCutaway(true), setUpTo(0)), 6500) : undefined;
+    // then in close on the biggest room guests use (a café's seating), where the lighting is
+    const area = (r: { w: number; h: number }) => r.w * r.h;
+    const guests = (layout.floors[0]?.spaces.filter((s) => !BACK_OF_HOUSE.has(s.kind)) ?? []).sort((a, b) => area(b.rect) - area(a.rect)).slice(0, 1).map((s) => s.id);
+    const closer = h === "#reveal" && guests.length ? setTimeout(() => setFocus({ ids: guests, key: Date.now() }), 8000) : undefined;
     return () => {
       clearTimeout(t);
       clearTimeout(open);
+      clearTimeout(closer);
     };
   }, []);
 
@@ -268,6 +276,7 @@ export function WalkthroughStep({
           onRoom={setRoom}
           onProgress={(p) => setProgress((old) => (Math.abs(old - p) > 0.004 || p === 1 ? p : old))}
           cutaway={cutaway}
+          focus={focus}
           upTo={upTo}
           level={level}
           go={go}
