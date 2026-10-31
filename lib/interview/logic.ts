@@ -79,12 +79,21 @@ export function profileSummary(profile: Profile, words = 8, brands = 5) {
 /** The words a style card shows: decor, ambience and aesthetic tags, strongest first, each once, with the pick it
  *  came from, and at most three from any one pick so every pick shows. */
 export function cardWords(profile: Profile, max = 6) {
+  // At most three words per source; a word several sources share is credited to one that still has room, so a photo
+  // read first doesn't hide every word the names gave too.
   const per = new Map<string | null, number>();
-  return profile.tags
+  const out: { word: string; from: string | null }[] = [];
+  const tags = profile.tags
     .filter((t) => (t.family === "decor" || t.family === "ambience" || t.family === "aesthetic") && !isComplaint(t.value))
     .sort((a, b) => b.weight - a.weight)
-    .filter((t, i, all) => all.findIndex((x) => x.value === t.value) === i)
-    .map((t) => ({ word: t.value.replaceAll("_", " "), from: t.sources[0]?.name ?? null }))
-    .filter((w) => (per.set(w.from, (per.get(w.from) ?? 0) + 1).get(w.from) ?? 0) <= 3)
-    .slice(0, max);
+    .filter((t, i, all) => all.findIndex((x) => x.value === t.value) === i);
+  for (const t of tags) {
+    if (out.length === max) break;
+    const names = t.sources.length ? t.sources.map((s) => s.name) : [null];
+    const from = names.find((n) => (per.get(n) ?? 0) < 3);
+    if (from === undefined) continue;
+    per.set(from, (per.get(from) ?? 0) + 1);
+    out.push({ word: t.value.replaceAll("_", " "), from });
+  }
+  return out;
 }

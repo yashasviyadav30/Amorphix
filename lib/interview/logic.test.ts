@@ -111,3 +111,10 @@ test("the style card's words: strongest first, each once, at most three from any
   const profile = { tags: [tag("decor", "vintage", 9), tag("ambience", "vintage", 8), tag("decor", "eclectic", 7), tag("ambience", "moody", 6), tag("decor", "artsy", 5), tag("tone", "warm", 4), tag("aesthetic", "clean lines", 3, b)], brands: [] };
   assert.deepEqual(cardWords(profile).map((w) => `${w.word}/${w.from}`), ["vintage/A hotel", "eclectic/A hotel", "moody/A hotel", "clean lines/A brand"]);
 });
+
+test("a word a photo and a name share goes to the name once the photo has three", () => {
+  const src = (name: string) => ({ entityId: name, name, layer: 1 as const });
+  const tag = (value: string, weight: number, ...from: string[]) => ({ family: "decor" as const, value, weight, sources: from.map(src) });
+  const profile: Profile = { tags: [tag("a", 9, "Photo 1", "Muji"), tag("b", 8, "Photo 1", "Muji"), tag("c", 7, "Photo 1"), tag("d", 6, "Photo 1", "Muji")], brands: [] };
+  assert.deepEqual(cardWords(profile).map((w) => `${w.word}/${w.from}`), ["a/Photo 1", "b/Photo 1", "c/Photo 1", "d/Muji"]);
+});

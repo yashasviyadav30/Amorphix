@@ -216,15 +216,17 @@ export function Interview() {
   // The live taste card: each new pick and photo is read by Amorphix's taste model on this device, while the next
   // question is already on screen.
   const picks = picksOf(answers);
-  const { result: tasteResult, failed: tasteFailed } = useTaste(picks, photos);
+  const { result: tasteResult, failed: tasteFailed, reading: tasteReading } = useTaste(picks, photos);
   const taste: TasteView | null = tasteResult?.view ?? null;
+  // The style revealed at the end only once every pick has been read, so it never shows (or saves) an older reading.
+  const settled: TasteView | null = tasteReading ? null : taste;
 
   // All answered: confirm the picks with Amorphix's taste model and create the project. The design itself runs on the next page.
   const finish = useCallback(async () => {
     setFinishing("working");
     transition();
     try {
-      if (!tasteResult) throw new Error("Your taste is still being read. Try again in a moment.");
+      if (!tasteResult || tasteReading) throw new Error("Your taste is still being read. Try again in a moment.");
       const res = await fetch("/api/interview", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -238,27 +240,27 @@ export function Interview() {
       setFailure(e instanceof Error ? e.message : "We couldn't start your design.");
       setFinishing("failed");
     }
-  }, [answers, lang, into, tasteResult]);
+  }, [answers, lang, into, tasteResult, tasteReading]);
   // All answered: the style is revealed and read aloud; the design starts when they ask for it.
   const revealing = !q && !projectId && finishing === "idle";
   useEffect(() => {
-    if (!revealing || !taste?.family) return;
-    const line = `${say("yourStyle")}: ${taste.family}.`;
+    if (!revealing || !settled?.family) return;
+    const line = `${say("yourStyle")}: ${settled.family}.`;
     if (!spoken.current.has(line)) {
       spoken.current.add(line);
       chime();
       voice.speak(line, voiceFor(line, lang));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [revealing, taste?.family]);
+  }, [revealing, settled?.family]);
   // The replay, once the style is shown: a moment to read it, then on to Maya's design (the tour's veil covers the move).
   useEffect(() => {
-    if (!replay || !revealing || !taste?.family) return;
+    if (!replay || !revealing || !settled?.family) return;
     const t = setTimeout(() => {
       tourGo("/demo?step=2");
     }, 5000 / speed);
     return () => clearTimeout(t);
-  }, [replay, revealing, taste?.family, speed]);
+  }, [replay, revealing, settled?.family, speed]);
 
   const designNow = () => {
     tick();
@@ -488,19 +490,19 @@ export function Interview() {
               ) : revealing ? (
                 <motion.div key="reveal" initial={still ? false : { opacity: 0, y: 24, filter: "blur(8px)" }} animate={{ opacity: 1, y: 0, filter: "blur(0px)" }} exit={still ? undefined : { opacity: 0, y: -18 }} className="w-full max-w-xl">
                   <div className="mx-auto w-fit drop-shadow-[0_0_30px_var(--accent)]">
-                    <AnimatedMark size={72} growing={!taste?.family} />
+                    <AnimatedMark size={72} growing={!settled?.family} />
                   </div>
                   <p className="mt-5 font-mono text-[11px] uppercase tracking-[0.3em] text-accent">{say("yourStyle")}</p>
-                  {taste?.family ? (
+                  {settled?.family ? (
                     <>
                       <h1 className="mt-2 font-serif text-5xl sm:text-6xl">
-                        <Decode text={taste.family} />
+                        <Decode text={settled.family} />
                       </h1>
                       <p className="mt-3 text-ink-soft">
                         {say("styleFrom")} {picks.map((p) => p.name).join(", ")}
                       </p>
                       <ul className="mt-5 flex flex-wrap justify-center gap-2">
-                        {(taste.words ?? []).map((s, i) => (
+                        {(settled.words ?? []).map((s, i) => (
                           <motion.li
                             key={s.word}
                             initial={still ? false : { opacity: 0, scale: 0.6 }}
@@ -528,7 +530,7 @@ export function Interview() {
                       See Maya&apos;s design
                     </a>
                   ) : (
-                    <button type="button" onClick={designNow} disabled={!taste?.family} className="glow-btn mt-8 px-8 py-3.5 text-lg disabled:opacity-50">
+                    <button type="button" onClick={designNow} disabled={!settled?.family} className="glow-btn mt-8 px-8 py-3.5 text-lg disabled:opacity-50">
                       {say("designNow")}
                     </button>
                   )}
