@@ -264,7 +264,7 @@ export function ExportStep({ p, tier, onWalkthrough }: { p: Project; tier: Tier 
         <div className="print-footer">
           <Mark size={18} />
           <span className="font-serif text-base">{studio ? `Designed by ${studio.name} · Made with Amorphix` : "Made with Amorphix"}</span>
-          <span>· {TAGLINE} · AI architect, powered by machine learning</span>
+          <span>· {TAGLINE} · AI architect</span>
         </div>
         <section className="print-page">
           {studio?.logo_url && <img src={studio.logo_url} alt="" className="mb-3 h-14 w-14 object-contain" />}

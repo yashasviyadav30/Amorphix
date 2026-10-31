@@ -526,7 +526,7 @@ export function Footer() {
             <Logo size={24} />
           </HomeLink>
           <p className="mt-3 max-w-xs text-sm text-ink-soft">An AI architect that designs any space around the taste of the people who use it.</p>
-          <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.25em] text-accent">Taste intelligence by Amorphix</p>
+          <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.25em] text-accent">Your AI architect</p>
         </div>
         <nav aria-label="Amorphix" className="grid content-start gap-2 text-sm">
           <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-ink-soft">Amorphix</p>

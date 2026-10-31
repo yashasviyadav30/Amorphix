@@ -109,7 +109,7 @@ export function Hero() {
             transition={{ delay: 0.2 }}
             className="font-mono text-[11px] uppercase tracking-[0.2em] text-accent sm:text-xs sm:tracking-[0.3em]"
           >
-            AI architect, powered by machine learning
+            AI architect
           </motion.p>
           <h1 className="mt-6 font-serif text-5xl leading-[1.05] sm:text-6xl lg:text-7xl">
             Spaces designed around
@@ -153,7 +153,7 @@ export function Hero() {
           <p className="mt-5 text-sm text-ink-soft">
             Type or talk · no account needed to try ·{" "}
             <Link href="/quiz" onClick={() => tick()} className="text-accent underline-offset-2 hover:underline">
-              Find your space style in three taps
+              Find your style from photos
             </Link>
           </p>
 

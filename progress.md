@@ -6,6 +6,9 @@ Newest first. Each entry is what was done that day, and how it was checked.
 
 ## 31 October: set-up at hackCBS 9.0
 
+- **Landing page pass on the live site:** the header menu no longer wraps beside the logo; the tagline is simply "AI
+  architect"; the film section, which had no film yet, is gone; links to the style quiz say "from photos".
+
 - **Live at amorphix-nine.vercel.app** (deployed from this repo on every push).
 - **Every page and message now speaks of Amorphix's own taste model**: the landing hero, the style and taste
   screens, the tour, the FAQ and the interviewer's instructions; the landing's live taste strip, which called the old

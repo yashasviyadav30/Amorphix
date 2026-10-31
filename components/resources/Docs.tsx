@@ -56,7 +56,7 @@ const SECTIONS: Section[] = [
           ]}
         />
         <p className="mt-4">
-          <Link href="/start" className="text-accent hover:underline">Start a design</Link> · <Link href="/quiz" className="text-accent hover:underline">Find your style in three taps</Link>
+          <Link href="/start" className="text-accent hover:underline">Start a design</Link> · <Link href="/quiz" className="text-accent hover:underline">Find your style from photos</Link>
         </p>
       </>
     ),
