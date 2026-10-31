@@ -1,0 +1,272 @@
+@import "tailwindcss";
+
+/* Amorphix theme "Mix 1": blueprint blue leads, forest green marks living things. Dark mode is Midnight Studio. */
+:root {
+  --paper: #f4f7fb;
+  --paper-raised: #ffffff;
+  --ink: #0e1a2b;
+  --ink-soft: #55647a;
+  --line: #dce4ef;
+  --accent: #2f6fed;
+  --leaf: #2f5d45;
+  --btn: #0e1a2b;
+  --btn-ink: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0d1117;
+    --paper-raised: #151b23;
+    --ink: #e6edf3;
+    --ink-soft: #8b97a5;
+    --line: #232c37;
+    --accent: #6b9bff;
+    --leaf: #7fd17a;
+    --btn: #6b9bff;
+    --btn-ink: #0d1117;
+  }
+}
+
+:root[data-theme="dark"] {
+  --paper: #0d1117;
+  --paper-raised: #151b23;
+  --ink: #e6edf3;
+  --ink-soft: #8b97a5;
+  --line: #232c37;
+  --accent: #6b9bff;
+  --leaf: #7fd17a;
+  --btn: #6b9bff;
+  --btn-ink: #0d1117;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-paper-raised: var(--paper-raised);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-btn: var(--btn);
+  --color-btn-ink: var(--btn-ink);
+  --color-leaf: var(--leaf);
+  --font-sans: var(--font-body);
+  --font-mono: var(--font-code);
+  --font-serif: var(--font-display);
+}
+
+/* Headings (font-serif) in Funnel Display: heavier and tighter than the old serif; a class on the element still wins. */
+@layer base {
+  .font-serif { font-weight: 600; letter-spacing: -0.035em; }
+  /* Martian Mono is wide: a key hint stays on one line */
+  kbd { white-space: nowrap; }
+}
+
+/* At 100% zoom on a laptop or a big screen, text and spacing step up a little (everything is in rem). */
+@media (min-width: 1024px) {
+  html { font-size: 106.25%; }
+}
+@media (min-width: 1536px) {
+  html { font-size: 112.5%; }
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+/* Tech motion: a scan line sweeping the processing screen, and plan walls drawing themselves. */
+@keyframes amorphix-scan {
+  from { transform: translateY(-10vh); }
+  to { transform: translateY(110vh); }
+}
+.amorphix-scan::after {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: 18vh;
+  pointer-events: none;
+  background: linear-gradient(to bottom, transparent, color-mix(in srgb, var(--accent) 12%, transparent), transparent);
+  animation: amorphix-scan 3.2s linear infinite;
+}
+@keyframes amorphix-draw {
+  to { stroke-dashoffset: 0; }
+}
+.amorphix-draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: amorphix-draw 1.4s ease-out forwards;
+}
+@media (prefers-reduced-motion: reduce) {
+  .amorphix-scan::after { display: none; }
+  .amorphix-draw { animation: none; stroke-dashoffset: 0; }
+}
+
+/* Light running along a card's edges on hover (HudCard). */
+@keyframes edge {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(300%); }
+}
+@keyframes edge-back {
+  from { transform: translateX(100%); }
+  to { transform: translateX(-300%); }
+}
+
+/* Landing intro. Waiting: a faint mark breathing over "Tap to enter". Playing: seeds grow out from the centre, the
+   name resolves, a scan line passes, then the page shows. Without scripts it fades out on its own at 9 seconds. */
+@keyframes intro-seed {
+  from { transform: scale(0); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+@keyframes intro-letter {
+  from { opacity: 0; transform: translateY(10px); filter: blur(8px); }
+  to { opacity: 1; transform: none; filter: none; }
+}
+@keyframes intro-bar {
+  from { width: 0; }
+  to { width: 100%; }
+}
+@keyframes intro-out {
+  to { opacity: 0; visibility: hidden; transform: scale(1.04); }
+}
+@keyframes intro-breathe {
+  50% { transform: scale(1.06); opacity: 0.32; }
+}
+.intro { animation: intro-out 0.6s cubic-bezier(0.7, 0, 0.3, 1) 9s forwards; }
+.intro.intro-live { animation: none; }
+.intro.intro-leaving { animation: intro-out 0.55s cubic-bezier(0.7, 0, 0.3, 1) forwards; }
+.intro-letter { display: inline-block; opacity: 0; }
+.intro-bar { width: 0; }
+.intro-waiting .intro-mark { opacity: 0.2; animation: intro-breathe 2.4s ease-in-out infinite; }
+.intro-gate { animation: intro-letter 0.6s ease-out 0.3s both; }
+.intro-play .intro-seed { opacity: 0; animation: intro-seed 0.45s cubic-bezier(0.2, 1.4, 0.4, 1) forwards; }
+.intro-play .intro-letter { animation: intro-letter 0.6s ease-out forwards; }
+.intro-play .intro-bar { animation: intro-bar 1.9s cubic-bezier(0.6, 0, 0.2, 1) 0.2s forwards; }
+.intro-play .intro-mark { filter: drop-shadow(0 0 24px color-mix(in srgb, var(--accent) 35%, transparent)); }
+.intro-scan { top: 0; animation: amorphix-scan 2.2s linear; opacity: 0.9; }
+html.intro-seen .intro { display: none; }
+@media (prefers-reduced-motion: reduce) {
+  .intro { display: none; }
+}
+
+/* Landing: a slow marquee and a pointer-following light. */
+@keyframes marquee {
+  to { transform: translateX(-50%); }
+}
+
+/* The primary button: a gradient pill with a light that sweeps across and a blue glow that lifts on hover. */
+.glow-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4em;
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: 9999px;
+  color: var(--btn-ink);
+  background: linear-gradient(120deg, var(--btn), color-mix(in srgb, var(--btn) 55%, var(--accent)) 60%, var(--accent));
+  background-size: 180% 100%;
+  background-position: 0% 0;
+  box-shadow: 0 10px 30px -14px var(--accent), inset 0 1px 0 color-mix(in srgb, white 25%, transparent);
+  transition: background-position 0.6s ease, box-shadow 0.3s ease, transform 0.2s ease;
+}
+.glow-btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(100deg, transparent 30%, color-mix(in srgb, white 30%, transparent) 50%, transparent 70%);
+  transform: translateX(-120%);
+  transition: transform 0.8s ease;
+}
+.glow-btn:hover {
+  background-position: 100% 0;
+  transform: translateY(-1px);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 60%, transparent), 0 14px 44px -10px var(--accent);
+}
+.glow-btn:hover::after { transform: translateX(120%); }
+.glow-btn:active { transform: translateY(0) scale(0.98); }
+
+/* The PDF pack: hidden on screen; when printing, only the pack shows, on white, one section per page. */
+.print-sheet { display: none; }
+@media print {
+  @page { margin: 14mm; }
+  body * { visibility: hidden; }
+  .print-sheet, .print-sheet * { visibility: visible; }
+  .print-sheet {
+    display: block;
+    position: absolute;
+    inset: 0 auto auto 0;
+    width: 100%;
+    --paper: #ffffff; --paper-raised: #ffffff; --ink: #0e1a2b; --ink-soft: #55647a; --line: #c9d3e0; --accent: #2f6fed; --leaf: #2f5d45;
+    color: #0e1a2b;
+    background: #ffffff;
+  }
+  .print-page { break-after: page; }
+  .print-page:last-child { break-after: auto; }
+}
+
+/* The PDF's watermark: a faint mark behind every page and a footer on every page. Fixed elements repeat on each
+   printed page. */
+.print-watermark, .print-footer { display: none; }
+@media print {
+  .print-watermark {
+    display: block;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0.06;
+    z-index: 0;
+  }
+  .print-footer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    font-size: 10px;
+    color: #55647a;
+    border-top: 1px solid #c9d3e0;
+    padding-top: 6px;
+  }
+  .print-page { position: relative; z-index: 1; padding-bottom: 28px; }
+}
+
+/* Home page plans: the outline draws itself, then each room, then the names fade in. */
+@keyframes sketch-draw { to { stroke-dashoffset: 0; } }
+@keyframes sketch-fade { to { opacity: 1; } }
+.sketch-draw rect { stroke-dasharray: 1; stroke-dashoffset: 1; animation: sketch-draw 0.9s cubic-bezier(0.6, 0, 0.2, 1) forwards; animation-delay: calc(var(--i, 0) * 70ms + 150ms); }
+.sketch-draw .sketch-shell { animation-delay: 0ms; animation-duration: 1.2s; }
+.sketch-draw .sketch-label { opacity: 0; animation: sketch-fade 0.6s ease forwards 1.2s; }
+@media (prefers-reduced-motion: reduce) { .sketch-draw rect { animation: none; stroke-dashoffset: 0; } .sketch-draw .sketch-label { animation: none; opacity: 1; } }
+
+/* Between the judges' tour stops the page is covered from its first paint until the tour's own screen takes over. */
+html[data-veil="1"] body::before { content: ""; position: fixed; inset: 0; z-index: 69; background: color-mix(in srgb, var(--paper) 93%, transparent); backdrop-filter: blur(48px); }
+
+/* The signed-in sidebar: full, or folded to a rail of icons (html[data-rail="1"], wide screens only). */
+.shell-side { width: 17rem; }
+/* how much of the left edge the sidebar takes, for anything fixed to the bottom of the page */
+@media (min-width: 1024px) {
+  html:has(.shell-side) { --shell-w: 17rem; }
+  html[data-rail="1"]:has(.shell-side) { --shell-w: 4.5rem; }
+}
+html:not([data-rail="1"]) .shell-only-rail { display: none !important; }
+@media (max-width: 1023px) { .shell-only-rail { display: none !important; } }
+@media (min-width: 1024px) {
+  html[data-rail="1"] .shell-side { width: 4.5rem; }
+  html[data-rail="1"] .shell-side .shell-label { display: none !important; }
+  html[data-rail="1"] .shell-side .shell-item, html[data-rail="1"] .shell-side .glow-btn { justify-content: center; }
+}
+/* each item: a light sweeps across on hover, and the open one carries a lit bar */
+.shell-item { position: relative; overflow: hidden; }
+.shell-item::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--accent) 16%, transparent), transparent); transform: translateX(-100%); transition: transform 0.55s ease; }
+.shell-item:hover::after { transform: translateX(100%); }
+.shell-item[aria-current="page"]::before { content: ""; position: absolute; left: 0; top: 22%; bottom: 22%; width: 3px; border-radius: 3px; background: var(--accent); box-shadow: 0 0 10px var(--accent); }
+@media (prefers-reduced-motion: reduce) { .shell-item::after { display: none; } .shell-side { transition: none; } }
+
+/* the bell gives one small swing when something new has come in */
+@keyframes bell { 0%, 100% { transform: rotate(0); } 10%, 30% { transform: rotate(14deg); } 20%, 40% { transform: rotate(-12deg); } 50% { transform: rotate(0); } }
+@media (prefers-reduced-motion: reduce) { [class*="animate-[bell"] { animation: none !important; } }

@@ -1,0 +1,38 @@
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+
+# next.js
+/.next/
+/out/
+/build
+/coverage
+*.tsbuildinfo
+next-env.d.ts
+
+# env files: keys stay local, only the example is committed
+.env*
+!.env.example
+
+# vercel
+.vercel
+
+# eve local workflow state
+.eve/
+
+# misc
+.DS_Store
+*.pem
+npm-debug.log*
+__pycache__/
+.venv/
+
+# Qloo response data must never be in a public repo (hackathon rules)
+.qloo-cache/
+fixtures/qloo/
+.output/
+
+# Local working notes (kept off the public repo)
+state.md
+private/
