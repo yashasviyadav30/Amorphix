@@ -3,10 +3,10 @@ import type { DemoRole } from "./story.ts";
 // The demo accounts (made by scripts/demo-world.ts, which reuses them). Fixed here so proxy.ts can tell a demo
 // session from a real one without a database call. Ids, not secrets.
 export const DEMO_IDS: Record<DemoRole, string> = {
-  maya: "25778a8b-a2b4-47c6-a012-e4f2ad695531",
-  lena: "3e8fdfa3-cd11-4c02-889a-925e9174826a",
-  mike: "8c0cb223-62ca-45c7-8203-fd6854c682c2",
-  sam: "dd014f0e-b3aa-4e9d-9a4c-ee52fa682bcc",
+  maya: "c9ab99d3-4861-4e40-ab36-7ff20880f6ec",
+  lena: "7f7e736f-0589-42fa-80b2-6a1adc1a01dd",
+  mike: "e81f98fb-af22-4ce6-afa4-1c5504758d67",
+  sam: "971431d2-d02d-44d2-9e0a-657be336995f",
 };
 const IDS = new Set(Object.values(DEMO_IDS));
 
