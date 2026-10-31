@@ -17,6 +17,17 @@ architect, builder and client.
 
 - Codebase set up and running locally: `npm ci`, `npx next typegen`, then type check is clean and all unit tests pass.
 - Product README.
+- `lib/taste`: profile types, 50-word style vocabulary (`vocab.ts`), 30 home brands (`brands.ts`), the engine
+  (`engine.ts`, tested) and CLIP vectors for both (`vectors.json`, made by `node scripts/embed-taste.ts`).
+- Finding: names must become a short design description before embedding (CLIP text-to-text is weak on bare
+  names); photos go straight to CLIP's image encoder.
+
+## Next step exactly
+
+Wire the engine into the app: `/api/taste/describe` (Gemini turns each loved name into a design description), a
+browser hook that embeds descriptions and uploaded photos with CLIP (transformers.js, model
+`Xenova/clip-vit-base-patch32`), and `/api/taste/profile` that takes the vectors and returns the `Profile`. Then
+replace the interview's picture picks with photo upload plus names.
 
 ## Now (in order)
 
