@@ -6,6 +6,16 @@ Newest first. Each entry is what was done that day, and how it was checked.
 
 ## 31 October: set-up at hackCBS 9.0
 
+- **Names become design descriptions (V1):** `lib/taste/describe.ts` and `/api/taste/describe`. Gemini says what kind
+  of thing each name is (place, brand, culture: its weight) and describes the interior look it evokes; checked live:
+  Chateau Marmont gives dark walnut panelling, velvet, dim light, brass lamps; Muji gives light ash wood and unbleached
+  cotton; Mad Men gives teak credenzas and brass bar carts. Four unit tests.
+- **The interview reads taste on the device (V3 and V4, first pass):** `components/interview/useTaste.ts` describes
+  each name, embeds descriptions and photos with CLIP in the browser, and builds the profile with the taste engine;
+  the taste step is now a typed name or an idea chip, with "Add photos of spaces you love" on the first taste
+  question; `/api/interview` saves the taste the browser read (checked against a schema) instead of asking the old
+  service. Type check clean, all unit tests pass; the browser walk-through reached question 10 of the interview.
+
 - **Landing page pass on the live site:** the header menu no longer wraps beside the logo; the tagline is simply "AI
   architect"; the film section, which had no film yet, is gone; links to the style quiz say "from photos".
 

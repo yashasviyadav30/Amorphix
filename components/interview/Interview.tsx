@@ -1,6 +1,5 @@
 "use client";
 
-import { QUIZ_KEY } from "@/lib/quiz/picks";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -13,14 +12,13 @@ import { STAGES, type TasteView } from "@/lib/interview/view";
 import { LANGS, langOf, voiceFor, type LangId } from "@/lib/interview/lang";
 import { asked, labelOf, matchChoices, next, picksOf, type Answer, type Answers, type Question, type TastePick } from "@/lib/interview/script";
 import { sizeFrom } from "@/lib/interview/logic";
-import type { Candidate } from "@/lib/interview/logic";
 import { useListen, useMicLevel, useSpeak } from "./useVoice";
 import { MAYA } from "@/lib/demo/story";
 import { tourGo } from "@/components/demo/JudgeBar";
 import { VoiceMode, type VoiceState } from "./VoiceMode";
+import { useTaste } from "./useTaste";
 
 const LANG_KEY = "amorphix-lang";
-type Look = { matches: Candidate[]; hint: string | null } | { error: string };
 
 // Small words the screen says, in the three languages.
 const SAY = {
@@ -76,7 +74,7 @@ export function Interview() {
     }, 1400);
     return () => clearTimeout(go);
   }, [projectId, router]);
-  const [taste, setTaste] = useState<TasteView | null>(null);
+  const [photos, setPhotos] = useState<File[]>([]);
   // The judges' replay (/start?demo=1): Maya's answers play themselves, at 2x unless slowed to 1x; nothing is saved.
   const [replay, setReplay] = useState(false);
   const [speed, setSpeed] = useState(2);
@@ -89,17 +87,6 @@ export function Interview() {
   useEffect(() => {
     window.scrollTo({ top: 0 });
   }, [q?.id]);
-  // The pictures for the three style picks (the same ones as the quiz), fetched once.
-  const [pictures, setPictures] = useState<Record<string, Picture[]>>({});
-  const [own, setOwn] = useState(false);
-  useEffect(() => {
-    // "v=2": the list with Amorphix's taste model ids (a copy cached before they were added has none, and those can't be picked).
-    fetch("/api/quiz?v=2")
-      .then((r) => (r.ok ? r.json() : { rounds: [] }))
-      .then((b: { rounds: { slot: string; options: Picture[] }[] }) => setPictures(Object.fromEntries(b.rounds.map((r) => [r.slot, r.options.filter((o) => o.id)]))))
-      .catch(() => {});
-  }, []);
-  useEffect(() => setOwn(false), [q?.id]);
   const say = (k: keyof typeof SAY) => SAY[k][lang];
 
   // Answers so far live in this browser tab, so a reload (or a phone that drops the page) picks up where it was.
@@ -113,15 +100,6 @@ export function Interview() {
     try {
       const saved = localStorage.getItem(LANG_KEY);
       if (saved) setLang(langOf(saved).id);
-    } catch {}
-    // Coming from the taste quiz: its three picks answer the taste questions (the place, the brand, the film or music).
-    try {
-      const quiz = JSON.parse(sessionStorage.getItem(QUIZ_KEY) ?? "null") as { slot: string; id: string; name: string }[] | null;
-      sessionStorage.removeItem(QUIZ_KEY);
-      if (Array.isArray(quiz)) {
-        const from = Object.fromEntries(quiz.filter((p) => p && typeof p.id === "string").map((p) => [p.slot, { slot: p.slot, id: p.id, name: String(p.name) }]));
-        setAnswers((a) => ({ ...from, ...a }) as Answers);
-      }
     } catch {}
     // /start?project=… fills that project; the type and city the pro already gave are answered.
     const id = new URLSearchParams(location.search).get("project");
@@ -179,18 +157,14 @@ export function Interview() {
     const intro = q.lead ? 5200 : 0;
     const later = (ms: number, f: () => void) => timers.push(setTimeout(f, intro + ms / speed));
     setGhost(null);
-    if (q.kind === "text") {
-      // the city is typed as people type it, and taken from the map's own list
-      const text = q.id === "city" ? "Los Angeles" : String(want);
+    if (q.kind === "text" || q.kind === "taste") {
+      // the city and the things she loves are typed as people type them
+      const text = q.id === "city" ? "Los Angeles" : q.kind === "taste" && want && typeof want === "object" && "name" in want ? String(want.name) : String(want);
       [...text].forEach((_, i) => later(1100 + i * 45, () => setDraft(text.slice(0, i + 1))));
       later(1100 + text.length * 45 + (q.id === "city" ? 1800 : 600), () => answer(q.id, want));
     } else {
-      // the pictures sit below the question: bring them into view so the pick is seen
-      if (q.kind === "taste") later(500, () => document.querySelector("[data-picks]")?.scrollIntoView({ behavior: "smooth", block: "center" }));
-      // a picture pick stays a moment longer, so the chosen picture is seen
-      const pic = q.kind === "taste";
-      later(pic ? 1800 : 1300, () => setGhost(want));
-      later(pic ? 3400 : 2200, () => answer(q.id, want));
+      later(1300, () => setGhost(want));
+      later(2200, () => answer(q.id, want));
     }
     return () => timers.forEach(clearTimeout);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -212,8 +186,8 @@ export function Interview() {
         else setNudge(true);
       } else if (q.kind === "text") {
         answer(q.id, t.slice(0, 200));
-      } else {
-        setDraft(t); // taste: the lookup below runs on the draft
+      } else if (q.kind === "taste") {
+        answer(q.id, { slot: q.slot!, id: `name:${t.slice(0, 80).toLowerCase()}`, name: t.slice(0, 80) });
       }
     },
     [q, answer],
@@ -239,28 +213,23 @@ export function Interview() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [q?.id, lang, held]);
 
-  // The live taste card: each new pick is read by Amorphix's taste model while the next question is already on screen.
+  // The live taste card: each new pick and photo is read by Amorphix's taste model on this device, while the next
+  // question is already on screen.
   const picks = picksOf(answers);
-  const pickKey = picks.map((p) => p.id).join("|");
-  useEffect(() => {
-    if (!picks.length) return setTaste(null);
-    let live = true;
-    void fetch("/api/interview/taste", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ picks }) })
-      .then((r) => (r.ok ? r.json() : null))
-      .then((t) => live && t && setTaste(t))
-      .catch(() => {});
-    return () => {
-      live = false;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pickKey]);
+  const { result: tasteResult, failed: tasteFailed } = useTaste(picks, photos);
+  const taste: TasteView | null = tasteResult?.view ?? null;
 
   // All answered: confirm the picks with Amorphix's taste model and create the project. The design itself runs on the next page.
   const finish = useCallback(async () => {
     setFinishing("working");
     transition();
     try {
-      const res = await fetch("/api/interview", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ answers, lang, projectId: into?.id }) });
+      if (!tasteResult) throw new Error("Your taste is still being read. Try again in a moment.");
+      const res = await fetch("/api/interview", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ answers, lang, projectId: into?.id, taste: { signals: tasteResult.signals, profile: tasteResult.profile } }),
+      });
       const body = await res.json().catch(() => ({}));
       if (!res.ok || !body.id) throw new Error(body.error ?? "We couldn't start your design.");
       setProjectId(body.id);
@@ -269,7 +238,7 @@ export function Interview() {
       setFailure(e instanceof Error ? e.message : "We couldn't start your design.");
       setFinishing("failed");
     }
-  }, [answers, lang, into]);
+  }, [answers, lang, into, tasteResult]);
   // All answered: the style is revealed and read aloud; the design starts when they ask for it.
   const revealing = !q && !projectId && finishing === "idle";
   useEffect(() => {
@@ -334,7 +303,7 @@ export function Interview() {
 
   const total = asked(answers).length;
   const number = Math.min(history.length + 1, total);
-  const typing = q && (q.kind === "text" || (q.kind === "taste" && own));
+  const typing = q && (q.kind === "text" || q.kind === "taste");
 
   return (
     <div className="relative flex-1 overflow-hidden">
@@ -466,32 +435,22 @@ export function Interview() {
                           aria-label="Your answer"
                           className="h-12 min-w-0 flex-1 rounded-full border border-line bg-paper-raised px-5 text-lg outline-none transition focus:border-accent focus:shadow-[0_0_0_4px_color-mix(in_srgb,var(--accent)_18%,transparent)]"
                         />
-                        {q.kind === "text" && (
+                        {(q.kind === "text" || q.kind === "taste") && (
                           <button type="submit" disabled={!draft.trim()} className="glow-btn h-12 shrink-0 px-5 disabled:opacity-40">
                             {say("done")}
                           </button>
                         )}
                       </form>
                     )}
-                    {q.kind === "taste" && !own && (
-                      <Pictures
-                        options={pictures[q.slot!] ?? []}
-                        chosen={ghost && typeof ghost === "object" && "id" in ghost ? ghost.id : null}
-                        hint={say("pictures")}
-                        typeOwn={say("typeOwn")}
-                        onPick={(o) => answer(q.id, { slot: q.slot!, id: o.id, name: o.name })}
-                        onOwn={() => {
-                          tick();
-                          setOwn(true);
-                        }}
+                    {q.kind === "taste" && (
+                      <TasteIdeas
+                        slot={q.slot!}
+                        chosen={ghost && typeof ghost === "object" && "name" in ghost ? String(ghost.name) : null}
+                        onPick={(name) => answer(q.id, { slot: q.slot!, id: `name:${name.toLowerCase()}`, name })}
                       />
                     )}
+                    {q.kind === "taste" && q.slot === "place" && !replay && <AddPhotos photos={photos} onChange={setPhotos} />}
                     {q.id === "city" && <CityLookup text={draft} onPick={(label) => answer(q.id, label)} />}
-                    {q.kind === "taste" && own && (
-                      <div className="mx-auto mt-4 max-w-lg">
-                        <TasteLookup near={typeof answers.city === "string" ? answers.city : undefined} q={q} text={draft} say={say} onAnswer={(v) => answer(q.id, v)} />
-                      </div>
-                    )}
                     {q.optional && (
                       <button type="button" onClick={() => answer(q.id, "")} className="mt-4 rounded-full px-4 py-1.5 text-sm text-ink-soft transition hover:text-accent">
                         {say("skip")}
@@ -557,7 +516,11 @@ export function Interview() {
                     </>
                   ) : (
                     <div className="mx-auto mt-6 w-fit text-left text-sm">
-                      <TypeLog lines={["Reading your picks with Amorphix's taste model", "Finding the words your style is made of", "Matching brands to your taste"]} done={false} />
+                      {tasteFailed ? (
+                        <p className="text-ink-soft">Couldn&apos;t read your taste just now. Change your last answer to try again.</p>
+                      ) : (
+                        <TypeLog lines={["Reading your picks with Amorphix's taste model", "Finding the words your style is made of", "Matching brands to your taste"]} done={false} />
+                      )}
                     </div>
                   )}
                   {replay ? (
@@ -637,44 +600,6 @@ export function Interview() {
 
         </div>
       </div>
-    </div>
-  );
-}
-
-type Picture = { key: string; id: string; name: string; image: string };
-
-// A style pick from pictures (the quiz's), one tap each, or "Something else? Type it" to name your own.
-function Pictures({ options, chosen, hint, typeOwn, onPick, onOwn }: { options: Picture[]; chosen?: string | null; hint: string; typeOwn: string; onPick: (o: Picture) => void; onOwn: () => void }) {
-  const still = useReducedMotion();
-  return (
-    <div>
-      <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-ink-soft">{hint}</p>
-      {!options.length ? (
-        <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
-          {Array.from({ length: 8 }, (_, i) => (
-            <div key={i} className="aspect-square animate-pulse rounded-2xl bg-paper-raised" />
-          ))}
-        </div>
-      ) : (
-        <ul data-picks className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
-          {options.map((o, i) => (
-            <motion.li key={o.key} initial={still ? false : { opacity: 0, y: 14, scale: 0.96 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ delay: i * 0.04 }}>
-              <button
-                type="button"
-                onClick={() => onPick(o)}
-                className={`group block w-full overflow-hidden rounded-2xl border bg-paper-raised text-left transition hover:-translate-y-0.5 hover:border-accent hover:shadow-[0_18px_44px_-22px_var(--accent)] ${chosen === o.id ? "-translate-y-1 border-accent ring-4 ring-accent/30" : "border-line"}`}
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element -- an image host, sized by CSS */}
-                <img src={o.image} alt="" onError={(e) => e.currentTarget.closest("li")?.setAttribute("hidden", "")} className="aspect-square w-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                <span className="block truncate p-2 text-sm font-medium">{o.name}</span>
-              </button>
-            </motion.li>
-          ))}
-        </ul>
-      )}
-      <button type="button" onClick={onOwn} className="mt-4 rounded-full border border-line px-4 py-1.5 text-sm text-ink-soft transition hover:border-accent hover:text-accent">
-        {typeOwn}
-      </button>
     </div>
   );
 }
@@ -772,67 +697,6 @@ function SizeInput({ lang, say, shown, onAnswer }: { lang: LangId; say: (k: keyo
   );
 }
 
-// A taste answer: what they type is matched by Amorphix as they type, and they confirm the match with a tap.
-function TasteLookup({ q, text, near, say, onAnswer }: { q: Question; text: string; near?: string; say: (k: keyof typeof SAY) => string; onAnswer: (v: TastePick) => void }) {
-  const [look, setLook] = useState<Look | null>(null);
-  const [chosen, setChosen] = useState<Candidate | null>(null);
-  const query = text.trim();
-  useEffect(() => {
-    setLook(null);
-    setChosen(null);
-    if (query.length < 2) return;
-    let live = true;
-    const t = setTimeout(async () => {
-      const res = await fetch(`/api/taste?slot=${q.slot}&q=${encodeURIComponent(query)}${near ? `&near=${encodeURIComponent(near)}` : ""}`).catch(() => null);
-      const body: Look = res ? await res.json().catch(() => ({ error: "Couldn't look that up." })) : { error: "Couldn't look that up. Check your connection." };
-      if (!live) return;
-      setLook(body);
-      if ("matches" in body && body.matches[0]) setChosen(body.matches[0]);
-    }, 450);
-    return () => {
-      live = false;
-      clearTimeout(t);
-    };
-  }, [query, q.slot, near]);
-
-  const describe = (c: Candidate) => [c.kind, c.detail].filter(Boolean).join(" · ");
-  if (query.length < 2) return null;
-  return (
-    <div aria-live="polite" className="text-sm">
-      {!look && <p className="animate-pulse font-mono text-xs text-ink-soft">› {say("looking")}</p>}
-      {look && "error" in look && <p className="text-accent">{look.error}</p>}
-      {look && "matches" in look && !look.matches.length && <p className="text-accent">{look.hint}</p>}
-      {chosen && (
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-ink-soft">{say("found")}:</span>
-          <strong>{chosen.name}</strong>
-          <span className="text-ink-soft">({describe(chosen)})</span>
-          <button type="button" onClick={() => onAnswer({ slot: q.slot!, id: chosen.entityId, name: chosen.name })} className="rounded-full bg-btn px-4 py-1.5 text-btn-ink transition hover:opacity-90">
-            {say("thatsIt")}
-          </button>
-        </div>
-      )}
-      {look && "matches" in look && look.matches.length > 1 && (
-        <div className="mt-2 flex flex-wrap items-center gap-2">
-          <span className="text-ink-soft">{say("notIt")}</span>
-          {look.matches
-            .filter((m) => m.entityId !== chosen?.entityId)
-            .map((m) => (
-              <button key={m.entityId} type="button" onClick={() => setChosen(m)} className="rounded-full border border-line px-3 py-1 transition hover:border-accent">
-                {m.name} <span className="text-ink-soft">({describe(m)})</span>
-              </button>
-            ))}
-        </div>
-      )}
-      {chosen && (
-        <button type="button" onClick={() => (setChosen(null), setLook({ matches: [], hint: "Add the city or street to the name, then it can find the right one." } as Look))} className="mt-2 text-xs text-ink-soft underline-offset-2 hover:text-accent hover:underline">
-          None of these
-        </button>
-      )}
-    </div>
-  );
-}
-
 // Amorphix's mark, on its own: no circle or box behind it. Its seeds grow while Amorphix works.
 function Avatar({ busy }: { busy: boolean }) {
   return <span className="mt-1 grid h-8 w-8 shrink-0 place-items-center">{busy ? <AnimatedMark size={28} /> : <Mark size={26} />}</span>;
@@ -881,6 +745,70 @@ function CityLookup({ text, onPick }: { text: string; onPick: (label: string) =>
       ) : (
         <p className="text-center text-ink-soft">That isn&apos;t on the map. Check the spelling, or add the state or country.</p>
       )}
+    </div>
+  );
+}
+
+// Ideas for a taste answer, one tap each; anything else is typed above.
+const IDEAS: Record<string, string[]> = {
+  place: ["Chateau Marmont", "Ace Hotel New York", "Aman Tokyo", "Soho House", "Blue Bottle Coffee", "Taj Mahal Palace, Mumbai"],
+  brand: ["Muji", "West Elm", "IKEA", "Fabindia", "CB2", "Good Earth"],
+  media: ["Mad Men", "The Grand Budapest Hotel", "Interstellar", "Call Me by Your Name", "Norah Jones", "Spirited Away"],
+};
+function TasteIdeas({ slot, chosen, onPick }: { slot: string; chosen: string | null; onPick: (name: string) => void }) {
+  return (
+    <ul data-picks className="mx-auto mt-4 flex max-w-xl flex-wrap justify-center gap-2" aria-label="Ideas">
+      {(IDEAS[slot] ?? []).map((name) => (
+        <li key={name}>
+          <button
+            type="button"
+            onClick={() => onPick(name)}
+            aria-pressed={chosen === name}
+            className={`rounded-full border px-4 py-1.5 text-sm transition hover:border-accent hover:text-accent ${chosen === name ? "border-accent bg-accent/10 text-accent" : "border-line bg-paper-raised"}`}
+          >
+            {name}
+          </button>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+// Photos of spaces they love, read by the taste model on this device; they never leave it.
+function AddPhotos({ photos, onChange }: { photos: File[]; onChange: (f: File[]) => void }) {
+  const input = useRef<HTMLInputElement>(null);
+  const urls = useMemo(() => photos.map((f) => URL.createObjectURL(f)), [photos]);
+  useEffect(() => () => urls.forEach((u) => URL.revokeObjectURL(u)), [urls]);
+  return (
+    <div className="mx-auto mt-6 max-w-lg rounded-2xl border border-dashed border-line p-4 text-left">
+      <p className="text-sm font-medium">Add photos of spaces you love <span className="font-normal text-ink-soft">(optional, up to 5)</span></p>
+      <p className="mt-1 text-xs text-ink-soft">Read by Amorphix&apos;s taste model on your device. They never leave it.</p>
+      <div className="mt-3 flex flex-wrap gap-2">
+        {urls.map((u, i) => (
+          <button key={u} type="button" onClick={() => onChange(photos.filter((_, k) => k !== i))} aria-label={`Remove photo ${i + 1}`} className="relative h-16 w-16 overflow-hidden rounded-xl border border-line">
+            {/* eslint-disable-next-line @next/next/no-img-element -- a local photo preview */}
+            <img src={u} alt={`Photo ${i + 1}`} className="h-full w-full object-cover" />
+            <span className="absolute right-0.5 top-0.5 grid h-5 w-5 place-items-center rounded-full bg-paper/90 text-xs">×</span>
+          </button>
+        ))}
+        {photos.length < 5 && (
+          <button type="button" onClick={() => input.current?.click()} className="grid h-16 w-16 place-items-center rounded-xl border border-dashed border-line text-xl text-ink-soft transition hover:border-accent hover:text-accent" aria-label="Add photos">
+            +
+          </button>
+        )}
+      </div>
+      <input
+        ref={input}
+        type="file"
+        accept="image/*"
+        multiple
+        hidden
+        onChange={(e) => {
+          const add = [...(e.currentTarget.files ?? [])].filter((f) => f.type.startsWith("image/"));
+          onChange([...photos, ...add].slice(0, 5));
+          e.currentTarget.value = "";
+        }}
+      />
     </div>
   );
 }

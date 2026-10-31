@@ -9,6 +9,18 @@ here. Updated 31 Oct 2026, hackCBS 9.0. Dated detail is in `progress.md` (newest
 
 ---
 
+## Resume here (31 Oct, before the break)
+
+1. **Finish the interview walk-through in the browser** (`npm run dev`, open `/start`): answer to the end, add a
+   name or two and a photo on the taste questions, check the taste card and the style reveal, press "Design my
+   space". Expect the design page to fail in places until V6: the moodboard, budget level, shopping list, greenery,
+   art and neighbourhood still call the old service (list in section 1).
+2. **V6:** move those to the new engine (shopping from the brand vectors, budget level and greenery from the taste
+   words; drop art and the neighbourhood read), remove `app/api/interview/taste`, `app/api/taste` (GET lookup),
+   `app/api/quiz`, `app/api/strip`, the interviewer agent's old taste tools, then delete the old module.
+3. Copy to fix: the interview's quick guide still says "three pictures for your taste".
+4. Then the demo seed, V5 (YugabyteDB), V7 (cost and risk model).
+
 ## 1. What Amorphix is today (the product map)
 
 | Part | What it does | Where |
@@ -52,10 +64,10 @@ Each task has an owner so both can work at the same time without touching the sa
 
 | # | Task | Done when |
 |---|---|---|
-| V1 | `app/api/taste/describe`: Gemini turns each loved name into a short design description | Returns descriptions for a list of names |
+| V1 | ✅ `app/api/taste/describe` + `lib/taste/describe.ts` | Done 31 Oct, checked live |
 | V2 | ✅ Browser CLIP (`lib/taste/clip.ts`) and the photo style quiz at `/quiz` | Done 31 Oct, checked in the browser |
-| V3 | `app/api/taste/profile`: vectors in, `Profile` out (`lib/taste/engine.ts`), stored on the project | The style step shows words with their sources |
-| V4 | Interview: photo upload and "things you love" names replace the old picture picks | A new design from photos works end to end |
+| V3 | ✅ (first pass) the profile is built in the browser by `components/interview/useTaste.ts` and saved by `/api/interview` | Done 31 Oct; moves to the server with V5 |
+| V4 | ⏳ Interview: typed names and idea chips, photos on the first taste question, live taste card from the device | Code done 31 Oct; **finish the browser walk-through** (it reached question 10) |
 | V5 | **YugabyteDB vector store** (after Y2): tables for style words and brands with pgvector, nearest-neighbour queries replace the in-memory match | Profile comes from Yugabyte queries |
 | V6 | Replace the rest of the old taste service (list in section 1): shopping from the brand vectors, budget level from the taste, art and neighbourhood dropped or rebuilt | Old module deleted, type check and tests clean |
 | V7 | **Cost and risk model:** budget by room and trade and the risk of going over, shown on the budget step | Model trained, tested, on screen |

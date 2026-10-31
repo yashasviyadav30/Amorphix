@@ -1,18 +1,14 @@
 import { z } from "zod";
 import { accessTo, whoOf } from "@/lib/auth/request";
 import { createProject, deleteProject, updateProject } from "@/lib/project/store";
-import { search, type Entity } from "@/lib/qloo/api";
-import { layerOf } from "@/lib/qloo/taste";
-import { profileFor } from "@/lib/qloo/profile";
-import { confirmPick, resolvePicks } from "@/lib/plan-import/taste";
 import { missingForDesign } from "@/lib/interview/logic";
-import { picksOf, problems, toProject, type Answers } from "@/lib/interview/script";
+import { problems, toProject, type Answers } from "@/lib/interview/script";
 import { nameOf, postEvent } from "@/lib/project/thread";
 import { JUDGE_COOKIE } from "@/lib/demo/ids";
 import { readCookie } from "@/lib/auth/guest";
 
-// The scripted interview's last step: the browser sends every answer, this checks them against the script,
-// confirms the three taste picks with Amorphix, and creates the project ready to design. No model runs here.
+// The scripted interview's last step: the browser sends every answer and the taste its model read on the device
+// (from the names and photos they love), this checks both and creates the project ready to design.
 export const maxDuration = 60;
 
 const Body = z.object({
@@ -20,6 +16,20 @@ const Body = z.object({
   lang: z.enum(["en", "hi", "hinglish"]).default("en"),
   // A project a pro created for a client ("New client"): the answers fill it instead of making a new one.
   projectId: z.uuid().optional(),
+  taste: z.object({
+    signals: z.array(z.object({ entityId: z.string().max(120), name: z.string().max(120), layer: z.union([z.literal(1), z.literal(2), z.literal(3)]), type: z.string().max(20).optional() })).min(1).max(12),
+    profile: z.object({
+      tags: z.array(
+        z.object({
+          family: z.enum(["decor", "ambience", "aesthetic", "tone", "style"]),
+          value: z.string().max(60),
+          weight: z.number(),
+          sources: z.array(z.object({ entityId: z.string().max(120), name: z.string().max(120), layer: z.union([z.literal(1), z.literal(2), z.literal(3)]) })).max(12),
+        }),
+      ).max(200),
+      brands: z.array(z.object({ id: z.string().max(80), name: z.string().max(80), affinity: z.number(), aesthetic: z.array(z.string().max(60)).max(10), because: z.array(z.object({ entityId: z.string().max(120), score: z.number() })).max(12) })).max(40),
+    }),
+  }),
 });
 
 export async function POST(request: Request) {
@@ -37,17 +47,7 @@ export async function POST(request: Request) {
   const wrong = problems(answers);
   if (wrong.length) return Response.json({ error: "Some answers are missing. Please go back and check them.", problems: wrong }, { status: 400 });
 
-  let found: Entity[];
-  try {
-    // One confirmed pick per question (a place, a brand, a film or music), then the optional extras.
-    const picks = picksOf(answers);
-    const all = [...(await resolvePicks(picks.slice(0, 3), search)), ...(await Promise.all(picks.slice(3).map((p) => confirmPick(p, search))))];
-    found = all.filter((e, i) => all.findIndex((x) => x.entity_id === e.entity_id) === i);
-  } catch (e) {
-    return Response.json({ error: e instanceof Error ? e.message : "We couldn't confirm what you love. Try again." }, { status: 422 });
-  }
-  const signals = found.map((e) => ({ entityId: e.entity_id, name: e.name, layer: layerOf(e), type: e.types?.[0] }));
-  const taste = await profileFor(signals, new Map(found.map((e) => [e.entity_id, e])));
+  const { signals, profile: taste } = body.data.taste;
 
   const fields = { ...toProject(answers, body.data.lang), status: "designing" as const, taste_signals: signals, taste };
   const p = into
