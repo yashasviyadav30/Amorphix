@@ -6,6 +6,12 @@ Newest first. Each entry is what was done that day, and how it was checked.
 
 ## 1 November
 
+- **Tour stop for "Make changes"** (now 13 stops): Sam's café opens on the workspace with two changes in its history,
+  made through the real edit route in plain words ("Make the cafe seating bigger", a renamed store room). A judge
+  who tries a change gets the view-only note and a link to try it on their own project. The café's night reveal now
+  comes in close on the seating after opening the building up. The seed runs against a local app started with
+  `AMORPHIX_DEMO_SEED=1`.
+
 - **The judges' demo on the new build:** the demo people pick by name and their taste is read by the taste model
   (`scripts/taste-node.ts`); the seed built Maya's house (on site), the Parks' house (in review), Ana's apartment (last
   week) and Sam's café through the app's own routes. The tour's demo account ids were from another database, so the

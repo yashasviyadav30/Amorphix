@@ -17,7 +17,8 @@ photo and three names: the reveal, the design, the budget's taste tier and the s
 
 1. **V7:** done (`lib/budget/risk.ts`, the "Risk of going over" card on the budget step); check it on the live site.
 2. ✅ Judges' demo re-seeded on the new build (`scripts/demo-world.ts` against `npm run dev`, about 7 minutes); the
-   demo account ids in `lib/demo/ids.ts` now match this database; all 12 tour stops checked on the live site.
+   demo account ids in `lib/demo/ids.ts` now match this database; all 13 tour stops checked on the live site
+   (a Make changes stop added). To re-seed: `AMORPHIX_DEMO_SEED=1 npm run dev`, then the script.
 3. Optional: a moodboard from the describe output (text tiles).
 4. Meko (YugabyteDB's agent memory track): decided to skip.
 
