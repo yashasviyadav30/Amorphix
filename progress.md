@@ -6,6 +6,8 @@ Newest first. Each entry is what was done that day, and how it was checked.
 
 ## 1 November
 
+- **Judges' demo re-seeded on the calibrated taste model:** Maya now reads "Classic Hollywood Mid-Century"
+  (vintage, dark wood, mid-century, old Hollywood), Sam's café "Scandinavian Industrial" with Muji first; tour checked.
 - **Full QA pass in Chrome on the live site**, and what it fixed:
   - The taste model is calibrated for names (`scripts/calibrate-taste.ts`, `lib/taste/calibration.json`): some style
     words and brands sat close to any description, so almost everyone got "Japandi meets Contemporary" and Crate &
