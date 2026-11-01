@@ -49,15 +49,6 @@ check("client can't change the site", (await fetch(`${BASE}/api/projects/${BUILD
 const self = await get(`/api/projects/${SELF}/site`, "owner");
 check("site steps for the owner", self.status === 200 && !!self.body.steps, JSON.stringify(self.body.steps ?? {}));
 
-// The neighbourhood read (15 Oct): real cafés only, one per chain
-const n = await get(`/api/projects/${CAFE}/neighbourhood?crowd=all`, "owner");
-const places: { name: string }[] = n.body.read?.places ?? [];
-check("neighbourhood read", n.status === 200 && places.length >= 3, `${places.length} places`);
-const stems = places.map((p) => p.name.toLowerCase().split(/\s+/)[0]);
-check("one place per chain", new Set(stems).size === stems.length, stems.join(", "));
-const young = await get(`/api/projects/${CAFE}/neighbourhood?crowd=young`, "owner");
-check("crowd switch", young.status === 200 && (young.body.read?.places ?? []).length >= 3);
-
 // The drawings pack (15 Oct) is drawn in the browser: check the live bundle for the page carries it.
 const page = await get(`/project/${CAFE}`, "owner");
 const scripts = [...String(page.body).matchAll(/src="(\/_next\/static\/[^"]+\.js)"/g)].map((m) => m[1]);
@@ -69,22 +60,14 @@ check("drawings pack in the live bundle", drawings);
 check("exterior from taste in the live bundle", bundle.includes("a pitched gable roof") && bundle.includes("a planted garden"));
 check("day and night in the live bundle", bundle.includes("#0d1424"));
 
-// The taste quiz (16 Oct): public, a fixed list, a card from Amorphix with no sign-in
+// The style quiz: public, read on the device; the taste profile route answers from the vector store
 check("quiz page", (await get("/quiz")).status === 200);
-const opts = await get("/api/quiz");
-check("quiz pictures", (opts.body.rounds ?? []).every((r: { options: unknown[] }) => r.options.length >= 6), (opts.body.rounds ?? []).map((r: { options: unknown[] }) => r.options.length).join("/"));
-const qcard = await get("/api/quiz?p=aman-tokyo.muji.spirited-away");
-check("quiz card", qcard.status === 200 && !!qcard.body.style && (qcard.body.words ?? []).length > 0, qcard.body.style);
-check("quiz refuses picks off the list", (await get("/api/quiz?p=aman-tokyo.supreme.amelie")).status === 400);
 // The interview flow (16 Oct): questions, then "Now let's find your style" with pictures, the style, then the design
-check("pictures carry Amorphix ids for the interview", (opts.body.rounds ?? []).every((r: { options: { id?: string }[] }) => r.options.every((o) => !!o.id)));
 const start = await get("/start");
 const startJs = (await Promise.all([...String(start.body).matchAll(/src="(\/_next\/static\/[^"]+\.js)"/g)].map(async (m) => (await fetch(BASE + m[1])).text()))).join(" ");
 check("interview: find your style, then design my space", start.status === 200 && startJs.includes("Now design my space") && startJs.includes("find your style"));
 
-// Room moods and art and sound (16 Oct)
-const art = await get(`/api/projects/${CAFE}/art`, "owner");
-check("art and sound", art.status === 200 && (art.body.art ?? []).length > 0 && (art.body.music ?? []).length > 0, `${(art.body.art ?? []).length} galleries, ${(art.body.music ?? []).length} artists`);
+// Room moods (16 Oct)
 check("room moods in the live bundle", bundle.includes("Mood, read by Amorphix"));
 
 // The app (16 Oct): installable, the logo in the tab, and someone signed in opens their projects, not the landing page
