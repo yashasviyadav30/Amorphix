@@ -6,6 +6,22 @@ Newest first. Each entry is what was done that day, and how it was checked.
 
 ## 1 November
 
+- **Full QA pass in Chrome on the live site**, and what it fixed:
+  - The taste model is calibrated for names (`scripts/calibrate-taste.ts`, `lib/taste/calibration.json`): some style
+    words and brands sat close to any description, so almost everyone got "Japandi meets Contemporary" and Crate &
+    Barrel. Each word and brand now counts only above its usual level, measured on 42 varied loves; photos are read
+    as before. Checked on ten other names: Ace Hotel reads industrial, Mad Men mid-century, Chateau Marmont old
+    Hollywood and velvet, Jonathan Adler maximalist.
+  - The empty space under the hero is a band of real taste reads (two loves, the style, its words and the nearest
+    brands by vector search on YugabyteDB), made by `scripts/landing-reads.ts`.
+  - The style quiz's "Design your space" now takes the quiz photos into the interview (they were dropped).
+  - Sign-in shows only the providers switched on; Google and Apple were off and would have failed.
+  - Copy that described the old taste service is gone from the landing, FAQ, Resources, Privacy and the plan check.
+  - The home card's estimate names the quality it is priced at; Find a pro without a project explains itself; the
+    add-photos note speaks Hindi and Hinglish; Resources fits a phone.
+  - Checked and working: plan upload, the photo quiz, Hindi interview, Make changes on your own project (typed in
+    Hinglish), login and sign-up pages, home, account, all 13 tour stops.
+
 - **Tour stop for "Make changes"** (now 13 stops): Sam's café opens on the workspace with two changes in its history,
   made through the real edit route in plain words ("Make the cafe seating bigger", a renamed store room). A judge
   who tries a change gets the view-only note and a link to try it on their own project. The café's night reveal now

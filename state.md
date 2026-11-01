@@ -9,18 +9,19 @@ here. Updated 1 Nov 2026, hackCBS 9.0. Dated detail is in `progress.md` (newest 
 
 ---
 
-## Resume here (1 Nov, 1:45 am)
+## Resume here (1 Nov, after the full QA pass)
 
-Done and checked on the live site: V6 (no old service left), V5 (`/api/taste/profile` answers with
-`engine: "yugabytedb"`, so Vercel reaches YugabyteDB), brand logos on the shopping list, and a full interview with a
-photo and three names: the reveal, the design, the budget's taste tier and the shopping list all work.
+Everything below was checked in Chrome on the live site: landing (every section), the interview in English and Hindi,
+the photo quiz into the interview, plan upload, the design, budget with the risk card, shopping list, Make changes
+on your own project (in Hinglish), all 13 tour stops, Resources, Privacy, login, home, account, and phone width for
+the public pages. No mention of the old names anywhere in the repo, its history or the live pages.
 
-1. **V7:** done (`lib/budget/risk.ts`, the "Risk of going over" card on the budget step); check it on the live site.
-2. ✅ Judges' demo re-seeded on the new build (`scripts/demo-world.ts` against `npm run dev`, about 7 minutes); the
-   demo account ids in `lib/demo/ids.ts` now match this database; all 13 tour stops checked on the live site
-   (a Make changes stop added). To re-seed: `AMORPHIX_DEMO_SEED=1 npm run dev`, then the script.
-3. Optional: a moodboard from the describe output (text tiles).
-4. Meko (YugabyteDB's agent memory track): decided to skip.
+Still open:
+1. **Logo:** the mark (icon, favicon, apple icon) is the same file as the earlier project's. Decide whether to change it.
+2. **Google and Apple sign-in** are off in Supabase, so their buttons are hidden. To offer them, switch them on in
+   Supabase (Authentication > Providers) and set `NEXT_PUBLIC_AMORPHIX_OAUTH=google,apple` in Vercel.
+3. **Email sign-up** needs the confirmation email; Supabase's built-in mailer sends very few an hour.
+4. Before submission: remove `progress.md` and `state.md` from the repo.
 
 ## 1. What Amorphix is today (the product map)
 
