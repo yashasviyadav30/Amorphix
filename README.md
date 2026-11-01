@@ -549,7 +549,7 @@ erDiagram
 | Unit | 410 tests: the taste engine and its calibration, the risk model, the layout engine and validator, every edit, budget and markets, shopping, fees, roles, move-in, interview logic | `lib/**/*.test.ts`, `node --test` |
 | Agent evals | 17 eve evals: one question at a time, all-at-once answers, Hindi, Hinglish, metric, off-topic, cafés, offices, hotels, prompt injection | `agents/interviewer/evals/` |
 | Vector store | The YugabyteDB profile checked against the in-memory engine (matches to 0.00002) | `lib/taste/yb.ts` |
-| End to end | In Chrome on the live site: interviews in English and Hindi, the photo quiz, plan upload, Make changes in Hinglish, every tour stop, phone width | run notes in `progress.md` |
+| End to end | In Chrome on the live site: interviews in English and Hindi, the photo quiz, plan upload, Make changes in Hinglish, every tour stop, phone width | the live site, amorphix-nine.vercel.app |
 
 `npm test` and `tsc --noEmit` pass before every commit.
 
